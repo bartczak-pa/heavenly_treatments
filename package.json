@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepare": "husky"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
@@ -30,9 +31,17 @@
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-react": "^7.37.5",
     "globals": "^16.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.0",
     "prettier": "^3.5.3",
     "tailwindcss": "^4",
     "typescript": "^5",
     "typescript-eslint": "^8.29.0"
+  },
+  "lint-staged": {
+    "*.js": "eslint --fix",
+    "*.ts": "eslint --fix",
+    "*.tsx": "eslint --fix",
+    "*.css": "prettier --write"
   }
 }
