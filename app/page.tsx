@@ -10,7 +10,7 @@ const HomePage: React.FC = () => {
       <section className="relative h-screen">
         <div className="absolute inset-0">
           <Image
-            src="/images/spa-hero.jpg" // Replace with your hero image path
+            src="/images/spa-hero.jpg" //TODO:  Replace with hero image path
             alt="Luxury Spa Interior"
             fill
             className="object-cover"
@@ -39,7 +39,7 @@ const HomePage: React.FC = () => {
             {/* Map through your services data here */}
             <div className="group relative overflow-hidden rounded-lg shadow-lg">
               <Image
-                src="/images/massage.jpg" // Replace with your service image paths
+                src="/images/massage.jpg" //TODO:  Replace with service image paths
                 alt="Massage Therapy"
                 width={400}
                 height={300}
@@ -54,7 +54,7 @@ const HomePage: React.FC = () => {
             </div>
             <div className="group relative overflow-hidden rounded-lg shadow-lg">
               <Image
-                src="/images/facial.jpg" // Replace with your service image paths
+                src="/images/facial.jpg" //TODO:  Replace with service image paths
                 alt="Facial Treatments"
                 width={400}
                 height={300}
@@ -69,7 +69,7 @@ const HomePage: React.FC = () => {
             </div>
             <div className="group relative overflow-hidden rounded-lg shadow-lg">
               <Image
-                src="/images/body-treatment.jpg" // Replace with your service image paths
+                src="/images/body-treatment.jpg" //TODO:   Replace with service image paths
                 alt="Body Treatments"
                 width={400}
                 height={300}
@@ -95,7 +95,7 @@ const HomePage: React.FC = () => {
             <div className="bg-white p-8 rounded-lg shadow-lg">
               <div className="flex items-center mb-4">
                 <Image
-                  src="/images/avatar-1.jpg" // Replace with your avatar image paths
+                  src="/images/avatar-1.jpg" //TODO:  Replace with avatar image paths
                   alt="Sarah Johnson"
                   width={50}
                   height={50}
@@ -111,7 +111,7 @@ const HomePage: React.FC = () => {
             <div className="bg-white p-8 rounded-lg shadow-lg">
               <div className="flex items-center mb-4">
                 <Image
-                  src="/images/avatar-2.jpg" // Replace with avatar image paths
+                  src="/images/avatar-2.jpg" //TODO:  Replace with avatar image paths
                   alt="Michael Brown"
                   width={50}
                   height={50}
@@ -127,7 +127,7 @@ const HomePage: React.FC = () => {
             <div className="bg-white p-8 rounded-lg shadow-lg">
               <div className="flex items-center mb-4">
                 <Image
-                  src="/images/avatar-3.jpg" // Replace with avatar image paths
+                  src="/images/avatar-3.jpg" //TODO:  Replace with avatar image paths
                   alt="Emily Davis"
                   width={50}
                   height={50}
