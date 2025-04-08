@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/app/components/ui/button';
 import { MainLayout } from '@/app/components/layout/MainLayout';
+import { GetServerSideProps } from 'next';
 
 const treatmentsData = {
   massages: [
@@ -98,6 +99,12 @@ const treatmentsData = {
     },
   ],
 };
+
+interface PageProps {
+  params: {
+    slug: string;
+  };
+}
 
 const TreatmentsPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -269,6 +276,19 @@ const TreatmentsPage: React.FC = () => {
       </div>
     </MainLayout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<PageProps> = async (context) => {
+  const { slug } = context.params as { slug: string };
+
+  // Fetch treatment data based on slug
+  // ...
+
+  return {
+    props: {
+      params: { slug },
+    },
+  };
 };
 
 export default TreatmentsPage;
