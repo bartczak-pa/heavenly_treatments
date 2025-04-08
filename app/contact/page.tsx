@@ -78,7 +78,7 @@ const ContactForm: React.FC = () => {
   // Generic handler for most input types
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
-    const checked = (e.target as HTMLInputElement).checked; //TODO: Refactor 
+    const {checked} = e.target as HTMLInputElement;
     setFormData((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
