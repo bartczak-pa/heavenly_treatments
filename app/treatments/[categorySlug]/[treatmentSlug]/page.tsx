@@ -5,15 +5,14 @@ import { MainLayout } from '@/app/components/layout/MainLayout';
 import { getTreatmentBySlug, getTreatments } from '@/lib/data/treatments';
 import { notFound } from 'next/navigation';
 
-// Define the expected resolved params structure
 type ResolvedParams = {
   categorySlug: string;
   treatmentSlug: string;
 };
 
-// Type the params prop as a Promise and make the component async
+
 const TreatmentDetailPage = async ({ params: paramsPromise }: { params: Promise<ResolvedParams> }) => {
-  // Await the params promise to get the resolved values
+
   const params = await paramsPromise;
   const { categorySlug, treatmentSlug } = params;
 

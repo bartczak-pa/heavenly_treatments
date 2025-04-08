@@ -8,8 +8,6 @@ import MapEmbed from '@/app/components/Contact/MapEmbed';
 import ContactForm from '@/app/components/Contact/ContactForm';
 
 
-
-// Main Contact Page Component
 const ContactPage: React.FC = () => {
   return (
     <MainLayout>

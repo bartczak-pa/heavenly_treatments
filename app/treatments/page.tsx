@@ -95,7 +95,7 @@ export default function TreatmentsOverviewPage() {
                        alt={treatment.title}
                        fill
                        style={{ objectFit: 'cover' }}
-                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" // Add sizes prop for optimization
+                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" 
                      />
                    </div>
                  </CardHeader>
@@ -110,7 +110,6 @@ export default function TreatmentsOverviewPage() {
                      <span className="font-semibold">{treatment.price}</span>
                      <span className="text-xs text-muted-foreground ml-2">({treatment.duration})</span>
                    </div>
-                   {/* Update the Link href to the new format */}
                    <Link href={`/treatments/${treatment.category}/${treatment.slug}`} passHref legacyBehavior>
                      <Button variant="outline" size="sm">
                        View Details
