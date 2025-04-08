@@ -21,6 +21,7 @@ import {
   SheetTrigger,
 } from "@/app/components/ui/sheet";
 import { Menu } from 'lucide-react';
+import { treatmentCategories } from '@/lib/data/treatments';
 
 export default function Navbar() {
   return (
@@ -47,8 +48,8 @@ export default function Navbar() {
               <NavigationMenuItem>
                 <NavigationMenuTrigger>Treatments</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid w-[400px] gap-3 p-4">
-                    <li>
+                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2">
+                    <li className="row-span-2 md:row-span-3">
                       <NavigationMenuLink asChild>
                         <Link
                           className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
@@ -58,76 +59,28 @@ export default function Navbar() {
                             All Treatments
                           </div>
                           <p className="text-sm leading-tight text-muted-foreground">
-                            Explore our full range of treatments and find the perfect one for you.
+                            Explore our full range of treatments.
                           </p>
                         </Link>
                       </NavigationMenuLink>
                     </li>
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link
-                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          href="/treatments/facial"
-                        >
-                          <div className="text-sm font-medium leading-none">Facial Treatments</div>
-                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Rejuvenate your skin with our specialized facial treatments.
-                          </p>
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link
-                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          href="/treatments/massage"
-                        >
-                          <div className="text-sm font-medium leading-none">Massage Therapy</div>
-                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Relax and unwind with our therapeutic massage services.
-                          </p>
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link
-                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          href="/treatments/body"
-                        >
-                          <div className="text-sm font-medium leading-none">Body Treatments</div>
-                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Experience our luxurious body treatments and therapies.
-                          </p>
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link
-                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          href="/treatments/waxing"
-                        >
-                          <div className="text-sm font-medium leading-none">Waxing Services</div>
-                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Professional waxing services for smooth, hair-free skin.
-                          </p>
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link
-                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          href="/treatments/nails"
-                        >
-                          <div className="text-sm font-medium leading-none">Nail Care</div>
-                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                            Pamper your hands and feet with our nail care services.
-                          </p>
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
+                    {treatmentCategories.map((category) => (
+                      <li key={category.id}>
+                        <NavigationMenuLink asChild>
+                          <Link
+                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            href={`/treatments/${category.slug}`}
+                          >
+                            <div className="text-sm font-medium leading-none">{category.name}</div>
+                            {category.shortDescription && (
+                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                {category.shortDescription}
+                              </p>
+                            )}
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                    ))}
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
@@ -186,21 +139,15 @@ export default function Navbar() {
                     <Link href="/treatments" className="text-sm text-muted-foreground hover:text-primary">
                       All Treatments
                     </Link>
-                    <Link href="/treatments/facial" className="text-sm text-muted-foreground hover:text-primary">
-                      Facial Treatments
-                    </Link>
-                    <Link href="/treatments/massage" className="text-sm text-muted-foreground hover:text-primary">
-                      Massage Therapy
-                    </Link>
-                    <Link href="/treatments/body" className="text-sm text-muted-foreground hover:text-primary">
-                      Body Treatments
-                    </Link>
-                    <Link href="/treatments/waxing" className="text-sm text-muted-foreground hover:text-primary">
-                      Waxing Services
-                    </Link>
-                    <Link href="/treatments/nails" className="text-sm text-muted-foreground hover:text-primary">
-                      Nail Care
-                    </Link>
+                    {treatmentCategories.map((category) => (
+                      <Link
+                        key={category.id}
+                        href={`/treatments/${category.slug}`}
+                        className="text-sm text-muted-foreground hover:text-primary"
+                      >
+                        {category.name}
+                      </Link>
+                    ))}
                   </div>
                 </div>
                 <Link href="/contact" className="text-sm font-medium transition-colors hover:text-primary">
