@@ -5,7 +5,7 @@
   - Set up Prettier with appropriate rules
   - Configure ESLint for code quality and consistency
   - Add pre-commit hooks (husky + lint-staged)
-- [ ] Set up project structure
+- [X] Set up project structure
   - Create components, layouts, and lib directories
   - Set up pages or app router structure following Next.js best practices
   - Organize public assets folder for images
