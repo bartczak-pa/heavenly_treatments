@@ -1,24 +1,26 @@
-'use client';
-
 import React from 'react';
 import Image from 'next/image';
-import { Button } from '@/app/components/ui/button';
+import { Button } from '@//app/components/ui/button';
 import { MainLayout } from '@/app/components/layout/MainLayout';
-import { getTreatmentBySlug } from '@/lib/data/treatments';
+import { getTreatmentBySlug, getTreatments } from '@/lib/data/treatments';
+import { notFound } from 'next/navigation';
 
-interface PageProps {
-  params: {
-    slug: string;
-  };
-}
+// Define the expected resolved params structure
+type ResolvedParams = {
+  categorySlug: string;
+  treatmentSlug: string;
+};
 
-const TreatmentDetailPage = ({ params }: PageProps) => {
-  const { slug } = params;
+// Type the params prop as a Promise and make the component async
+const TreatmentDetailPage = async ({ params: paramsPromise }: { params: Promise<ResolvedParams> }) => {
+  // Await the params promise to get the resolved values
+  const params = await paramsPromise;
+  const { categorySlug, treatmentSlug } = params;
 
-  const treatment = getTreatmentBySlug(slug);
+  const treatment = getTreatmentBySlug(treatmentSlug);
 
-  if (!treatment) {
-    return <div>Treatment not found</div>;
+  if (!treatment || treatment.category !== categorySlug) {
+    notFound();
   }
 
   return (
@@ -29,8 +31,8 @@ const TreatmentDetailPage = ({ params }: PageProps) => {
             <Image
               src={treatment.image}
               alt={treatment.title}
-              layout="fill"
-              objectFit="cover"
+              fill
+              style={{ objectFit: 'cover' }}
               priority
             />
           </div>
@@ -69,3 +71,13 @@ const TreatmentDetailPage = ({ params }: PageProps) => {
 };
 
 export default TreatmentDetailPage;
+
+// generateStaticParams still returns the resolved params objects
+export async function generateStaticParams(): Promise<ResolvedParams[]> {
+  const treatments = getTreatments();
+
+  return treatments.map((treatment) => ({
+    categorySlug: treatment.category,
+    treatmentSlug: treatment.slug,
+  }));
+}
