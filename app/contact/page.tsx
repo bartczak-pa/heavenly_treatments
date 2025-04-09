@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { MainLayout } from '@/app/components/layout/MainLayout';
-import HeroSection from '@/app/components/Contact/HeroSection';
+import HeroSection from '@/app/components/shared/HeroSection';
 import ContactInfo, { contactInfo } from '@/app/components/Contact/ContactInfo';
 import MapEmbed from '@/app/components/Contact/MapEmbed';
 import ContactForm from '@/app/components/Contact/ContactForm';
