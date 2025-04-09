@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Button } from '@/app/components/ui/button';
 import { MainLayout } from '@/app/components/layout/MainLayout';
-
+import Testimonials from '@/app/components/sections/testimonials';
 const HomePage: React.FC = () => {
   return (
     <MainLayout>
@@ -86,63 +86,7 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">What Our Clients Say</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Map through your testimonials data here */}
-            <div className="bg-white p-8 rounded-lg shadow-lg">
-              <div className="flex items-center mb-4">
-                <Image
-                  src="/images/avatar-1.jpg" //TODO:  Replace with avatar image paths
-                  alt="Sarah Johnson"
-                  width={50}
-                  height={50}
-                  className="rounded-full"
-                />
-                <div className="ml-4">
-                  <h4 className="font-semibold">Sarah Johnson</h4>
-                  <p className="text-gray-500">Regular Client</p>
-                </div>
-              </div>
-              <p className="text-gray-600 italic">&quot;The best spa experience I&apos;ve ever had. The staff is amazing and the treatments are heavenly!&quot;</p>
-            </div>
-            <div className="bg-white p-8 rounded-lg shadow-lg">
-              <div className="flex items-center mb-4">
-                <Image
-                  src="/images/avatar-2.jpg" //TODO:  Replace with avatar image paths
-                  alt="Michael Brown"
-                  width={50}
-                  height={50}
-                  className="rounded-full"
-                />
-                <div className="ml-4">
-                  <h4 className="font-semibold">Michael Brown</h4>
-                  <p className="text-gray-500">First-time Visitor</p>
-                </div>
-              </div>
-              <p className="text-gray-600 italic">&quot;Incredible service and atmosphere. I&apos;ll definitely be coming back!&quot;</p>
-            </div>
-            <div className="bg-white p-8 rounded-lg shadow-lg">
-              <div className="flex items-center mb-4">
-                <Image
-                  src="/images/avatar-3.jpg" //TODO:  Replace with avatar image paths
-                  alt="Emily Davis"
-                  width={50}
-                  height={50}
-                  className="rounded-full"
-                />
-                <div className="ml-4">
-                  <h4 className="font-semibold">Emily Davis</h4>
-                  <p className="text-gray-500">VIP Member</p>
-                </div>
-              </div>
-              <p className="text-gray-600 italic">&quot;Heavenly Treatments has become my sanctuary. The perfect place to unwind and recharge.&quot;</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Testimonials />
 
       {/* Call-to-Action Section */}
       <section className="py-20 bg-black text-white">
