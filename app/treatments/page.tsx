@@ -3,10 +3,10 @@
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Button } from '@/app/components/ui/button';
-import { MainLayout } from '@/app/components/layout/MainLayout';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/app/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { getTreatments, getCategories, Treatment, TreatmentCategory, TreatmentCategorySlug } from '@/lib/data/treatments';
 
 // Fetch data directly since this is static data

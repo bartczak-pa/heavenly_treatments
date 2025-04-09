@@ -1,11 +1,11 @@
 // app/about/page.tsx
 import React from 'react';
-import { MainLayout } from '@/app/components/layout/MainLayout';
-import HeroSection from '@/app/components/shared/HeroSection';
-import MeetTherapist from '@/app/components/sections/meetTherapist';
-import MyStudio from '@/app/components/sections/myStudio';
-import ContactInfo from '@/app/components/sections/contactInfo';
-import CTASection from '../components/sections/cta';
+import { MainLayout } from '@/components/layout/MainLayout';
+import HeroSection from '@/components/shared/HeroSection';
+import MeetTherapist from '@/components/sections/meetTherapist';
+import MyStudio from '@/components/sections/myStudio';
+import ContactInfo from '@/components/sections/contactInfo';
+import CTASection from '../../components/sections/cta';
 export default function AboutPage() {
   return (
     <MainLayout>

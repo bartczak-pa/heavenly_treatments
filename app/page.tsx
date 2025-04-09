@@ -1,9 +1,9 @@
 import React from 'react';
-import { MainLayout } from '@/app/components/layout/MainLayout';
-import Testimonials from '@/app/components/sections/testimonials';
-import CTASection from './components/sections/cta';
-import MainHeader from './components/sections/mainHeader';
-import ServicesSection from './components/sections/services';
+import { MainLayout } from '@/components/layout/MainLayout';
+import Testimonials from '@/components/sections/testimonials';
+import CTASection from '../components/sections/cta';
+import MainHeader from '../components/sections/mainHeader';
+import ServicesSection from '../components/sections/services';
 
 const HomePage: React.FC = () => {
   return (

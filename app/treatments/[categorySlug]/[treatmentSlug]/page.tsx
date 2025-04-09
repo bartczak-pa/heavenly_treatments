@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
-import { Button } from '@//app/components/ui/button';
-import { MainLayout } from '@/app/components/layout/MainLayout';
+import { Button } from '@/components/ui/button';
+import { MainLayout } from '@/components/layout/MainLayout';
 import { getTreatmentBySlug, getTreatments } from '@/lib/data/treatments';
 import { notFound } from 'next/navigation';
 

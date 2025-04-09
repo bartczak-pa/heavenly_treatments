@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import { MainLayout } from '@/app/components/layout/MainLayout';
-import HeroSection from '@/app/components/shared/HeroSection';
-import ContactInfo, { contactInfo } from '@/app/components/Contact/ContactInfo';
-import MapEmbed from '@/app/components/Contact/MapEmbed';
-import ContactForm from '@/app/components/Contact/ContactForm';
+import { MainLayout } from '@/components/layout/MainLayout';
+import HeroSection from '@/components/shared/HeroSection';
+import ContactInfo, { contactInfo } from '@/components/Contact/ContactInfo';
+import MapEmbed from '@/components/Contact/MapEmbed';
+import ContactForm from '@/components/Contact/ContactForm';
 
 
 const ContactPage: React.FC = () => {
