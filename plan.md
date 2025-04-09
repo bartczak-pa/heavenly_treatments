@@ -10,10 +10,14 @@
   - Set up pages or app router structure following Next.js best practices
   - Organize public assets folder for images
   - Create lib directory with the following structure:
-    - /lib/api - For API interactions and data fetching
-    - /lib/utils - For utility functions
-    - /lib/hooks - For custom React hooks
-    - /lib/constants - For shared constants and data
+    - /lib/api - For API interactions and data fetching  
+      • Purpose: To abstract API calls, manage data fetching, handle errors, and implement caching strategies where needed.
+    - /lib/utils - For utility functions  
+      • Purpose: To store general helper functions that provide common data transformations and operations reusable across the application.
+    - /lib/hooks - For custom React hooks  
+      • Purpose: To encapsulate and reuse stateful logic and side effects throughout the app.
+    - /lib/constants - For shared constants and data  
+      • Purpose: To centralize configuration values, enumerations, and static data ensuring consistency across different modules.
 - [ ] Configure environment variables
   - Create .env.local for development
   - Document required environment variables
