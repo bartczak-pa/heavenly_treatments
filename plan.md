@@ -5,10 +5,15 @@
   - Set up Prettier with appropriate rules
   - Configure ESLint for code quality and consistency
   - Add pre-commit hooks (husky + lint-staged)
-- [ ] Set up project structure
+- [X] Set up project structure
   - Create components, layouts, and lib directories
   - Set up pages or app router structure following Next.js best practices
   - Organize public assets folder for images
+  - Create lib directory with the following structure:
+    - /lib/api - For API interactions and data fetching
+    - /lib/utils - For utility functions
+    - /lib/hooks - For custom React hooks
+    - /lib/constants - For shared constants and data
 - [ ] Configure environment variables
   - Create .env.local for development
   - Document required environment variables
@@ -30,6 +35,11 @@
   - Build Card components for treatments
   - Implement Section components for page structure
   - Create responsive Image components
+- [ ] Implement shared utilities and constants
+  - Create formatting utilities for dates, prices, and durations
+  - Set up validation functions for forms
+  - Define shared hooks for responsive design
+  - Establish constants for categories, benefits, and site configuration
 
 ## 3. Page Implementation
 - [ ] Build Home Page
@@ -64,6 +74,8 @@
   - Create API route for contact form submission
   - Implement email sending functionality (SendGrid or similar)
   - Add form validation and error handling
+  - Build reusable form submission functions in /lib/api/contact.ts
+  - Implement client-side validation with /lib/utils/validation.ts
 - [ ] Implement Calendly booking
   - Research Calendly embed options
   - Create Calendly integration component
@@ -79,9 +91,8 @@
   - Define types for treatments, categories, and services
   - Create static data files for initial content
   - Implement data fetching methods
-- [ ] Set up testimonials data
-  - Create testimonial data structure
-  - Implement display components
+  - Build treatment data utilities in /lib/api/treatments.ts
+  - Define treatment categories and constants in /lib/constants/treatments.ts
 
 ## 6. SEO & Performance
 - [ ] Implement SEO optimization
@@ -113,6 +124,7 @@
   - Update README with project overview and setup instructions
   - Document component usage and patterns
   - Add comments for complex logic
+  - Document the purpose and usage of /lib directory structure
 - [ ] Prepare for production
   - Run final performance audits
   - Check for accessibility issues
