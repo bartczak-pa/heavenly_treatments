@@ -20,6 +20,7 @@ export interface Treatment {
     id: string;
     slug: TreatmentCategorySlug;
     name: string;
+    image: string; // Relative path to the image in /public
     description?: string; // Optional description for the category page
     shortDescription?: string; // Optional short description for Nav or previews
   }
@@ -40,6 +41,7 @@ export interface Treatment {
       name: 'Massages',
       description: 'Relax and rejuvenate with our range of massage therapies.',
       shortDescription: 'Relax and unwind with our therapeutic massage services.',
+      image: '/images/treatments/massage.jpg',
     },
     {
       id: 'cat-2',
@@ -47,6 +49,7 @@ export interface Treatment {
       name: 'Facial Treatments',
       description: 'Revitalize your skin with our specialized facial treatments.',
       shortDescription: 'Rejuvenate your skin with our specialized facial treatments.',
+      image: '/images/treatments/facial.jpg',
     },
     {
       id: 'cat-3',
@@ -54,6 +57,7 @@ export interface Treatment {
       name: 'Body Treatments',
       description: 'Nourish and pamper your body from head to toe.',
       shortDescription: 'Experience our luxurious body treatments and therapies.',
+      image: '/images/treatments/body-treatment.jpg',
     },
     {
       id: 'cat-4',
@@ -61,6 +65,7 @@ export interface Treatment {
       name: 'Waxing Services',
       description: 'Professional waxing services for various areas.',
       shortDescription: 'Professional waxing services for smooth, hair-free skin.',
+      image: '/images/treatments/waxing.jpg',
     },
     {
       id: 'cat-5',
@@ -68,6 +73,7 @@ export interface Treatment {
       name: 'Nail Care',
       description: 'Manicures, pedicures, and nail enhancements.',
       shortDescription: 'Pamper your hands and feet with our nail care services.',
+      image: '/images/treatments/nails.jpg',
     },
   ];
   

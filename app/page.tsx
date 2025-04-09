@@ -1,72 +1,20 @@
 import React from 'react';
-import Image from 'next/image';
 import { MainLayout } from '@/app/components/layout/MainLayout';
 import Testimonials from '@/app/components/sections/testimonials';
 import CTASection from './components/sections/cta';
 import MainHeader from './components/sections/mainHeader';
+import ServicesSection from './components/sections/services';
+
 const HomePage: React.FC = () => {
   return (
     <MainLayout>
       <MainHeader />
 
       {/* Services Section */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">Our Services</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Map through your services data here */}
-            <div className="group relative overflow-hidden rounded-lg shadow-lg">
-              <Image
-                src="/images/massage.jpg" //TODO:  Replace with service image paths
-                alt="Massage Therapy"
-                width={400}
-                height={300}
-                className="object-cover transition-transform duration-300 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent">
-                <div className="absolute bottom-0 p-6">
-                  <h3 className="text-2xl font-semibold text-white mb-2">Massage Therapy</h3>
-                  <p className="text-gray-200">Professional massage treatments to relieve stress and tension.</p>
-                </div>
-              </div>
-            </div>
-            <div className="group relative overflow-hidden rounded-lg shadow-lg">
-              <Image
-                src="/images/facial.jpg" //TODO:  Replace with service image paths
-                alt="Facial Treatments"
-                width={400}
-                height={300}
-                className="object-cover transition-transform duration-300 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent">
-                <div className="absolute bottom-0 p-6">
-                  <h3 className="text-2xl font-semibold text-white mb-2">Facial Treatments</h3>
-                  <p className="text-gray-200">Luxurious facials for glowing, healthy skin.</p>
-                </div>
-              </div>
-            </div>
-            <div className="group relative overflow-hidden rounded-lg shadow-lg">
-              <Image
-                src="/images/body-treatment.jpg" //TODO:   Replace with service image paths
-                alt="Body Treatments"
-                width={400}
-                height={300}
-                className="object-cover transition-transform duration-300 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent">
-                <div className="absolute bottom-0 p-6">
-                  <h3 className="text-2xl font-semibold text-white mb-2">Body Treatments</h3>
-                  <p className="text-gray-200">Rejuvenating body treatments for complete relaxation.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ServicesSection />
 
       <Testimonials />
 
-      {/* Call-to-Action Section */}
       <CTASection
         title="Ready to Experience Heaven?"
         description="Book your appointment today and start your journey to relaxation and rejuvenation."
