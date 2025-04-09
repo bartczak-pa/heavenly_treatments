@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Button } from '@/app/components/ui/button';
 import { MainLayout } from '@/app/components/layout/MainLayout';
 import Testimonials from '@/app/components/sections/testimonials';
+import CTASection from './components/sections/cta';
 const HomePage: React.FC = () => {
   return (
     <MainLayout>
@@ -89,17 +90,12 @@ const HomePage: React.FC = () => {
       <Testimonials />
 
       {/* Call-to-Action Section */}
-      <section className="py-20 bg-black text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold mb-6">Ready to Experience Heaven?</h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Book your appointment today and start your journey to relaxation and rejuvenation.
-          </p>
-          <Button size="lg" className="bg-white text-black hover:bg-gray-100">
-            Book Now
-          </Button>
-        </div>
-      </section>
+      <CTASection
+        title="Ready to Experience Heaven?"
+        description="Book your appointment today and start your journey to relaxation and rejuvenation."
+        buttonText="Book Now"
+        buttonLink="/contact"
+      />
     </MainLayout>
   );
 };
