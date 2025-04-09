@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { treatmentCategories } from '@/lib/data/treatments';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/UI/button';
 
 const ServicesSection = () => {
     const [showAll, setShowAll] = useState(false);

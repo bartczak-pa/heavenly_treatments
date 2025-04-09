@@ -3,7 +3,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/UI/button';
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -12,14 +12,14 @@ import {
   NavigationMenuTrigger,
   NavigationMenuContent,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+} from "@/components/UI/navigation-menu";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "@/components/UI/sheet";
 import { Menu } from 'lucide-react';
 import { treatmentCategories } from '@/lib/data/treatments';
 

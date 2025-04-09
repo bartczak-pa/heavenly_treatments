@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { MainLayout } from '@/components/layout/MainLayout';
-import HeroSection from '@/components/shared/HeroSection';
+import { MainLayout } from '@/components/Layout/MainLayout';
+import HeroSection from '@/components/Shared/HeroSection';
 import ContactInfo, { contactInfo } from '@/components/Contact/ContactInfo';
 import MapEmbed from '@/components/Contact/MapEmbed';
 import ContactForm from '@/components/Contact/ContactForm';

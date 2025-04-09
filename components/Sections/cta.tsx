@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 
-import { Button } from '../ui/button';
+import { Button } from '../UI/button';
 import Link from 'next/link';
 
 type CTAProps = {
