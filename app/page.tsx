@@ -1,36 +1,13 @@
 import React from 'react';
 import Image from 'next/image';
-import { Button } from '@/app/components/ui/button';
 import { MainLayout } from '@/app/components/layout/MainLayout';
 import Testimonials from '@/app/components/sections/testimonials';
 import CTASection from './components/sections/cta';
+import MainHeader from './components/sections/mainHeader';
 const HomePage: React.FC = () => {
   return (
     <MainLayout>
-      {/* Hero Section */}
-      <section className="relative h-screen">
-        <div className="absolute inset-0">
-          <Image
-            src="/images/spa-hero.jpg" //TODO:  Replace with hero image path
-            alt="Luxury Spa Interior"
-            fill
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0 bg-black/50" />
-        </div>
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-white px-4">
-          <h1 className="text-5xl md:text-7xl font-bold text-center mb-6">
-            Experience Heavenly Treatments
-          </h1>
-          <p className="text-xl md:text-2xl text-center mb-8 max-w-2xl">
-            Indulge in luxury spa treatments designed to rejuvenate your body and soul.
-          </p>
-          <Button size="lg" className="bg-white text-black hover:bg-gray-100">
-            Book Your Treatment
-          </Button>
-        </div>
-      </section>
+      <MainHeader />
 
       {/* Services Section */}
       <section className="py-20 bg-white">
