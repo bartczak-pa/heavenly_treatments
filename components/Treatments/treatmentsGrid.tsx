@@ -33,7 +33,7 @@ const TreatmentsGrid: React.FC<TreatmentsGridProps> = ({ treatments }) => {
                     </CardContent>
                     <CardFooter className="p-4">
                         <Button variant="outline" asChild>
-                            <Link href={`/treatments/${treatment.slug}`}>
+                            <Link href={`/treatments/${treatment.category}/${treatment.slug}`}>
                                 View Details
                             </Link>
                         </Button>
