@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Label } from '@/components/UI/label';
-import { Input } from '@/components/UI/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/UI/select';
-import { Textarea } from '@/components/UI/textarea';
-import { Button } from '@/components/UI/button';
-import { Checkbox } from '@/components/UI/checkbox';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 
 
 // Define the structure for form data

@@ -20,14 +20,17 @@ const MyStudio = () => {
                   Book your appointment today and discover the ultimate escape at our cottage spa in Kelso.
                 </p>
               </div>
-              <div className="md:w-1/3">
-                <Image
-                  src="/images/studio.jpg" //TODO: Replace with studio image
-                  alt="Spa Studio"
-                  width={300}
-                  height={400}
-                  className="rounded-lg shadow-lg"
-                />
+              <div className="w-full md:w-1/2">
+                <div className="relative w-full h-[500px] rounded-lg overflow-hidden shadow-lg mx-auto md:mx-0">
+                  <Image
+                    src="/images/about/heavenly-treatments-room.jpg"
+                    alt="Spa Studio"
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="rounded-lg"
+                  />
+                </div>
               </div>
             </div>
           </div>

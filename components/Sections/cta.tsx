@@ -1,26 +1,28 @@
 'use client';
 import React from 'react';
 
-import { Button } from '../UI/button';
+import { Button } from '../ui/button';
 import Link from 'next/link';
 
 type CTAProps = {
     title: string,
     description: string,
-    buttonText: string, 
+    buttonText: string,
     buttonLink: string
 }
 
 const CTASection = ({ title, description, buttonText, buttonLink }: CTAProps) => {
     return (
-        <section className="py-20 bg-black text-white">
+        <section className="py-16 md:py-24 bg-primary">
             <div className="container mx-auto px-4 text-center">
-                <h2 className="text-4xl font-bold mb-6">{title}</h2>
-                <p className="text-xl mb-8 max-w-2xl mx-auto">
+                <h2 className="font-serif text-3xl md:text-4xl font-semibold text-white mb-4">
+                    {title}
+                </h2>
+                <p className="font-sans text-lg text-background/90 mb-8 max-w-2xl mx-auto">
                     {description}
                 </p>
                 <Link href={buttonLink}>
-                    <Button size="lg" className="bg-white text-black hover:bg-gray-100">
+                    <Button size="lg" variant="secondary">
                         {buttonText}
                     </Button>
                 </Link>

@@ -11,7 +11,7 @@ const MeetTherapist = () => {
             <div className="flex flex-col md:flex-row gap-8 items-center">
               <div className="md:w-1/3">
                 <Image
-                  src="/images/therapist.jpg" //TODO: Replace with therapist image
+                  src="/images/about/owner-of-heavenly-treatments.jpg"
                   alt="Spa Therapist"
                   width={300}
                   height={400}

@@ -1,54 +1,63 @@
-'use client';
-
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
+import { getTreatments, getCategories, TreatmentCategorySlug, TreatmentCategory } from '@/lib/data/treatments';
 import { MainLayout } from '@/components/Layout/MainLayout';
-import { getTreatments, Treatment, TreatmentCategorySlug } from '@/lib/data/treatments';
 import CategoryFilters from '@/components/Treatments/categoryFilters';
-import TreatmentsGrid from '@/components/Treatments/treatmentsGrid';
+import FilteredTreatmentsDisplay from '@/components/Treatments/FilteredTreatmentsDisplay';
 
+export default function TreatmentsPage({ 
+  searchParams 
+}: { 
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) {
+  const allTreatments = getTreatments();
+  const categories: TreatmentCategory[] = getCategories();
 
-const allTreatments: Treatment[] = getTreatments();
+  const selectedCategorySlug = searchParams?.category as TreatmentCategorySlug | null;
+  const currentSelection: TreatmentCategorySlug | 'all' = 
+    selectedCategorySlug && categories.some(c => c.slug === selectedCategorySlug) 
+      ? selectedCategorySlug 
+      : 'all';
 
+  const currentCategoryData: TreatmentCategory | null = useMemo(() => {
+    if (currentSelection === 'all') {
+      return null;
+    }
+    return categories.find(cat => cat.slug === currentSelection) || null;
+  }, [currentSelection, categories]);
 
-export default function TreatmentsOverviewPage() {
-  // State for the selected category filter
-  const [selectedCategory, setSelectedCategory] = useState<TreatmentCategorySlug | 'all'>('all');
-
-  // Memoize filtered treatments to avoid recalculation on every render
   const filteredTreatments = useMemo(() => {
-    if (selectedCategory === 'all') {
+    if (currentSelection === 'all') {
       return allTreatments;
     }
-    return allTreatments.filter(treatment => treatment.category === selectedCategory);
-  }, [selectedCategory]); // Recalculate only when selectedCategory changes
-
-  const handleCategoryChange = (value: string) => {
-    setSelectedCategory(value as TreatmentCategorySlug | 'all');
-  };
+    return allTreatments.filter(treatment => treatment.category === currentSelection);
+  }, [currentSelection, allTreatments]);
 
   return (
     <MainLayout>
-      <div className="container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold text-center mb-4 text-primary">
-          My Treatments
-        </h1>
-        <p className="text-lg text-center text-muted-foreground mb-8 max-w-2xl mx-auto">
-          Discover a range of therapies designed to relax your body, rejuvenate your skin, and restore your sense of well-being.
-        </p>
+      <section className="py-16 md:py-24 bg-primary/10">
+        <div className="container mx-auto px-4">
+          <h1 className="font-serif text-3xl md:text-4xl font-semibold text-primary text-center mb-8">
+            {currentCategoryData ? currentCategoryData.name : 'All Treatments'}
+          </h1>
 
-        <CategoryFilters
-          selectedCategory={selectedCategory}
-          onCategoryChange={handleCategoryChange}
-        />
+          <CategoryFilters 
+            selectedCategory={currentSelection}
+          />
 
-        {filteredTreatments.length > 0 ? (
-          <TreatmentsGrid treatments={filteredTreatments} />
-        ) : (
-          <p className="text-center text-muted-foreground mt-8">
-            No treatments found for the selected category.
-          </p>
-        )}
-      </div>
+          {currentCategoryData && (
+            <div className="text-center mb-12">
+              <p className="font-sans text-lg text-muted-foreground max-w-xl mx-auto">
+                {currentCategoryData.shortDescription || currentCategoryData.description}
+              </p>
+            </div>
+          )}
+
+          <FilteredTreatmentsDisplay 
+            filteredTreatments={filteredTreatments}
+            currentSelection={currentSelection}
+          />
+        </div>
+      </section>
     </MainLayout>
   );
 }
