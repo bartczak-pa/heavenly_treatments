@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@/components/UI/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/UI/select';
+import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { getCategories, TreatmentCategorySlug } from '@/lib/data/treatments'; 
 
 interface CategoryFiltersProps {

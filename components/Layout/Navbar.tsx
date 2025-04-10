@@ -1,9 +1,9 @@
 // components/layout/Navbar.tsx
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/UI/button';
+import { Button } from '@/components/ui/button';
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -12,24 +12,31 @@ import {
   NavigationMenuTrigger,
   NavigationMenuContent,
   navigationMenuTriggerStyle,
-} from "@/components/UI/navigation-menu";
+} from "@/components/ui/navigation-menu";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/UI/sheet";
-import { Menu } from 'lucide-react';
+} from "@/components/ui/sheet";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { Menu, ChevronRight, ChevronDown } from 'lucide-react';
 import { treatmentCategories } from '@/lib/data/treatments';
 
 export default function Navbar() {
+  const [isMobileTreatmentsOpen, setIsMobileTreatmentsOpen] = useState(false);
+
   return (
-    <header className="w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40">
       <nav className="container flex h-16 items-center">
         {/* Left Navigation Menu - Desktop */}
         <div className="hidden lg:flex items-center space-x-6">
-          <NavigationMenu>
+          <NavigationMenu className="relative z-50">
             <NavigationMenuList>
               <NavigationMenuItem>
                 <Link href="/" legacyBehavior passHref>
@@ -52,14 +59,14 @@ export default function Navbar() {
                     <li className="row-span-2 md:row-span-3">
                       <NavigationMenuLink asChild>
                         <Link
-                          className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                          className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-secondary/50 to-secondary p-6 no-underline outline-none focus:shadow-md"
                           href="/treatments"
                         >
-                          <div className="mb-2 mt-4 text-lg font-medium">
+                          <div className="mb-2 mt-4 text-lg font-medium text-secondary-foreground">
                             All Treatments
                           </div>
-                          <p className="text-sm leading-tight text-muted-foreground">
-                            Explore our full range of treatments.
+                          <p className="text-sm leading-tight text-secondary-foreground/80">
+                            Explore my full range of treatments.
                           </p>
                         </Link>
                       </NavigationMenuLink>
@@ -98,17 +105,17 @@ export default function Navbar() {
         {/* Centered Logo */}
         <div className="flex-1 flex justify-center">
           <Link href="/" className="flex items-center space-x-2">
-            <span className="text-xl font-bold">Heavenly Treatments with Hayleybell</span>
+            <span className="text-xl font-bold font-serif text-primary">Heavenly Treatments with Hayleybell</span>
           </Link>
         </div>
 
         {/* Book Now Button - Desktop */}
         <div className="hidden lg:flex items-center">
-          <Link href="/book">
-            <Button variant="default" size="sm">
+          <Button variant="default" size="sm" asChild>
+            <Link href="/#calendly-embed">
               Book Now
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
 
         {/* Mobile Menu Button */}
@@ -120,45 +127,65 @@ export default function Navbar() {
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+            <SheetContent side="right" className="w-[300px] sm:w-[400px] z-50">
               <SheetHeader>
                 <SheetTitle>Menu</SheetTitle>
               </SheetHeader>
-              <div className="flex flex-col space-y-3 mt-4">
+              <div className="flex flex-col space-y-3 mt-4 pl-4 pr-4">
                 <Link href="/" className="text-sm font-medium transition-colors hover:text-primary">
                   Home
                 </Link>
                 <Link href="/about" className="text-sm font-medium transition-colors hover:text-primary">
                   About Me
                 </Link>
-                <div className="flex flex-col space-y-2">
-                  <Link href="/treatments" className="text-sm font-medium transition-colors hover:text-primary">
-                    Treatments
-                  </Link>
-                  <div className="flex flex-col space-y-2 pl-4">
-                    <Link href="/treatments" className="text-sm text-muted-foreground hover:text-primary">
-                      All Treatments
-                    </Link>
-                    {treatmentCategories.map((category) => (
-                      <Link
-                        key={category.id}
-                        href={`/treatments/${category.slug}`}
-                        className="text-sm text-muted-foreground hover:text-primary"
-                      >
-                        {category.name}
-                      </Link>
-                    ))}
+
+                <Collapsible
+                  open={isMobileTreatmentsOpen}
+                  onOpenChange={setIsMobileTreatmentsOpen}
+                >
+                  <div className="flex items-center">
+                     <Link href="/treatments" className="text-sm font-medium transition-colors hover:text-primary">
+                       Treatments
+                     </Link>
+                     <CollapsibleTrigger asChild>
+                        <Button variant="ghost" size="sm" className="w-9 p-0 ml-2">
+                          {isMobileTreatmentsOpen ? (
+                            <ChevronDown className="h-4 w-4" />
+                          ) : (
+                            <ChevronRight className="h-4 w-4" />
+                          )}
+                          <span className="sr-only">Toggle Treatments</span>
+                        </Button>
+                      </CollapsibleTrigger>
                   </div>
-                </div>
+
+                  <CollapsibleContent>
+                    <div className="flex flex-col space-y-2 pl-4 pt-2">
+                      <Link href="/treatments" className="text-sm text-muted-foreground hover:text-primary">
+                        All Treatments
+                      </Link>
+                      {treatmentCategories.map((category) => (
+                        <Link
+                          key={category.id}
+                          href={`/treatments/${category.slug}`}
+                          className="text-sm text-muted-foreground hover:text-primary"
+                        >
+                          {category.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+
                 <Link href="/contact" className="text-sm font-medium transition-colors hover:text-primary">
                   Contact
                 </Link>
                 <div className="pt-4">
-                  <Link href="/book">
-                    <Button variant="default" className="w-full">
+                  <Button variant="default" className="w-full" asChild>
+                    <Link href="/#calendly-embed">
                       Book Now
-                    </Button>
-                  </Link>
+                    </Link>
+                  </Button>
                 </div>
               </div>
             </SheetContent>

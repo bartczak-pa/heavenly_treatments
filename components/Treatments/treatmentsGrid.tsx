@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/UI/card';
-import { Button } from '@/components/UI/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Treatment } from '@/lib/data/treatments';
 import Image from 'next/image';
 import Link from 'next/link';

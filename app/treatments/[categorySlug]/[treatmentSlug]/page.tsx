@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { Button } from '@/components/UI/button';
+import { Button } from '@/components/ui/button';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import { getTreatmentBySlug, getTreatments } from '@/lib/data/treatments';
 import { notFound } from 'next/navigation';
