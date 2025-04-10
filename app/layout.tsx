@@ -2,6 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./styles/globals.css";
+import { validateEnv } from '@/lib/env';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,6 +13,9 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+// Validate environment variables on startup
+validateEnv();
 
 export const metadata: Metadata = {
   title: "Heavenly Treatments",
