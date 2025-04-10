@@ -34,7 +34,7 @@ const ServicesSection = () => {
                                 'md:block'
                              )}
                         >
-                             <Card className="flex flex-col h-full overflow-hidden shadow-md hover:shadow-xl">
+                             <Card className="flex flex-col h-full overflow-hidden shadow-md hover:shadow-xl group p-0">
                                  <div className="relative w-full h-52 overflow-hidden">
                                     {category.image ? (
                                         <Image

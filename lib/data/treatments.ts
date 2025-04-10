@@ -51,7 +51,7 @@ export interface Treatment {
       name: 'Seasonal Treatments',
       description: 'Relax and rejuvenate with my range of seasonal treatments.',
       shortDescription: 'Relax and rejuvenate with my range of seasonal treatments.',
-      image: '/images/categories/seasonal-treatments.jpg',
+      image: '/images/categories/products_used_for_seasonal_treatments.jpg',
       iconName: 'Sun',
     },
     {
@@ -60,7 +60,7 @@ export interface Treatment {
       name: 'Massages',
       description: 'Revitalize your skin with my range of massages.',
       shortDescription: 'Rejuvenate your skin with my range of massages.',
-      image: '/images/categories/massages.jpg',
+      image: '/images/categories/woman-with-closed-eyes-enjoying-massage.jpg',
       iconName: 'HandHelping',
     },
     {
@@ -69,7 +69,7 @@ export interface Treatment {
       name: 'Facials',
       description: 'Nourish and pamper your body from head to toe.',
       shortDescription: 'Experience our luxurious body treatments and therapies.',
-      image: '/images/categories/facials.jpg',
+      image: '/images/categories/woman-salon-making-beauty-treatment-with-gua-sha-stone.jpg',
       iconName: 'SmilePlus',
     },
     {
@@ -78,7 +78,7 @@ export interface Treatment {
       name: 'Body Treatments',
       description: 'Professional waxing services for various areas.',
       shortDescription: 'Professional waxing services for smooth, hair-free skin.',
-      image: '/images/categories/body-treatments.jpg',
+      image: '/images/categories/woman-having-body-treatment.jpg',
       iconName: 'PersonStanding',
     },
     {
@@ -87,7 +87,7 @@ export interface Treatment {
       name: 'Reflexology',
       description: 'Relax and rejuvenate with my range of reflexology treatments.',
       shortDescription: 'Relax and rejuvenate with my range of reflexology treatments.',
-      image: '/images/categories/reflexology.jpg',
+      image: '/images/categories/person_having_reflexology_treatment.png',
       iconName: 'Footprints',
     },
   ];
