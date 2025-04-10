@@ -18,10 +18,10 @@
       • Purpose: To encapsulate and reuse stateful logic and side effects throughout the app.
     - /lib/constants - For shared constants and data  
       • Purpose: To centralize configuration values, enumerations, and static data ensuring consistency across different modules.
-- [ ] Configure environment variables
+- [X] Configure environment variables
   - Create .env.local for development
   - Document required environment variables
-- [ ] Set up deployment configuration
+- [X] Set up deployment configuration
   - Configure Vercel project settings
   - Set up production environment variables
 
