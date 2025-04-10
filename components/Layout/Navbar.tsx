@@ -118,7 +118,7 @@ export default function Navbar() {
 
         {/* Book Now Button - Desktop */}
         <div className="hidden lg:flex items-center">
-          <Button variant="default" size="sm" asChild>
+          <Button variant="default" size="lg" asChild>
             <Link href="/#calendly-embed">
               Book Now
             </Link>
