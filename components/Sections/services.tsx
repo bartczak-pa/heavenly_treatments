@@ -14,7 +14,7 @@ const ServicesSection = () => {
     const initialVisibleCount = 3;
 
     return (
-        <section className="py-16 md:py-24 bg-muted">
+        <section className="py-16 md:py-24 bg-primary/10">
             <div className="container mx-auto px-4">
                 <h2 className="font-serif text-3xl md:text-4xl font-semibold text-primary text-center mb-4">
                     Explore My Services
@@ -74,7 +74,7 @@ const ServicesSection = () => {
                     </div>
                 )}
                  <div className="text-center mt-12 hidden md:block">
-                      <Button variant="outline" size="lg" asChild>
+                      <Button variant="default" size="lg" asChild>
                          <Link href="/treatments">View All Treatments</Link>
                       </Button>
                  </div>

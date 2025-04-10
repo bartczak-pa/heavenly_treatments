@@ -27,12 +27,13 @@ import {
 } from "@/components/ui/collapsible";
 import { Menu, ChevronRight, ChevronDown } from 'lucide-react';
 import { treatmentCategories, categoryIconMap } from '@/lib/data/treatments';
+import { cn } from '@/lib/utils';
 
 export default function Navbar() {
   const [isMobileTreatmentsOpen, setIsMobileTreatmentsOpen] = useState(false);
 
   return (
-    <header className="w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky z-40">
+    <header className="w-full border-b bg-secondary/15 backdrop-blur supports-[backdrop-filter]:bg-secondary/15 sticky z-40">
       <nav className="container flex h-16 items-center">
         {/* Left Navigation Menu - Desktop */}
         <div className="hidden lg:flex items-center space-x-6">
@@ -40,22 +41,22 @@ export default function Navbar() {
             <NavigationMenuList>
               <NavigationMenuItem>
                 <Link href="/" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "bg-transparent")}>
                     Home
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <Link href="/about" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "bg-transparent")}>
                     About Me
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <NavigationMenuTrigger>Treatments</NavigationMenuTrigger>
+                <NavigationMenuTrigger className="bg-transparent">Treatments</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2">
+                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 bg-secondary/15">
                     <li className="row-span-2 md:row-span-3">
                       <NavigationMenuLink asChild>
                         <Link
@@ -100,7 +101,7 @@ export default function Navbar() {
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <Link href="/contact" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "bg-transparent")}>
                     Contact
                   </NavigationMenuLink>
                 </Link>
@@ -119,7 +120,7 @@ export default function Navbar() {
         {/* Book Now Button - Desktop */}
         <div className="hidden lg:flex items-center">
           <Button variant="default" size="lg" asChild>
-            <Link href="/#calendly-embed">
+            <Link href="/contact#booking-form">
               Book Now
             </Link>
           </Button>
@@ -195,8 +196,8 @@ export default function Navbar() {
                   Contact
                 </Link>
                 <div className="pt-4">
-                  <Button variant="default" className="w-full" asChild>
-                    <Link href="/#calendly-embed">
+                  <Button variant="ghost" className="w-full" asChild>
+                    <Link href="/contact#booking-form">
                       Book Now
                     </Link>
                   </Button>
