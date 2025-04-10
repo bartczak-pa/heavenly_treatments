@@ -60,8 +60,7 @@ const TreatmentsPage = () => {
 
           {treatmentsToShow.length > 0 ? (
             <TreatmentsGrid 
-              treatments={treatmentsToShow} 
-              selectedCategory={selectedCategory} 
+              treatments={treatmentsToShow}  
             />
           ) : (
             <p className="text-center text-muted-foreground mt-8">
