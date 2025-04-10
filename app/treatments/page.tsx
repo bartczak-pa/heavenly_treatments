@@ -4,7 +4,11 @@ import { MainLayout } from '@/components/Layout/MainLayout';
 import CategoryFilters from '@/components/Treatments/categoryFilters';
 import FilteredTreatmentsDisplay from '@/components/Treatments/FilteredTreatmentsDisplay';
 
-export default function TreatmentsPage({ searchParams }: { searchParams?: { category?: string } }) {
+export default function TreatmentsPage({ 
+  searchParams 
+}: { 
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) {
   const allTreatments = getTreatments();
   const categories: TreatmentCategory[] = getCategories();
 
