@@ -32,11 +32,11 @@ export default function Navbar() {
   const [isMobileTreatmentsOpen, setIsMobileTreatmentsOpen] = useState(false);
 
   return (
-    <header className="w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40">
+    <header className="w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky z-40">
       <nav className="container flex h-16 items-center">
         {/* Left Navigation Menu - Desktop */}
         <div className="hidden lg:flex items-center space-x-6">
-          <NavigationMenu className="relative z-50">
+          <NavigationMenu className="relative z-50 pl-2">
             <NavigationMenuList>
               <NavigationMenuItem>
                 <Link href="/" legacyBehavior passHref>
