@@ -16,10 +16,9 @@ interface TreatmentCardProps {
 const TreatmentCard: React.FC<TreatmentCardProps> = ({ treatment }) => {
   return (
     <Link href={`/treatments/${treatment.category}/${treatment.slug}`} className="group block">
-      {/* Apply ring unconditionally */}
+      
       <Card className={cn(
-        "flex flex-col h-full overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 ring-1 ring-primary/50",
-        // Removed conditional logic
+        "flex flex-col h-full overflow-hidden  hover:shadow-lg transition-all duration-300  pt-0",
       )}>
         <div className="relative w-full h-52 overflow-hidden">
           {treatment.image ? (

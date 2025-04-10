@@ -39,7 +39,7 @@ const TreatmentsPage = () => {
 
   return (
     <MainLayout>
-      <section className="py-16 md:py-24 bg-secondary">
+      <section className="py-16 md:py-24 bg-primary/10">
         <div className="container mx-auto px-4">
           <h1 className="font-serif text-3xl md:text-4xl font-semibold text-primary text-center mb-8">
             {currentCategoryData ? currentCategoryData.name : 'All Treatments'}
