@@ -26,7 +26,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Menu, ChevronRight, ChevronDown } from 'lucide-react';
-import { treatmentCategories } from '@/lib/data/treatments';
+import { treatmentCategories, categoryIconMap } from '@/lib/data/treatments';
 
 export default function Navbar() {
   const [isMobileTreatmentsOpen, setIsMobileTreatmentsOpen] = useState(false);
@@ -71,23 +71,30 @@ export default function Navbar() {
                         </Link>
                       </NavigationMenuLink>
                     </li>
-                    {treatmentCategories.map((category) => (
-                      <li key={category.id}>
-                        <NavigationMenuLink asChild>
-                          <Link
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                            href={`/treatments/${category.slug}`}
-                          >
-                            <div className="text-sm font-medium leading-none">{category.name}</div>
-                            {category.shortDescription && (
-                              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                                {category.shortDescription}
-                              </p>
-                            )}
-                          </Link>
-                        </NavigationMenuLink>
-                      </li>
-                    ))}
+                    {treatmentCategories.map((category) => {
+                      const IconComponent = category.iconName ? categoryIconMap[category.iconName] : null;
+
+                      return (
+                        <li key={category.id}>
+                          <NavigationMenuLink asChild>
+                            <Link
+                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                              href={`/treatments/${category.slug}`}
+                            >
+                              <div className="flex items-center space-x-3">
+                                {IconComponent && <IconComponent className="h-4 w-4 flex-shrink-0 text-primary" />}
+                                <div className="text-sm font-medium leading-none">{category.name}</div>
+                              </div>
+                              {category.shortDescription && (
+                                <p className="line-clamp-2 text-sm leading-snug text-muted-foreground mt-1">
+                                  {category.shortDescription}
+                                </p>
+                              )}
+                            </Link>
+                          </NavigationMenuLink>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
@@ -164,15 +171,22 @@ export default function Navbar() {
                       <Link href="/treatments" className="text-sm text-muted-foreground hover:text-primary">
                         All Treatments
                       </Link>
-                      {treatmentCategories.map((category) => (
-                        <Link
-                          key={category.id}
-                          href={`/treatments/${category.slug}`}
-                          className="text-sm text-muted-foreground hover:text-primary"
-                        >
-                          {category.name}
-                        </Link>
-                      ))}
+                      {treatmentCategories.map((category) => {
+                        const IconComponent = category.iconName ? categoryIconMap[category.iconName] : null;
+
+                        return (
+                          <Link
+                            key={category.id}
+                            href={`/treatments/${category.slug}`}
+                            className="text-sm text-muted-foreground hover:text-primary"
+                          >
+                            <div className="flex items-center space-x-3">
+                              {IconComponent && <IconComponent className="h-4 w-4 flex-shrink-0 text-primary pr-0.5" />}
+                              {category.name}
+                            </div>
+                          </Link>
+                        );
+                      })}
                     </div>
                   </CollapsibleContent>
                 </Collapsible>
