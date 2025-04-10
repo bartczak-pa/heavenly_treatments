@@ -1,41 +1,32 @@
-'use client';
-
-import React, { useState, useMemo } from 'react';
-import { getTreatments, getCategories, TreatmentCategorySlug } from '@/lib/data/treatments';
+import React, { useMemo } from 'react';
+import { getTreatments, getCategories, TreatmentCategorySlug, TreatmentCategory } from '@/lib/data/treatments';
 import { MainLayout } from '@/components/Layout/MainLayout';
-import { Button } from '@/components/ui/button';
 import CategoryFilters from '@/components/Treatments/categoryFilters';
-import TreatmentsGrid from '@/components/Treatments/treatmentsGrid';
+import FilteredTreatmentsDisplay from '@/components/Treatments/FilteredTreatmentsDisplay';
 
-const TreatmentsPage = () => {
+export default function TreatmentsPage({ searchParams }: { searchParams?: { category?: string } }) {
   const allTreatments = getTreatments();
-  const categories = getCategories();
-  const initialVisibleCount = 6;
+  const categories: TreatmentCategory[] = getCategories();
 
-  const [selectedCategory, setSelectedCategory] = useState<TreatmentCategorySlug | 'all'>('all');
-  const [visibleCount, setVisibleCount] = useState(initialVisibleCount);
+  const selectedCategorySlug = searchParams?.category as TreatmentCategorySlug | null;
+  const currentSelection: TreatmentCategorySlug | 'all' = 
+    selectedCategorySlug && categories.some(c => c.slug === selectedCategorySlug) 
+      ? selectedCategorySlug 
+      : 'all';
 
-  const currentCategoryData = useMemo(() => {
-    if (selectedCategory === 'all') {
+  const currentCategoryData: TreatmentCategory | null = useMemo(() => {
+    if (currentSelection === 'all') {
       return null;
     }
-    return categories.find(cat => cat.slug === selectedCategory);
-  }, [selectedCategory, categories]);
+    return categories.find(cat => cat.slug === currentSelection) || null;
+  }, [currentSelection, categories]);
 
   const filteredTreatments = useMemo(() => {
-    if (selectedCategory === 'all') {
+    if (currentSelection === 'all') {
       return allTreatments;
     }
-    return allTreatments.filter(treatment => treatment.category === selectedCategory);
-  }, [selectedCategory, allTreatments]);
-
-  const treatmentsToShow = filteredTreatments.slice(0, visibleCount);
-  const hasMoreTreatments = filteredTreatments.length > visibleCount;
-
-  const handleCategoryChange = (categorySlug: string) => {
-    setSelectedCategory(categorySlug as TreatmentCategorySlug | 'all');
-    setVisibleCount(initialVisibleCount);
-  };
+    return allTreatments.filter(treatment => treatment.category === currentSelection);
+  }, [currentSelection, allTreatments]);
 
   return (
     <MainLayout>
@@ -46,8 +37,7 @@ const TreatmentsPage = () => {
           </h1>
 
           <CategoryFilters 
-            selectedCategory={selectedCategory}
-            onCategoryChange={handleCategoryChange} 
+            selectedCategory={currentSelection}
           />
 
           {currentCategoryData && (
@@ -58,31 +48,12 @@ const TreatmentsPage = () => {
             </div>
           )}
 
-          {treatmentsToShow.length > 0 ? (
-            <TreatmentsGrid 
-              treatments={treatmentsToShow}  
-            />
-          ) : (
-            <p className="text-center text-muted-foreground mt-8">
-              No treatments found for the selected category.
-            </p>
-          )}
-
-          {hasMoreTreatments && (
-            <div className="text-center mt-12">
-              <Button 
-                onClick={() => setVisibleCount(filteredTreatments.length)}
-                variant="outline"
-                size="lg"
-              >
-                Show All {selectedCategory !== 'all' ? currentCategoryData?.name : ''} Treatments ({filteredTreatments.length})
-              </Button>
-            </div>
-          )}
+          <FilteredTreatmentsDisplay 
+            filteredTreatments={filteredTreatments}
+            currentSelection={currentSelection}
+          />
         </div>
       </section>
     </MainLayout>
   );
-};
-
-export default TreatmentsPage;
+}
