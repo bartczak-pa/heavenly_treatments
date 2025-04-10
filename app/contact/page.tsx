@@ -18,7 +18,7 @@ const ContactPage: React.FC = () => {
         imageUrl="/images/contact/heavenly-treatments-from-outside.jpg"
       />
 
-      <section className="py-16 md:py-24 bg-secondary/20">
+      <section className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-16">
             <div className="lg:order-1">

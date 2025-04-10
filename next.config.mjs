@@ -7,10 +7,10 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        // Source path: Matches /treatments/ followed by any slug
-        source: '/treatments/:categorySlug*',
+        // Source path: Matches /treatments/ followed by a single slug segment
+        source: '/treatments/:categorySlug',
         // Destination path: Maps to the treatments page with a query parameter
-        destination: '/treatments?category=:categorySlug*', 
+        destination: '/treatments?category=:categorySlug', 
       },
       // You can add other rewrite rules here if needed
     ];

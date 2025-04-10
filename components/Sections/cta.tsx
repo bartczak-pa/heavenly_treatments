@@ -22,7 +22,7 @@ const CTASection = ({ title, description, buttonText, buttonLink }: CTAProps) =>
                     {description}
                 </p>
                 <Link href={buttonLink}>
-                    <Button size="lg" variant="outline" >
+                    <Button size="lg" variant="secondary">
                         {buttonText}
                     </Button>
                 </Link>

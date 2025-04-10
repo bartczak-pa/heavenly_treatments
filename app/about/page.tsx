@@ -1,17 +1,18 @@
 // app/about/page.tsx
 import React from 'react';
+import Link from 'next/link';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import MeetTherapist from '@/components/Sections/meetTherapist';
 import MyStudio from '@/components/Sections/myStudio';
 import ContactInfo from '@/components/Sections/contactInfo';
 import CTASection from '../../components/Sections/cta';
+import { Button } from '@/components/ui/button';
 
 export default function AboutPage() {
   return (
     <MainLayout>
-      <div className="flex flex-col min-h-screen">
-        
-        <main className="py-16 md:py-24 bg-background">
+      <main className="flex flex-col">
+        <section className="py-16 md:py-24 bg-background">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto space-y-8">
               <h1 className="font-serif text-3xl md:text-4xl font-semibold text-primary text-center mb-12">
@@ -31,12 +32,17 @@ export default function AboutPage() {
                 I look forward to welcoming you and helping you on your journey to wellness.
               </p>
             </div>
+
+            <div className="text-center mt-12">
+              <Button asChild variant="secondary" size="lg">
+                <Link href="/treatments">Explore My Treatments</Link>
+              </Button>
+            </div>
           </div>
-        </main>
+        </section>
 
         <MeetTherapist />
         <MyStudio />
-
         <ContactInfo />
 
         <CTASection 
@@ -45,7 +51,7 @@ export default function AboutPage() {
           buttonText="Book Now"
           buttonLink="/booking"
         />
-      </div>
+      </main>
     </MainLayout>
   );
 }

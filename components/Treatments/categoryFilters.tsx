@@ -28,7 +28,7 @@ export default function CategoryFilters({ selectedCategory }: CategoryFiltersPro
       {/* Desktop Buttons */}
       <div className="hidden sm:flex flex-wrap justify-center gap-2">
         <Button
-          variant={selectedCategory === 'all' ? 'default' : 'outline'}
+          variant={selectedCategory === 'all' ? 'default' : 'ghost'}
           onClick={() => handleFilterChange('all')}
           size="sm"
         >
@@ -37,7 +37,7 @@ export default function CategoryFilters({ selectedCategory }: CategoryFiltersPro
         {categories.map((category) => (
           <Button
             key={category.id}
-            variant={selectedCategory === category.slug ? 'default' : 'outline'}
+            variant={selectedCategory === category.slug ? 'default' : 'ghost'}
             onClick={() => handleFilterChange(category.slug)}
             size="sm"
           >
