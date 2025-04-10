@@ -26,7 +26,7 @@
   - Set up production environment variables
 
 ## 2. Design System & Core Components
-- [ ] Define design tokens
+- [X] Define design tokens
   - Create color palette based on brand identity
   - Set up typography system
   - Configure spacing and layout scales
