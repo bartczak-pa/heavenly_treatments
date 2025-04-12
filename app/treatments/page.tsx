@@ -1,36 +1,44 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { getTreatments, getCategories, TreatmentCategorySlug, TreatmentCategory } from '@/lib/data/treatments';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import CategoryFilters from '@/components/Treatments/categoryFilters';
 import FilteredTreatmentsDisplay from '@/components/Treatments/FilteredTreatmentsDisplay';
 
-export default function TreatmentsPage({ 
-  searchParams 
-}: { 
-  searchParams?: { [key: string]: string | string[] | undefined };
-}) {
+type Props = {
+  params: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+
+export default async function TreatmentsPage(props: Props) { 
+  
+  const awaitedParams = await props.params;
+  const awaitedSearchParams = await props.searchParams;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _params = awaitedParams; // Assign awaited params to unused variable
+
   const allTreatments = getTreatments();
   const categories: TreatmentCategory[] = getCategories();
 
-  const selectedCategorySlug = searchParams?.category as TreatmentCategorySlug | null;
+  
+  const selectedCategorySlug = awaitedSearchParams?.category as TreatmentCategorySlug | null;
   const currentSelection: TreatmentCategorySlug | 'all' = 
     selectedCategorySlug && categories.some(c => c.slug === selectedCategorySlug) 
       ? selectedCategorySlug 
       : 'all';
 
-  const currentCategoryData: TreatmentCategory | null = useMemo(() => {
-    if (currentSelection === 'all') {
-      return null;
-    }
-    return categories.find(cat => cat.slug === currentSelection) || null;
-  }, [currentSelection, categories]);
+  
+  const currentCategoryData: TreatmentCategory | null = 
+    currentSelection === 'all' 
+      ? null 
+      : categories.find(cat => cat.slug === currentSelection) || null;
 
-  const filteredTreatments = useMemo(() => {
-    if (currentSelection === 'all') {
-      return allTreatments;
-    }
-    return allTreatments.filter(treatment => treatment.category === currentSelection);
-  }, [currentSelection, allTreatments]);
+  
+  const filteredTreatments = 
+    currentSelection === 'all'
+      ? allTreatments
+      : allTreatments.filter(treatment => treatment.category === currentSelection);
 
   return (
     <MainLayout>
