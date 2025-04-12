@@ -69,7 +69,7 @@
   - Add direct contact methods section
 
 ## 4. Integrations
-- [ ] Set up form handling
+- [X] Set up form handling
   - Create API route for contact form submission
   - Implement email sending functionality (SendGrid or similar)
   - Add form validation and error handling
@@ -86,7 +86,7 @@
   - Add location marker for the spa
 
 ## 5. Data Management
-- [ ] Create content data structure
+- [X] Create content data structure
   - Define types for treatments, categories, and services
   - Create static data files for initial content
   - Implement data fetching methods
