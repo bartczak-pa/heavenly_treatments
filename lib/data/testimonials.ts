@@ -1,26 +1,22 @@
 const testimonialsData: { // TODO: Replace with actual reviews
     name: string;
-    avatar: string;
     testimonial: string;
     customerType: string;
 }[] = [
     {
-        name: 'Sarah Johnson',
-        avatar: '/images/avatar-1.jpg',
-        testimonial: 'The best spa experience I\'ve ever had. The staff is amazing and the treatments are heavenly!',
-        customerType: 'Regular Client',
+        name: 'Lucy',
+        testimonial: 'Had my first treatment with Hayley today and she was so lovely and welcoming! Her treatment room is so cosy and peaceful, felt very relaxed after a full body massage and can highly recommend her 🤩 will definitely be booking in again 🥰xx',
+        customerType: 'New Client',
     }, 
     {
-        name: 'Michael Brown',
-        avatar: '/images/avatar-2.jpg',
-        testimonial: 'Incredible service and atmosphere. I\'ll definitely be coming back!',
-        customerType: 'First-time Visitor',
+        name: 'Lauren',
+        testimonial: 'I had the best, most relaxing massage with Hayley last week! She is great at what she does, is so lovely & has a beautiful wee treatment room that smells divine. Can’t wait to come back again 👏🏼🩷',
+        customerType: 'Regular Client',
     },
     {
-        name: 'Emily Davis',
-        avatar: '/images/avatar-3.jpg',
-        testimonial: 'Heavenly Treatments has become my sanctuary. The perfect place to unwind and recharge.',
-        customerType: 'VIP Member',
+        name: 'Selena',
+        testimonial: 'absolutely amazing treatment! 90mins of bliss! I felt like I was in a luxury spa, so many thoughtful touches 🙂 I wish I lived closer, but anytime I can make the trip to Kelso I will 100% be booking back in! x',
+        customerType: 'Client outside Kelso',
     },
 ]
 
