@@ -1,17 +1,26 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@/components/UI/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/UI/select';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { getCategories, TreatmentCategorySlug } from '@/lib/data/treatments'; 
 
 interface CategoryFiltersProps {
   selectedCategory: TreatmentCategorySlug | 'all';
-  onCategoryChange: (value: string) => void;
 }
 
-export default function CategoryFilters({ selectedCategory, onCategoryChange }: CategoryFiltersProps) {
+export default function CategoryFilters({ selectedCategory }: CategoryFiltersProps) {
   const categories = getCategories();
+  const router = useRouter();
+
+  const handleFilterChange = (slug: string) => {
+    if (slug === 'all') {
+      router.push('/treatments', { scroll: false });
+    } else {
+      router.push(`/treatments?category=${slug}`, { scroll: false });
+    }
+  };
 
   return (
     <div className="mb-8 flex flex-col sm:flex-row justify-center items-center gap-4">
@@ -19,8 +28,8 @@ export default function CategoryFilters({ selectedCategory, onCategoryChange }: 
       {/* Desktop Buttons */}
       <div className="hidden sm:flex flex-wrap justify-center gap-2">
         <Button
-          variant={selectedCategory === 'all' ? 'default' : 'outline'}
-          onClick={() => onCategoryChange('all')}
+          variant={selectedCategory === 'all' ? 'default' : 'ghost'}
+          onClick={() => handleFilterChange('all')}
           size="sm"
         >
           All Treatments
@@ -28,8 +37,8 @@ export default function CategoryFilters({ selectedCategory, onCategoryChange }: 
         {categories.map((category) => (
           <Button
             key={category.id}
-            variant={selectedCategory === category.slug ? 'default' : 'outline'}
-            onClick={() => onCategoryChange(category.slug)}
+            variant={selectedCategory === category.slug ? 'default' : 'ghost'}
+            onClick={() => handleFilterChange(category.slug)}
             size="sm"
           >
             {category.name}
@@ -38,7 +47,7 @@ export default function CategoryFilters({ selectedCategory, onCategoryChange }: 
       </div>
       {/* Mobile Select Dropdown */}
       <div className="sm:hidden w-full max-w-xs">
-        <Select value={selectedCategory} onValueChange={onCategoryChange}>
+        <Select value={selectedCategory} onValueChange={handleFilterChange}>
           <SelectTrigger>
             <SelectValue placeholder="Select a category" />
           </SelectTrigger>
