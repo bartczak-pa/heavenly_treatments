@@ -9,7 +9,17 @@ import ContactForm from '@/components/Contact/ContactForm';
 
 import { contactInfo } from '@/components/Contact/ContactInfo';
 
-const ContactPage: React.FC = () => {
+// Define props to accept searchParams
+interface ContactPageProps {
+    searchParams?: { [key: string]: string | string[] | undefined };
+}
+
+const ContactPage: React.FC<ContactPageProps> = ({ searchParams }) => {
+  // Extract the treatment title from searchParams
+  const initialTreatment = typeof searchParams?.treatment === 'string' 
+      ? searchParams.treatment 
+      : undefined;
+
   return (
     <MainLayout>
       <HeroSection  
@@ -25,7 +35,7 @@ const ContactPage: React.FC = () => {
               <h2 className="font-serif text-3xl font-semibold mb-6 text-primary">
                 Booking Inquiry & Contact Form
               </h2>
-              <ContactForm />
+              <ContactForm initialTreatment={initialTreatment} />
             </div>
 
             <div className="lg:order-2 space-y-8">

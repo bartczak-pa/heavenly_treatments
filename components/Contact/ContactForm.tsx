@@ -31,7 +31,12 @@ import { ReloadIcon, Cross2Icon } from "@radix-ui/react-icons";
 import * as Toast from "@radix-ui/react-toast"; 
 
 
-export default function ContactForm() {
+// Add prop for initial treatment
+interface ContactFormProps {
+    initialTreatment?: string;
+}
+
+export default function ContactForm({ initialTreatment }: ContactFormProps) {
 
   /* 
   This component is the main contact form component.
@@ -54,13 +59,14 @@ export default function ContactForm() {
   
   const treatments = getTreatments();
 
+  // 1. Initialize Form with react-hook-form + Zod
   const form = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
       firstName: '',
       email: '',
       phone: '',
-      treatment: '',
+      treatment: initialTreatment || '', // Use prop for default value
       message: '',
       preferredDate: '',
       preferredTime: '',

@@ -2,27 +2,36 @@ import React from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { MainLayout } from '@/components/Layout/MainLayout';
-import { getTreatmentBySlug, getTreatments } from '@/lib/data/treatments';
+import { getTreatmentBySlug, getTreatments, Treatment } from '@/lib/data/treatments';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Clock, PoundSterling, CheckCircle } from 'lucide-react';
+
 
 type ResolvedParams = {
   categorySlug: string;
   treatmentSlug: string;
 };
 
+export default async function TreatmentDetailPage({ params }: { params: { categorySlug: string; treatmentSlug: string } }) {
+  /* 
+  This function is the main treatment detail page.
+  It gets the treatment by slug and renders the treatment details.
+  It also constructs the contact link with the treatment title / generates the static params for the treatment / notifies the user if the treatment is not found / renders the treatment details / constructs the contact link with the treatment title.
 
-const TreatmentDetailPage = async ({ params: paramsPromise }: { params: Promise<ResolvedParams> }) => {
+  @param params - The parameters for the treatment
+  @returns A React component that renders the treatment details
+  @throws Error if the treatment is not found / not valid 
+  */
 
-  const params = await paramsPromise;
-  const { categorySlug, treatmentSlug } = params;
+  const treatment: Treatment | undefined = getTreatmentBySlug(params.treatmentSlug);
 
-  const treatment = getTreatmentBySlug(treatmentSlug);
-
-  if (!treatment || treatment.category !== categorySlug) {
+  if (!treatment) {
     notFound();
   }
+
+  // Construct the contact link
+  const contactHref: string = `/contact?treatment=${encodeURIComponent(treatment.title)}`;
 
   return (
     <MainLayout>
@@ -30,14 +39,20 @@ const TreatmentDetailPage = async ({ params: paramsPromise }: { params: Promise<
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start">
             <div className="relative w-full aspect-video md:aspect-square rounded-lg overflow-hidden shadow-lg">
-              <Image
-                src={treatment.image}
-                alt={treatment.title}
-                fill
-                style={{ objectFit: 'cover' }}
-                sizes="(max-width: 768px) 100vw, 50vw"
-                priority
-              />
+              {treatment.image ? (
+                <Image
+                  src={treatment.image}
+                  alt={treatment.title}
+                  fill
+                  priority
+                  style={{ objectFit: 'cover' }}
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              ) : (
+                <div className="w-full h-full bg-secondary/20 flex items-center justify-center">
+                  <span className="text-muted-foreground text-sm">Image coming soon</span>
+                </div>
+              )}
             </div>
 
             <div className="space-y-6">
@@ -72,23 +87,30 @@ const TreatmentDetailPage = async ({ params: paramsPromise }: { params: Promise<
                 </div>
               )}
 
-              <Button size="lg" asChild variant="default">
-                 <Link href="/#calendly-embed">
-                   Book This Treatment
-                 </Link>
-              </Button>
+              <div className="pt-4">
+                <Link href={contactHref}>
+                  <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90">
+                    Book This Treatment
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </section>
     </MainLayout>
   );
-};
-
-export default TreatmentDetailPage;
+}
 
 export async function generateStaticParams(): Promise<ResolvedParams[]> {
-  const treatments = getTreatments();
+  /* 
+  This function generates the static params for the treatment.
+  It gets the treatments and returns the static params for the treatment.
+
+  @returns An array of objects with the category slug and treatment slug
+  @throws Error if the treatments are not found / not valid
+  */
+  const treatments: Treatment[] = getTreatments();
 
   return treatments.map((treatment) => ({
     categorySlug: treatment.category,
