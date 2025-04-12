@@ -9,34 +9,33 @@ import ContactForm from '@/components/Contact/ContactForm';
 
 import { contactInfo } from '@/components/Contact/ContactInfo';
 
-// Define props to accept searchParams and params
+// Define props to accept searchParams and params (as Promises for Next.js 15+)
 interface ContactPageProps {
-    params: Record<string, never>; // Add params type
-    searchParams?: { [key: string]: string | string[] | undefined };
+    params: Promise<Record<string, never>>; // Wrap params type in Promise
+    searchParams?: Promise<{ [key: string]: string | string[] | undefined }>; // Wrap searchParams too
 }
 
-export default function ContactPage({ 
-    
-    
-    // eslint-disable-next-line no-unused-vars
-    params: _params, // Destructure and rename unused params
-    searchParams 
-}: ContactPageProps) {
-
+// Make component async
+export default async function ContactPage({ params, searchParams }: ContactPageProps) {
     /* 
     This function is the main contact page.
     It renders the contact page with the contact form and contact info.
     It also extracts the treatment title from the searchParams.
 
-    @param _params - The parameters for the contact page
+    @param params - The parameters for the contact page
     @param searchParams - The search parameters for the contact page
     @returns A React component that renders the contact page with the contact form and contact info
     @throws Error if the treatment is not found / not valid
     */
 
-    // Extract the treatment title from searchParams
-    const initialTreatment = typeof searchParams?.treatment === 'string' 
-        ? searchParams.treatment 
+    // Await props even if params is unused
+    // eslint-disable-next-line no-unused-vars
+    const _params = await params; 
+    const awaitedSearchParams = await searchParams;
+    
+    // Extract the treatment title from awaited searchParams
+    const initialTreatment = typeof awaitedSearchParams?.treatment === 'string' 
+        ? awaitedSearchParams.treatment 
         : undefined;
 
     return (

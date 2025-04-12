@@ -2,36 +2,37 @@ import React from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { MainLayout } from '@/components/Layout/MainLayout';
-import { getTreatmentBySlug, getTreatments, Treatment } from '@/lib/data/treatments';
+import { getTreatmentBySlug, getTreatments, } from '@/lib/data/treatments';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Clock, PoundSterling, CheckCircle } from 'lucide-react';
+import { Metadata } from 'next';
 
-
+// eslint-disable-next-line no-unused-vars
 type ResolvedParams = {
   categorySlug: string;
   treatmentSlug: string;
 };
 
-export default async function TreatmentDetailPage({ params }: { params: { categorySlug: string; treatmentSlug: string } }) {
-  /* 
-  This function is the main treatment detail page.
-  It gets the treatment by slug and renders the treatment details.
-  It also constructs the contact link with the treatment title / generates the static params for the treatment / notifies the user if the treatment is not found / renders the treatment details / constructs the contact link with the treatment title.
+// Define Props for Next.js 15+ 
+interface Props {
+  params: Promise<{ 
+    categorySlug: string; 
+    treatmentSlug: string; 
+  }>;
+}
 
-  @param params - The parameters for the treatment
-  @returns A React component that renders the treatment details
-  @throws Error if the treatment is not found / not valid 
-  */
-
-  const treatment: Treatment | undefined = getTreatmentBySlug(params.treatmentSlug);
+export default async function TreatmentDetailPage({ params: paramsPromise }: Props) { 
+  const params = await paramsPromise; // Await the params promise
+  
+  const treatment = getTreatmentBySlug(params.treatmentSlug);
 
   if (!treatment) {
     notFound();
   }
 
   // Construct the contact link
-  const contactHref: string = `/contact?treatment=${encodeURIComponent(treatment.title)}`;
+  const contactHref = `/contact?treatment=${encodeURIComponent(treatment.title)}`;
 
   return (
     <MainLayout>
@@ -102,16 +103,29 @@ export default async function TreatmentDetailPage({ params }: { params: { catego
   );
 }
 
-export async function generateStaticParams(): Promise<ResolvedParams[]> {
-  /* 
-  This function generates the static params for the treatment.
-  It gets the treatments and returns the static params for the treatment.
+export async function generateMetadata({ params: paramsPromise }: Props): Promise<Metadata> {
+  const params = await paramsPromise; // Await params here too
+  const treatment = getTreatmentBySlug(params.treatmentSlug);
 
-  @returns An array of objects with the category slug and treatment slug
-  @throws Error if the treatments are not found / not valid
-  */
-  const treatments: Treatment[] = getTreatments();
+  if (!treatment) {
+    return {
+      title: "Treatment Not Found",
+    };
+  }
 
+  return {
+    title: `${treatment.title} | Heavenly Treatments`,
+    description: treatment.description || treatment.description.substring(0, 160), // Use shortDescription if available
+    openGraph: {
+      title: `${treatment.title} | Heavenly Treatments`,
+      description: treatment.description || treatment.description.substring(0, 160),
+      images: treatment.image ? [treatment.image] : [],
+    },
+  };
+}
+
+export async function generateStaticParams(): Promise<{ categorySlug: string; treatmentSlug: string }[]> {
+  const treatments = getTreatments();
   return treatments.map((treatment) => ({
     categorySlug: treatment.category,
     treatmentSlug: treatment.slug,
