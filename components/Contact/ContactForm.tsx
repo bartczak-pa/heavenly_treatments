@@ -91,8 +91,10 @@ export default function ContactForm() {
     }
     
     setIsSubmitting(true);
-    console.log("Client: Form submitted with data:", data);
-    console.log("Client: Using Turnstile token:", turnstileToken);
+    if (process.env.NODE_ENV === 'development') {
+        console.log("Client: Form submitted with data:", data);
+        console.log("Client: Using Turnstile token:", turnstileToken);
+    }
 
     try {
       const response = await fetch('/api/contact', {
