@@ -83,7 +83,8 @@ export async function POST(request: NextRequest) {
     }
 
     // 4. Prepare email data (remove token)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    
+    // eslint-disable-next-line no-unused-vars
     const { turnstileToken: _token, ...emailData } = validatedData;
 
     // 5. Render email template

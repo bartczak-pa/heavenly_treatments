@@ -16,7 +16,9 @@ interface ContactPageProps {
 }
 
 export default function ContactPage({ 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    
+    
+    // eslint-disable-next-line no-unused-vars
     params: _params, // Destructure and rename unused params
     searchParams 
 }: ContactPageProps) {
