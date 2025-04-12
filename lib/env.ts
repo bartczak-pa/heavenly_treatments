@@ -2,7 +2,8 @@
 export const requiredEnvs = [
     'RESEND_API_KEY',
     'EMAIL_FROM_ADDRESS',
-    'EMAIL_TO_ADDRESS'
+    'CONTACT_EMAIL',
+    'TURNSTILE_SECRET_KEY'
 ];
 
 export function validateEnv(): void {

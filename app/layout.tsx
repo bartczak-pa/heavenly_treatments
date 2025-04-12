@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./styles/globals.css";
 import { validateEnv } from '@/lib/env';
 import { Playfair_Display, Open_Sans } from 'next/font/google';
+import * as Toast from '@radix-ui/react-toast';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,7 +48,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${openSans.variable} antialiased`}>
       <body className="font-sans min-h-screen bg-background text-foreground">
-        {children}
+        <Toast.Provider swipeDirection="right">
+          {children}
+          <Toast.Viewport className="fixed bottom-0 right-0 p-4" />
+        </Toast.Provider>
       </body>
     </html>
   );
