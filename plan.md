@@ -61,7 +61,7 @@
   - Build treatment list with details, pricing, and duration
   - Add treatment benefits descriptions
   - Implement related treatments recommendations
-  - Include booking CTAs for each treatment
+  - Include booking CTAs for each treatment (linking to Contact)
 - [X] Build Contact Page
   - Implement contact form with validation
   - Add business hours display
@@ -69,21 +69,20 @@
   - Add direct contact methods section
 
 ## 4. Integrations
-- [X] Set up form handling
+- [X] Set up form handling (API Route + Resend + Turnstile)
   - Create API route for contact form submission
-  - Implement email sending functionality (SendGrid or similar)
-  - Add form validation and error handling
-  - Build reusable form submission functions in /lib/api/contact.ts
-  - Implement client-side validation with /lib/utils/validation.ts
-- [ ] Implement Calendly booking
-  - Research Calendly embed options
-  - Create Calendly integration component
-  - Add "Book Now" buttons throughout the site
-  - Style Calendly embed to match site design (if possible)
+  - Implement email sending functionality (Resend)
+  - Add form validation (Zod) and error handling
+  - Implement client-side validation and form state (React Hook Form)
+  - Add Bot Protection (Turnstile)
+- [-] Implement Calendly booking (Deferred - Using Contact Form for initial booking)
+  - Research Calendly embed options (Deferred)
+  - Create Calendly integration component (Deferred)
+  - "Book Now" buttons link to Contact Form with pre-filled treatment
+  - Style Calendly embed to match site design (Deferred)
 - [ ] Add Google Maps integration
   - Get Google Maps API key
   - Implement map component on contact page
-  - Add location marker for the spa
 
 ## 5. Data Management
 - [X] Create content data structure
