@@ -32,6 +32,16 @@ import * as Toast from "@radix-ui/react-toast";
 
 
 export default function ContactForm() {
+
+  /* 
+  This component is the main contact form component.
+  It uses the `useForm` hook from `react-hook-form` to manage the form state and validation.
+  It also uses the `Turnstile` component from `react-turnstile` to manage the Turnstile token.
+  It also uses the `Toast` component from `radix-ui` to manage the toast notifications.
+
+  @returns A React component that renders the contact form
+  @throws Error if the Turnstile token is not valid / form data is not valid / form submission fails
+  */
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string>('');
 
@@ -61,6 +71,16 @@ export default function ContactForm() {
 
   // Handle Form Submission
   const onSubmit = async (data: ContactFormData) => {
+    /* 
+    This function handles the form submission.
+    It checks if the Turnstile token is valid, and if not, it sets the state for the Radix Toast to show a verification needed message.
+    If the token is valid, it sets the state for the Radix Toast to show a success message.
+    It then submits the form data to the server.
+
+    @param data - The form data
+    @returns void
+    @throws Error if the Turnstile token is not valid / form data is not valid / form submission fails
+    */
     if (!turnstileToken) {
         // Set state to show Radix Toast for verification needed
         setToastTitle("Verification Needed");
@@ -231,7 +251,7 @@ export default function ContactForm() {
               <FormLabel>Message *</FormLabel>
               <FormControl>
                 <Textarea 
-                  placeholder="Please let me know of any alergies or medical conditions ie. pregnancy"
+                  placeholder="Please let me know of any allergies or medical conditions ie. pregnancy"
                   className="resize-none min-h-[120px]" 
                   {...field} 
                 />
