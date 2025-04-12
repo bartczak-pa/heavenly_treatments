@@ -8,6 +8,8 @@ import { render } from '@react-email/render';
 
 // Initialize Resend client - ensure RESEND_API_KEY is set in .env.local / Vercel envs
 const resendApiKey = process.env.RESEND_API_KEY;
+
+
 if (!resendApiKey) {
   console.error('RESEND_API_KEY environment variable is not set.'); 
   // TODO: Add a graceful error handling mechanism
@@ -18,8 +20,17 @@ const resend = new Resend(resendApiKey);
 const turnstileSecretKey = process.env.TURNSTILE_SECRET_KEY;
 const TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 
-// Verify Turnstile token function
+
 async function verifyTurnstileToken(token: string): Promise<boolean> {
+  /* 
+  This function verifies the Turnstile token using the Cloudflare Turnstile API.
+  It sends the token to the API and returns true if the token is valid, otherwise false. 
+  It also logs the success/failure details to the console.
+
+  @param token - The Turnstile token to verify
+  @returns true if the token is valid, otherwise false
+  @throws Error if the token is invalid / secret key is not set / API call fails / response is not ok / response is not JSON
+  */
   if (!turnstileSecretKey) {
     console.error('TURNSTILE_SECRET_KEY environment variable is not set.');
     return false; // Cannot verify without secret key
@@ -44,6 +55,16 @@ async function verifyTurnstileToken(token: string): Promise<boolean> {
 
 // POST Handler for the contact form
 export async function POST(request: NextRequest) {
+
+  /* 
+  This function handles the POST request for the contact form.
+  It parses the request body, validates the data using the Zod schema, verifies the Turnstile token, and sends the email using the Resend SDK.
+  It also logs the success/failure details to the console.
+
+  @param request - The POST request object
+  @returns A JSON response with the success/failure details
+  @throws Error if the request body is not valid / Zod schema validation fails / Turnstile token verification fails / Email sending fails
+  */
   try {
     // 1. Parse request body
     const body = await request.json();
