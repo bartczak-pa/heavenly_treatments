@@ -15,15 +15,31 @@ interface TreatmentCardProps {
 
   
 const TreatmentCard: React.FC<TreatmentCardProps> = ({ treatment }) => {
-  /* 
-  This component is the main treatment card component.
-  It renders the treatment card with the treatment details.
-  It also constructs the contact link with the treatment title / constructs the detail link with the treatment category and slug.
-  It also uses the `cn` utility function to merge the default styles with the treatment card styles / renders the treatment card with the treatment details.
-  
-  @param treatment - The treatment to render
-  @returns A React component that renders the treatment card with the treatment details
-  */
+  /**
+   * TreatmentCard Component
+   * 
+   * A card component that displays treatment information including:
+   * - Treatment image
+   * - Title
+   * - Description
+   * - Duration
+   * - Price
+   * 
+   * Features:
+   * - Responsive image handling with fallback
+   * - Hover effects for better user interaction
+   * - Links to both treatment details and contact page
+   * - Accessible design with proper semantic HTML
+   * 
+   * @component
+   * @example
+   * ```tsx
+   * <TreatmentCard treatment={treatmentData} />
+   * ```
+   * 
+   * @param {Treatment} treatment - The treatment data to display
+   * @returns {JSX.Element} A treatment card component
+   */
 
   const contactHref: string = `/contact?treatment=${encodeURIComponent(treatment.title)}`;
   const detailHref: string = `/treatments/${treatment.category}/${treatment.slug}`;
@@ -31,6 +47,7 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({ treatment }) => {
   return (
     <Card className={cn(
       "flex flex-col h-full overflow-hidden hover:shadow-lg transition-all duration-300 group",
+      "pt-0 pb-6"
     )}>
       <Link href={detailHref} className="block relative w-full h-52 overflow-hidden">
         {treatment.image ? (
