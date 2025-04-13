@@ -27,14 +27,42 @@ import {
 } from "@/components/ui/collapsible";
 import { Menu, ChevronRight, ChevronDown } from 'lucide-react';
 import { treatmentCategories, categoryIconMap } from '@/lib/data/treatments';
+import TreatmentCategoryLinks from './TreatmentCategoryLinks';
 import { cn } from '@/lib/utils';
 
+// --- Link Style Constants ---
+const desktopCategoryLinkClasses: string = "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground";
+const mobileCategoryLinkClasses: string = "text-sm text-muted-foreground hover:text-primary";
+// ---------------------------
+
 export default function Navbar() {
+  /**
+   * Navbar Component
+   * 
+   * A responsive navigation bar component that provides:
+   * - Desktop navigation with dropdown menus
+   * - Mobile navigation with a collapsible sheet
+   * - Treatment category navigation in both desktop and mobile views
+   * 
+   * Features:
+   * - Responsive design with mobile-first approach
+   * - Integration with TreatmentCategoryLinks component
+   * - Uses Radix UI components for accessibility
+   * 
+   * @component
+   * @example
+   * ```tsx
+   * <Navbar />
+   * ```
+   * 
+   * @returns {JSX.Element} A responsive navigation bar
+   */
   const [isMobileTreatmentsOpen, setIsMobileTreatmentsOpen] = useState(false);
 
   return (
     <header className="w-full border-b bg-secondary/15 backdrop-blur supports-[backdrop-filter]:bg-secondary/15 sticky z-40">
       <nav className="container flex h-16 items-center">
+        
         {/* Left Navigation Menu - Desktop */}
         <div className="hidden lg:flex items-center space-x-6">
           <NavigationMenu className="relative z-50 pl-2">
@@ -74,13 +102,12 @@ export default function Navbar() {
                     </li>
                     {treatmentCategories.map((category) => {
                       const IconComponent = category.iconName ? categoryIconMap[category.iconName] : null;
-
                       return (
                         <li key={category.id}>
                           <NavigationMenuLink asChild>
                             <Link
-                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                               href={`/treatments/${category.slug}`}
+                              className={desktopCategoryLinkClasses}
                             >
                               <div className="flex items-center space-x-3">
                                 {IconComponent && <IconComponent className="h-4 w-4 flex-shrink-0 text-primary" />}
@@ -169,25 +196,16 @@ export default function Navbar() {
 
                   <CollapsibleContent>
                     <div className="flex flex-col space-y-2 pl-4 pt-2">
-                      <Link href="/treatments" className="text-sm text-muted-foreground hover:text-primary">
+                      <Link href="/treatments" className={mobileCategoryLinkClasses}>
                         All Treatments
                       </Link>
-                      {treatmentCategories.map((category) => {
-                        const IconComponent = category.iconName ? categoryIconMap[category.iconName] : null;
-
-                        return (
-                          <Link
-                            key={category.id}
-                            href={`/treatments/${category.slug}`}
-                            className="text-sm text-muted-foreground hover:text-primary"
-                          >
-                            <div className="flex items-center space-x-3">
-                              {IconComponent && <IconComponent className="h-4 w-4 flex-shrink-0 text-primary pr-0.5" />}
-                              {category.name}
-                            </div>
-                          </Link>
-                        );
-                      })}
+                      <TreatmentCategoryLinks 
+                        categories={treatmentCategories} 
+                        showIcon={true}
+                        baseLinkClasses={mobileCategoryLinkClasses}
+                        textClasses=""
+                        iconClasses="h-4 w-4 flex-shrink-0 text-primary pr-0.5"
+                      />
                     </div>
                   </CollapsibleContent>
                 </Collapsible>
