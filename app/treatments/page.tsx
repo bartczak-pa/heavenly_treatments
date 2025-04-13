@@ -4,6 +4,8 @@ import { getTreatments, getCategories, TreatmentCategorySlug, TreatmentCategory 
 import { MainLayout } from '@/components/Layout/MainLayout';
 import CategoryFilters from '@/components/Treatments/categoryFilters';
 import FilteredTreatmentsDisplay from '@/components/Treatments/FilteredTreatmentsDisplay';
+import { contactInfo } from '@/lib/data/contactInfo';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: 'Treatments Menu',
@@ -37,6 +39,20 @@ type Props = {
 
 export default async function TreatmentsPage(props: Props) { 
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'HealthAndBeautyBusiness',
+    name: 'Heavenly Treatments',
+    url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/treatments`,
+    address: contactInfo.address,
+    telephone: contactInfo.phone,
+    email: contactInfo.email,
+    openingHours: contactInfo.openingHours,
+    hasMap: contactInfo.mapSrc,
+    image: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/images/logo.png`,
+  }
+    
+
   
   const awaitedParams = await props.params;
   const awaitedSearchParams = await props.searchParams;
@@ -69,6 +85,11 @@ export default async function TreatmentsPage(props: Props) {
 
   return (
     <MainLayout>
+      <Script 
+        id="treatments-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <section className="py-16 md:py-24 bg-primary/10">
         <div className="container mx-auto px-4">
           <h1 className="font-serif text-3xl md:text-4xl font-semibold text-primary text-center mb-8">
