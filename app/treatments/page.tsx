@@ -1,39 +1,42 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import { getTreatments, getCategories, TreatmentCategorySlug, TreatmentCategory } from '@/lib/data/treatments';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import CategoryFilters from '@/components/Treatments/categoryFilters';
 import FilteredTreatmentsDisplay from '@/components/Treatments/FilteredTreatmentsDisplay';
+
+export const metadata: Metadata = {
+  title: 'Treatments Menu',
+  description: 'Explore my full menu of massage therapies, facials, reflexology, and body treatments. Find the perfect service for your relaxation and wellness needs.',
+};
 
 type Props = {
   params: Promise<{ [key: string]: string | string[] | undefined }>;
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
+/**
+ * TreatmentsPage Component
+ * 
+ * @component
+ * @description The Treatments page component that displays a filtered list of available treatments.
+ * It supports filtering by treatment category and displays either all treatments or treatments
+ * from a specific category based on URL search parameters.
+ * 
+ * @param {Props} props - The component props
+ * @param {Promise<{ [key: string]: string | string[] | undefined }>} props.params - Route parameters
+ * @param {Promise<{ [key: string]: string | string[] | undefined }>} [props.searchParams] - URL search parameters
+ * 
+ * @returns {JSX.Element} The rendered Treatments page with category filters and treatment listings
+ * 
+ * @example
+ * return (
+ *   <TreatmentsPage params={params} searchParams={searchParams} />
+ * )
+ */
 
 export default async function TreatmentsPage(props: Props) { 
-  /**
-   * Treatments Page Component
-   * 
-   * A dynamic page component that displays treatments based on category filters.
-   * 
-   * Features:
-   * - Displays all treatments or filtered by category
-   * - Dynamic page title based on selected category
-   * - Responsive grid layout for treatments
-   * - Category filter navigation
-   * - SEO-friendly with proper heading hierarchy
-   * 
-   * @component
-   * @example
-   * ```tsx
-   * <TreatmentsPage params={params} searchParams={searchParams} />
-   * ```
-   * 
-   * @param {Object} props - Component props
-   * @param {Promise<Object>} props.params - Route parameters
-   * @param {Promise<Object>} [props.searchParams] - URL search parameters
-   * @returns {JSX.Element} A treatments page component
-   */
+
   
   const awaitedParams = await props.params;
   const awaitedSearchParams = await props.searchParams;
@@ -72,7 +75,6 @@ export default async function TreatmentsPage(props: Props) {
             {currentCategoryData ? currentCategoryData.name : 'All Treatments'}
           </h1>
 
-          {/* Wrap CategoryFilters in a centering div */}
           <div className="flex justify-center mb-2 lg:mb-12">
             <CategoryFilters 
               selectedCategory={currentSelection}

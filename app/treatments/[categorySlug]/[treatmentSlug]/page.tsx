@@ -14,7 +14,6 @@ type ResolvedParams = {
   treatmentSlug: string;
 };
 
-// Define Props for Next.js 15+ 
 interface Props {
   params: Promise<{ 
     categorySlug: string; 
@@ -23,16 +22,33 @@ interface Props {
 }
 
 
+/**
+ * TreatmentDetailPage Component
+ * 
+ * @component
+ * @description The Treatment Detail page component that displays detailed information about a specific treatment.
+ * It shows the treatment's image, title, description, price, duration, and key features. The page also includes
+ * a call-to-action button for booking the treatment.
+ * 
+ * @param {Props} props - The component props
+ * @param {Promise<{ categorySlug: string; treatmentSlug: string; }>} props.params - Route parameters containing the treatment category and treatment slugs
+ * 
+ * @returns {JSX.Element} The rendered Treatment Detail page with all treatment information
+ * 
+ * @example
+ * return (
+ *   <TreatmentDetailPage params={params} />
+ * )
+ */
+
 export default async function TreatmentDetailPage({ params: paramsPromise }: Props) { 
-  const params = await paramsPromise; // Await the params promise
-  
+  const params = await paramsPromise;
   const treatment = getTreatmentBySlug(params.treatmentSlug);
 
   if (!treatment) {
     notFound();
   }
 
-  // Construct the contact link
   const contactHref = `/contact?treatment=${encodeURIComponent(treatment.title)}`;
 
   return (
@@ -104,8 +120,27 @@ export default async function TreatmentDetailPage({ params: paramsPromise }: Pro
   );
 }
 
+/**
+ * TreatmentDetailPage Component
+ * 
+ * @component
+ * @description The Treatment Detail page component that displays detailed information about a specific treatment.
+ * It shows the treatment's title, description, price, duration, key features, and provides a booking button.
+ * The page is dynamically generated based on the treatment slug from the URL parameters.
+ * 
+ * @param {Props} props - The component props
+ * @param {Promise<{ [key: string]: string | string[] | undefined }>} props.params - Route parameters containing categorySlug and treatmentSlug
+ * 
+ * @returns {JSX.Element} The rendered Treatment Detail page with all treatment information
+ * 
+ * @example
+ * return (
+ *   <TreatmentDetailPage params={params} />
+ * )
+ */
+
 export async function generateMetadata({ params: paramsPromise }: Props): Promise<Metadata> {
-  const params = await paramsPromise; // Await params here too
+  const params = await paramsPromise; 
   const treatment = getTreatmentBySlug(params.treatmentSlug);
 
   if (!treatment) {
@@ -114,14 +149,25 @@ export async function generateMetadata({ params: paramsPromise }: Props): Promis
     };
   }
 
+  const description = treatment.description.substring(0, 160);
+
   return {
-    title: `${treatment.title} | Heavenly Treatments`,
-    description: treatment.description || treatment.description.substring(0, 160), // Use shortDescription if available
+    title: `${treatment.title}`, 
+    description: description,
     openGraph: {
       title: `${treatment.title} | Heavenly Treatments`,
-      description: treatment.description || treatment.description.substring(0, 160),
-      images: treatment.image ? [treatment.image] : [],
+      description: description,
+      images: treatment.image
+        ? [{ 
+            url: treatment.image,
+            alt: `${treatment.title} - Heavenly Treatments Image`,
+            width: 800, 
+            height: 800, 
+          }]
+        : [],
     },
+
+    keywords: [treatment.title, treatment.category, 'Massage', 'Facial', 'Spa', 'Kelso', 'Scottish Borders', 'Heavenly Treatments', 'Heavenly Treatments with Hayleybell', 'Heavenly Treatments with Hayleybell Kelso', 'Scottish Borders Massage', 'Scottish Borders Facials', 'Scottish Borders Body Treatments'], 
   };
 }
 
