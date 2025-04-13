@@ -7,7 +7,6 @@ import ContactInfo from '@/components/Contact/ContactInfo';
 import MapEmbed from '@/components/Contact/MapEmbed';
 import ContactForm from '@/components/Contact/ContactForm';
 
-import { contactInfo } from '@/components/Contact/ContactInfo';
 
 // Define props to accept searchParams and params (as Promises for Next.js 15+)
 interface ContactPageProps {
@@ -59,9 +58,9 @@ export default async function ContactPage({ params, searchParams }: ContactPageP
                         <div className="lg:order-2 space-y-8">
                             <div>
                                 <h2 className="font-serif text-3xl font-semibold mb-6 text-primary">
-                                    Our Location
+                                    How to find me
                                 </h2>
-                                <MapEmbed src={contactInfo.mapSrc} />
+                                <MapEmbed />
                             </div>
                             <ContactInfo />
                         </div>
