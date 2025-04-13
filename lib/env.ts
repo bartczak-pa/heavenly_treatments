@@ -34,5 +34,7 @@ export function validateEnv(): void {
         console.error("FATAL ERROR: Missing required environment variables:", missingEnvs);
         throw new Error(`Missing required environment variables: ${missingEnvs.join(', ')}`);
     }
-    console.log("Environment variables validated successfully."); // Optional: confirmation log
+    if (process.env.NODE_ENV !== 'production') {
+        console.log("Environment variables validated successfully.");
+    }
 }
