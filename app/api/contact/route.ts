@@ -6,114 +6,161 @@ import ContactEmail from '@/components/Email/ContactEmail';
 import { createElement } from 'react';
 import { render } from '@react-email/render';
 
-// Initialize Resend client - ensure RESEND_API_KEY is set in .env.local / Vercel envs
-const resendApiKey = process.env.RESEND_API_KEY;
-
-
-if (!resendApiKey) {
-  console.error('RESEND_API_KEY environment variable is not set.'); 
-  // TODO: Add a graceful error handling mechanism
-}
-const resend = new Resend(resendApiKey);
+// Initialize Resend client
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Turnstile secrets
 const turnstileSecretKey = process.env.TURNSTILE_SECRET_KEY;
 const TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 
-
 async function verifyTurnstileToken(token: string): Promise<boolean> {
-  /* 
-  This function verifies the Turnstile token using the Cloudflare Turnstile API.
-  It sends the token to the API and returns true if the token is valid, otherwise false. 
-  It also logs the success/failure details to the console.
-
-  @param token - The Turnstile token to verify
-  @returns true if the token is valid, otherwise false
-  @throws Error if the token is invalid / secret key is not set / API call fails / response is not ok / response is not JSON
-  */
+  /**
+   * Verifies a Turnstile token with Cloudflare's verification service.
+   * 
+   * This function:
+   * 1. Validates the presence of the Turnstile secret key
+   * 2. Sends a POST request to Cloudflare's verification endpoint
+   * 3. Handles timeouts and errors gracefully
+   * 4. Returns a boolean indicating verification success
+   * 
+   * @param {string} token - The Turnstile token to verify
+   * @returns {Promise<boolean>} - True if verification succeeds, false otherwise
+   * 
+   * @example
+   * ```ts
+   * const isValid = await verifyTurnstileToken(token);
+   * if (!isValid) {
+   *   throw new Error('Invalid Turnstile token');
+   * }
+   * ```
+   */
   if (!turnstileSecretKey) {
     console.error('TURNSTILE_SECRET_KEY environment variable is not set.');
     return false; // Cannot verify without secret key
   }
+  
   const formData = new FormData();
   formData.append('secret', turnstileSecretKey);
   formData.append('response', token);
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000); // 5-second timeout
+
   try {
-    const response = await fetch(TURNSTILE_VERIFY_URL, { method: 'POST', body: formData });
+    console.log('API Route - Sending request to Turnstile...');
+    const response = await fetch(TURNSTILE_VERIFY_URL, {
+      method: 'POST', 
+      body: formData,
+      signal: controller.signal, // Add abort signal
+    });
+    
     if (!response.ok) {
       console.error(`Turnstile verification failed with status: ${response.status}`);
       return false;
     }
     const data = await response.json();
-    console.log('Turnstile verification response:', data); // Log success/failure details
+    console.log('Turnstile verification response:', data); 
     return data.success === true;
-  } catch (error) {
-    console.error('API Route - Turnstile verification fetch error:', error);
+
+  } catch (error: unknown) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      console.error('API Route - Turnstile verification fetch timed out.');
+    } else {
+      console.error('API Route - Turnstile verification fetch error:', error);
+    }
     return false;
+  } finally {
+    clearTimeout(timeoutId); // Clear the timeout always
   }
 }
 
-// POST Handler for the contact form
 export async function POST(request: NextRequest) {
+  /**
+   * POST handler for the contact form API endpoint.
+   * 
+   * This handler processes contact form submissions by:
+   * 1. Validating the request body against the contact form schema
+   * 2. Verifying the Turnstile token for bot protection
+   * 3. Rendering and sending an email using the Resend SDK
+   * 
+   * @param {NextRequest} request - The incoming request object containing form data
+   * @returns {Promise<NextResponse>} A response indicating success or failure
+   * 
+   * @example
+   * ```ts
+   * // Example request body
+   * {
+   *   firstName: "John",
+   *   email: "john@example.com",
+   *   phone: "1234567890",
+   *   treatment: "massage",
+   *   message: "I'd like to book an appointment",
+   *   preferredDate: "2024-03-15",
+   *   preferredTime: "14:00",
+   *   cancellationPolicy: true,
+   *   turnstileToken: "valid_token_here"
+   * }
+   * ```
+   * 
+   * @throws {Error} If environment variables are missing or invalid
+   * @throws {Error} If form validation fails
+   * @throws {Error} If Turnstile verification fails
+   * @throws {Error} If email sending fails
+   */
+  console.log('API Route /api/contact POST request received');
 
-  /* 
-  This function handles the POST request for the contact form.
-  It parses the request body, validates the data using the Zod schema, verifies the Turnstile token, and sends the email using the Resend SDK.
-  It also logs the success/failure details to the console.
+  // --- Envs validated at startup --- 
+  const fromEmail = process.env.EMAIL_FROM_ADDRESS;
+  const toEmail = process.env.CONTACT_EMAIL;
 
-  @param request - The POST request object
-  @returns A JSON response with the success/failure details
-  @throws Error if the request body is not valid / Zod schema validation fails / Turnstile token verification fails / Email sending fails
-  */
   try {
     // 1. Parse request body
     const body = await request.json();
+    console.log('API Route - Received body:', body);
 
     // 2. Validate data using Zod schema
     const validatedData = contactFormSchema.parse(body);
+    console.log('API Route - Validation successful');
 
     // 3. Verify Turnstile token
     const isHuman = await verifyTurnstileToken(validatedData.turnstileToken);
     if (!isHuman) {
-      console.error('API Route - Turnstile verification FAILED.');
+      // Error already logged in verifyTurnstileToken
       return NextResponse.json(
         { success: false, message: 'Bot verification failed. Please try again.' },
         { status: 422 } // Unprocessable Entity
       );
     }
+    console.log('API Route - Turnstile verification successful');
 
     // 4. Prepare email data (remove token)
-    
     // eslint-disable-next-line no-unused-vars
-    const { turnstileToken: _token, ...emailData } = validatedData;
+    const { turnstileToken, ...emailData } = validatedData;
 
     // 5. Render email template
+    console.log('API Route - Rendering email template...');
     const emailHtml = await render(
       createElement(ContactEmail, { formData: emailData })
     );
+    console.log('API Route - Email template rendered.');
 
-    // 6. Send email using Resend SDK
-    const fromEmail = process.env.EMAIL_FROM_ADDRESS;
-    const toEmail = process.env.CONTACT_EMAIL;
-
-    if (!fromEmail || !toEmail) {
-      console.error('Missing EMAIL_FROM_ADDRESS or CONTACT_EMAIL environment variables.');
-      return NextResponse.json(
-        { success: false, message: 'Server configuration error.' },
-        { status: 500 }
-      );
+    // 6. Send email using Resend SDK (ensure fromEmail/toEmail were loaded)
+    if (!fromEmail || !toEmail) { // Minimal check here in case startup validation failed silently
+       console.error('API Route Critical Error: EMAIL_FROM_ADDRESS or CONTACT_EMAIL missing despite startup validation!');
+       return NextResponse.json({ success: false, message: 'Server configuration error.' },{ status: 500 });
     }
-
-    const { error } = await resend.emails.send({
+    
+    console.log(`API Route - Sending email from ${fromEmail} to ${toEmail} via Resend SDK...`);
+    const { data, error } = await resend.emails.send({
       from: fromEmail, 
       to: [toEmail], 
-      subject: `New Contact Form Submission: ${emailData.firstName} `,
+      subject: `New Contact Form Submission: ${emailData.firstName}`,
       html: emailHtml,
     });
 
     if (error) {
-      
-      // @TODO: Add a more specific error message
+      console.error('API Route - Resend SDK Error:', error);
+      // Provide more specific feedback if possible
       let clientMessage = 'Failed to send message due to a server error.';
       if (error.message.includes('verified sender address')) {
         clientMessage = 'Server configuration error: Sending email address is not verified.';
@@ -121,11 +168,13 @@ export async function POST(request: NextRequest) {
         clientMessage = 'Server configuration error: Invalid recipient email address.';
       }
       return NextResponse.json(
-        { success: false, message: clientMessage, error: error.message },
+        { success: false, message: clientMessage },
         { status: 500 }
       );
     }
     
+    // Use the 'data' variable in the log
+    console.log('API Route - Email sent successfully via Resend. ID:', data?.id);
     return NextResponse.json(
       { success: true, message: 'Thank you! Your message has been sent successfully.' },
       { status: 200 }
