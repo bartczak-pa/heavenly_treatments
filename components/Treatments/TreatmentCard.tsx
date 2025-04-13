@@ -23,7 +23,6 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({ treatment }) => {
   
   @param treatment - The treatment to render
   @returns A React component that renders the treatment card with the treatment details
-  @throws Error if the treatment is not found / not valid
   */
 
   const contactHref: string = `/contact?treatment=${encodeURIComponent(treatment.title)}`;
