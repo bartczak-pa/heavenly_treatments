@@ -60,7 +60,7 @@ export default async function TreatmentDetailPage({ params: paramsPromise }: Pro
     name: treatment.title,
     description: treatment.description.substring(0, 5000), // Use a longer description for schema
     image: treatment.image ? `${process.env.NEXT_PUBLIC_BASE_URL || ''}${treatment.image}` : undefined,
-    url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/treatments/${treatment.category}/${treatment.slug}`,
+    url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/${treatment.image}`,
     provider: {
       '@type': 'Organization',
       name: 'Heavenly Treatments with Hayleybell',

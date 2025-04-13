@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { MainLayout } from '@/components/Layout/MainLayout';
@@ -7,6 +7,8 @@ import MyStudio from '@/components/Sections/myStudio';
 import ContactInfo from '@/components/Sections/contactInfo';
 import CTASection from '../../components/Sections/cta';
 import { Button } from '@/components/ui/button';
+import { contactInfo } from '@/lib/data/contactInfo';
+import Script from 'next/script';
 
 
 export const metadata: Metadata = {
@@ -35,9 +37,31 @@ export const metadata: Metadata = {
  * )
  */
 
-const AboutPage: React.FC = () => {
+const AboutPage: React.FC = (): JSX.Element => {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Heavenly Treatments',
+    url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/about`,
+    address: contactInfo.address,
+    telephone: contactInfo.phone,
+    email: contactInfo.email,
+    openingHours: contactInfo.openingHours,
+    hasMap: contactInfo.mapSrc,
+    image: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/images/logo.png`,
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: '55.584',
+      longitude: '-2.385',
+    },
+  }
   return (
     <MainLayout>
+      <Script 
+        id="about-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <main className="flex flex-col">
         <section className="py-16 md:py-24 bg-background">
           <div className="container mx-auto px-4">
