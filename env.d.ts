@@ -1,3 +1,4 @@
+// eslint-disable-next-line 
 interface ProcessEnv {
   NODE_ENV: 'development' | 'production' | 'test';
   RESEND_API_KEY: string;
