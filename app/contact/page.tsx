@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import type { Metadata } from 'next';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import HeroSection from '@/components/Shared/HeroSection';
 import ContactInfo from '@/components/Contact/ContactInfo';
@@ -8,24 +9,37 @@ import MapEmbed from '@/components/Contact/MapEmbed';
 import ContactForm from '@/components/Contact/ContactForm';
 
 
-// Define props to accept searchParams and params (as Promises for Next.js 15+)
+export const metadata: Metadata = {
+  title: 'Contact & Booking',
+  description: 'Contact Heavenly Treatments to book an appointment or ask a question. Find my location, opening hours, and use my contact form.',
+};
+
 interface ContactPageProps {
-    params: Promise<Record<string, never>>; // Wrap params type in Promise
-    searchParams?: Promise<{ [key: string]: string | string[] | undefined }>; // Wrap searchParams too
+    params: Promise<Record<string, never>>; 
+    searchParams?: Promise<{ [key: string]: string | string[] | undefined }>; 
 }
 
-// Make component async
-export default async function ContactPage({ params, searchParams }: ContactPageProps) {
-    /* 
-    This function is the main contact page.
-    It renders the contact page with the contact form and contact info.
-    It also extracts the treatment title from the searchParams.
+/**
+ * ContactPage Component
+ * 
+ * @component
+ * @description The Contact page component that provides multiple ways for users to get in touch,
+ * including a contact form, location map, and contact information. The page supports pre-filling
+ * the contact form with a treatment title when accessed from a treatment detail page.
+ * 
+ * @param {ContactPageProps} props - The component props
+ * @param {Promise<Record<string, never>>} props.params - Route parameters (unused)
+ * @param {Promise<{ [key: string]: string | string[] | undefined }>} [props.searchParams] - URL search parameters, used to pre-fill treatment in contact form
+ * 
+ * @returns {JSX.Element} The rendered Contact page with contact form, map, and contact information
+ * 
+ * @example
+ * return (
+ *   <ContactPage params={params} searchParams={searchParams} />
+ * )
+ */
 
-    @param params - The parameters for the contact page
-    @param searchParams - The search parameters for the contact page
-    @returns A React component that renders the contact page with the contact form and contact info
-    @throws Error if the treatment is not found / not valid
-    */
+export default async function ContactPage({ params, searchParams }: ContactPageProps) {
 
     // Await props even if params is unused
     // eslint-disable-next-line no-unused-vars
