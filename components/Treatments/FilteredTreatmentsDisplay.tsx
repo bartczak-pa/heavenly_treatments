@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Treatment, TreatmentCategorySlug } from '@/lib/data/treatments';
 import TreatmentsGrid from './treatmentsGrid';
 import { Button } from '@/components/ui/button';
@@ -10,21 +10,67 @@ interface FilteredTreatmentsDisplayProps {
   currentSelection: TreatmentCategorySlug | 'all';
 }
 
-const initialVisibleCount = 6;
+const INITIAL_VISIBLE_COUNT: number = 3; 
+
+
+  /**
+   * FilteredTreatmentsDisplay Component
+   * 
+   * A component that displays a grid of treatment cards with pagination functionality.
+   * 
+   * Features:
+   * - Displays treatments in a responsive grid layout
+   * - Implements "Show More" pagination
+   * - Dynamically adjusts visible items based on screen size
+   * - Resets visible count when category changes
+   * - Handles empty states gracefully
+   * 
+   * @returns a JSX element
+   */ 
 
 export default function FilteredTreatmentsDisplay({ 
   filteredTreatments,
   currentSelection
 }: FilteredTreatmentsDisplayProps) {
-  const [visibleCount, setVisibleCount] = useState(initialVisibleCount);
 
-  const treatmentsToShow = filteredTreatments.slice(0, visibleCount);
-  const hasMoreTreatments = filteredTreatments.length > visibleCount;
 
-  // Get the category name for the button text (if not 'all')
-  const categoryName = currentSelection !== 'all' 
-    ? currentSelection.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) // Simple slug-to-name approximation
-    : ''; 
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
+
+  
+  useEffect(() => {
+    setVisibleCount(INITIAL_VISIBLE_COUNT);
+  }, [currentSelection]);
+
+  const totalTreatments: number = filteredTreatments.length;
+  const treatmentsToShow: Treatment[] = filteredTreatments.slice(0, visibleCount);
+  const canShowMore: boolean = visibleCount < totalTreatments;
+
+  
+  /**
+   * Handles the "Show More" button click event.
+   * 
+   * Dynamically adjusts the number of visible treatments based on screen width:
+   * - Small screens (< 1024px): Shows 3 more treatments
+   * - Large screens (1024px - 1279px): Shows 4 more treatments
+   * - Extra large screens (≥ 1280px): Shows 6 more treatments
+   * 
+   * @function
+   * @returns {void}
+   */
+
+  const handleShowMore = () => {
+    const screenWidth: number = window.innerWidth;
+    let increment: number = 3; // Default increment (small screens)
+
+    if (screenWidth >= 1280) { // Approx XL breakpoint
+      increment = 6;
+    } else if (screenWidth >= 1024) { // Approx LG breakpoint
+      increment = 4;
+    }
+
+    setVisibleCount((prevCount) => Math.min(prevCount + increment, totalTreatments));
+  };
+
 
   return (
     <>
@@ -36,14 +82,14 @@ export default function FilteredTreatmentsDisplay({
         </p>
       )}
 
-      {hasMoreTreatments && (
-        <div className="text-center mt-12">
+      {canShowMore && (
+        <div className="mt-12 text-center">
           <Button 
-            onClick={() => setVisibleCount(filteredTreatments.length)}
             variant="outline"
             size="lg"
+            onClick={handleShowMore}
           >
-            Show All {categoryName} Treatments ({filteredTreatments.length})
+            Show More Treatments
           </Button>
         </div>
       )}
