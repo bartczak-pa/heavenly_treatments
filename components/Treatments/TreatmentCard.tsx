@@ -13,8 +13,6 @@ interface TreatmentCardProps {
   treatment: Treatment;
 };
 
-  
-const TreatmentCard: React.FC<TreatmentCardProps> = ({ treatment }) => {
   /**
    * TreatmentCard Component
    * 
@@ -40,6 +38,8 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({ treatment }) => {
    * @param {Treatment} treatment - The treatment data to display
    * @returns {JSX.Element} A treatment card component
    */
+const TreatmentCard: React.FC<TreatmentCardProps> = ({ treatment }) => {
+  
 
   const contactHref: string = `/contact?treatment=${encodeURIComponent(treatment.title)}`;
   const detailHref: string = `/treatments/${treatment.category}/${treatment.slug}`;
@@ -85,7 +85,7 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({ treatment }) => {
               <Clock className="h-4 w-4" />
               {treatment.duration}
             </span>
-            <span className="flex items-center gap-1.5 font-medium text-primary/90">
+            <span className="flex items-center gap-0.5 font-medium text-primary/90">
               <PoundSterling className="h-4 w-4" />
               {treatment.price.replace('£', '')}
             </span>
