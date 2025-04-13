@@ -7,6 +7,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Clock, PoundSterling, CheckCircle } from 'lucide-react';
 import { Metadata } from 'next';
+import Script from 'next/script';
 
 // eslint-disable-next-line no-unused-vars
 type ResolvedParams = {
@@ -51,8 +52,44 @@ export default async function TreatmentDetailPage({ params: paramsPromise }: Pro
 
   const contactHref = `/contact?treatment=${encodeURIComponent(treatment.title)}`;
 
+  // --- Prepare JSON-LD Structured Data ---
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: treatment.title,
+    description: treatment.description.substring(0, 5000), // Use a longer description for schema
+    image: treatment.image ? `${process.env.NEXT_PUBLIC_BASE_URL || ''}${treatment.image}` : undefined,
+    url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/treatments/${treatment.category}/${treatment.slug}`,
+    provider: {
+      '@type': 'Organization',
+      name: 'Heavenly Treatments with Hayleybell',
+      // Add address, phone etc. if available globally or hardcoded
+      // address: { ... },
+      // telephone: "...",
+    },
+    // Define the offer (price)
+    offers: {
+      '@type': 'Offer',
+      price: treatment.price.replace('£', ''), // Extract numeric price
+      priceCurrency: 'GBP',
+      // url: contactHref, // Optional: Link to booking/contact page
+    },
+    // Optional: Add service duration if parseable
+    // serviceDuration: 'PT...' // ISO 8601 duration format (e.g., PT1H30M for 90 mins)
+    // Optional: Add category
+    // category: treatment.category, 
+  };
+  // -------------------------------------
+
   return (
     <MainLayout>
+      {/* Inject JSON-LD Script */}
+      <Script 
+        id={`treatment-jsonld-${treatment.slug}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <section className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start">

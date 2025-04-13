@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { JSX } from 'react';
 import { contactInfo } from '@/lib/data/contactInfo';
 
 
@@ -25,13 +25,13 @@ import { contactInfo } from '@/lib/data/contactInfo';
  * - Exports both the component and the contactInfo data
  */
 
-const ContactInfo: React.FC = () => (
+const ContactInfo: React.FC = (): JSX.Element => (
     <div className="space-y-4 text-sm sm:text-base"> 
       <h3 className="text-xl font-semibold mb-3 text-primary">Contact Details</h3>
       <p><strong>Email:</strong> <a href={`mailto:${contactInfo.email}`} className="hover:underline text-foreground">{contactInfo.email}</a></p>
       <p><strong>Phone:</strong> <a href={`tel:${contactInfo.phone.replace(/\s/g, '')}`} className="hover:underline text-foreground">{contactInfo.phone}</a></p>
-      <p><strong>Address:</strong> {contactInfo.address}</p>
-      <p><strong>Hours:</strong> {contactInfo.hours}</p>
+      <p><strong>Address:</strong> {contactInfo.address.streetAddress}, {contactInfo.address.addressLocality}, {contactInfo.address.postalCode}, {contactInfo.address.addressCountry  }</p>
+      <p><strong>Hours:</strong> {`${contactInfo.openingHours[0].dayOfWeek[0]} - ${contactInfo.openingHours[0].dayOfWeek[6]}: ${contactInfo.openingHours[0].opens} - ${contactInfo.openingHours[0].closes}`}</p>
     </div>
   );
 
