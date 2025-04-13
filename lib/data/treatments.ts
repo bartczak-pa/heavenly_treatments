@@ -68,7 +68,7 @@ export interface Treatment {
       slug: 'facials',
       name: 'Facials',
       description: 'Nourish and pamper your body from head to toe.',
-      shortDescription: 'Experience our luxurious body treatments and therapies.',
+      shortDescription: 'Experience my luxurious facials.',
       image: '/images/categories/woman-salon-making-beauty-treatment-with-gua-sha-stone.jpg',
       iconName: 'SmilePlus',
     },
