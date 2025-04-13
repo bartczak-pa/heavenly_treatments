@@ -11,6 +11,29 @@ type Props = {
 
 
 export default async function TreatmentsPage(props: Props) { 
+  /**
+   * Treatments Page Component
+   * 
+   * A dynamic page component that displays treatments based on category filters.
+   * 
+   * Features:
+   * - Displays all treatments or filtered by category
+   * - Dynamic page title based on selected category
+   * - Responsive grid layout for treatments
+   * - Category filter navigation
+   * - SEO-friendly with proper heading hierarchy
+   * 
+   * @component
+   * @example
+   * ```tsx
+   * <TreatmentsPage params={params} searchParams={searchParams} />
+   * ```
+   * 
+   * @param {Object} props - Component props
+   * @param {Promise<Object>} props.params - Route parameters
+   * @param {Promise<Object>} [props.searchParams] - URL search parameters
+   * @returns {JSX.Element} A treatments page component
+   */
   
   const awaitedParams = await props.params;
   const awaitedSearchParams = await props.searchParams;
@@ -49,12 +72,15 @@ export default async function TreatmentsPage(props: Props) {
             {currentCategoryData ? currentCategoryData.name : 'All Treatments'}
           </h1>
 
-          <CategoryFilters 
-            selectedCategory={currentSelection}
-          />
+          {/* Wrap CategoryFilters in a centering div */}
+          <div className="flex justify-center mb-2 lg:mb-12">
+            <CategoryFilters 
+              selectedCategory={currentSelection}
+            />
+          </div>
 
           {currentCategoryData && (
-            <div className="text-center mb-12">
+            <div className="text-center mb-6 lg:mb-12">
               <p className="font-sans text-lg text-muted-foreground max-w-xl mx-auto">
                 {currentCategoryData.shortDescription || currentCategoryData.description}
               </p>
