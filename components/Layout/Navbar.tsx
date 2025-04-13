@@ -1,4 +1,4 @@
-// components/layout/Navbar.tsx
+
 'use client';
 
 import React, { useState } from 'react';
@@ -32,7 +32,7 @@ import { cn } from '@/lib/utils';
 
 // --- Link Style Constants ---
 const desktopCategoryLinkClasses: string = "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground";
-const mobileCategoryLinkClasses: string = "text-sm text-muted-foreground hover:text-primary";
+const mobileCategoryLinkClasses: string = "text-sm text-foreground hover:text-primary";
 // ---------------------------
 
 export default function Navbar() {
@@ -162,7 +162,7 @@ export default function Navbar() {
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] sm:w-[400px] z-50">
+            <SheetContent side="right" className="w-[300px] sm:w-[400px] z-50 bg-secondary ">
               <SheetHeader>
                 <SheetTitle>Menu</SheetTitle>
               </SheetHeader>
@@ -209,18 +209,18 @@ export default function Navbar() {
                         categories={treatmentCategories} 
                         showIcon={true}
                         baseLinkClasses={mobileCategoryLinkClasses}
-                        textClasses=""
+                        textClasses="text-secondary-foreground hover:text-primary"
                         iconClasses="h-4 w-4 flex-shrink-0 text-primary pr-0.5"
                       />
                     </div>
                   </CollapsibleContent>
                 </Collapsible>
 
-                <Link href="/treatments" className="text-sm font-medium transition-colors hover:text-primary">
+                <Link href="/contact" className="text-sm font-medium transition-colors hover:text-primary">
                   Contact
                 </Link>
                 <div className="pt-4">
-                  <Button variant="ghost" className="w-full" asChild>
+                  <Button variant="default" className="w-full" asChild>
                     <Link href="/treatments">
                       Book Now
                     </Link>
