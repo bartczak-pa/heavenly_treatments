@@ -157,8 +157,8 @@ export default function Navbar() {
         <div className="flex lg:hidden">
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="lg:hidden">
-                <Menu className="h-5 w-5" />
+              <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Toggle main menu">
+                <Menu className="h-5 w-5" aria-hidden="true" />
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
@@ -183,11 +183,17 @@ export default function Navbar() {
                        Treatments
                      </Link>
                      <CollapsibleTrigger asChild>
-                        <Button variant="ghost" size="sm" className="w-9 p-0 ml-2">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="w-9 p-0 ml-2" 
+                          aria-expanded={isMobileTreatmentsOpen}
+                          aria-label="Toggle treatment categories"
+                        >
                           {isMobileTreatmentsOpen ? (
-                            <ChevronDown className="h-4 w-4" />
+                            <ChevronDown className="h-4 w-4" aria-hidden="true" />
                           ) : (
-                            <ChevronRight className="h-4 w-4" />
+                            <ChevronRight className="h-4 w-4" aria-hidden="true" />
                           )}
                           <span className="sr-only">Toggle Treatments</span>
                         </Button>
