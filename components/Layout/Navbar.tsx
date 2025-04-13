@@ -147,7 +147,7 @@ export default function Navbar() {
         {/* Book Now Button - Desktop */}
         <div className="hidden lg:flex items-center">
           <Button variant="default" size="lg" asChild>
-            <Link href="/contact#booking-form">
+            <Link href="/treatments">
               Book Now
             </Link>
           </Button>
@@ -216,12 +216,12 @@ export default function Navbar() {
                   </CollapsibleContent>
                 </Collapsible>
 
-                <Link href="/contact" className="text-sm font-medium transition-colors hover:text-primary">
+                <Link href="/treatments" className="text-sm font-medium transition-colors hover:text-primary">
                   Contact
                 </Link>
                 <div className="pt-4">
                   <Button variant="ghost" className="w-full" asChild>
-                    <Link href="/contact#booking-form">
+                    <Link href="/treatments">
                       Book Now
                     </Link>
                   </Button>
