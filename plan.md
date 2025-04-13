@@ -80,9 +80,9 @@
   - Create Calendly integration component (Deferred)
   - "Book Now" buttons link to Contact Form with pre-filled treatment
   - Style Calendly embed to match site design (Deferred)
-- [ ] Add Google Maps integration
-  - Get Google Maps API key
-  - Implement map component on contact page
+- [X] Add Google Maps integration (iframe embed)
+  - [X] Get Google Maps Embed URL
+  - [X] Implement map component on contact page (using iframe)
 
 ## 5. Data Management
 - [X] Create content data structure
@@ -114,7 +114,6 @@
 - [ ] Validate functionality
   - Test all navigation links
   - Verify form submission works
-  - Test Calendly integration
   - Verify Google Maps display
 
 ## 8. Documentation & Deployment
