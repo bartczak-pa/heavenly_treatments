@@ -116,7 +116,7 @@ export async function POST(request: NextRequest) {
   try {
     // 1. Parse request body
     const body = await request.json();
-    console.log('API Route - Received body:', body);
+    console.log('API Route - Received contact form submission.'); 
 
     // 2. Validate data using Zod schema
     const validatedData = contactFormSchema.parse(body);
@@ -166,7 +166,6 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('API Route - Resend SDK Error:', error);
-      // Provide more specific feedback if possible
       let clientMessage = 'Failed to send message due to a server error.';
       if (error.message.includes('verified sender address')) {
         clientMessage = 'Server configuration error: Sending email address is not verified.';
@@ -179,7 +178,6 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    // Use the 'data' variable in the log
     console.log('API Route - Email sent successfully via Resend. ID:', data?.id);
     return NextResponse.json(
       { success: true, message: 'Thank you! Your message has been sent successfully.' },
