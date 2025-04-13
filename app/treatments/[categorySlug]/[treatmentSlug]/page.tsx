@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { Clock, PoundSterling, CheckCircle } from 'lucide-react';
 import { Metadata } from 'next';
 import Script from 'next/script';
+import { contactInfo } from '@/lib/data/contactInfo';
 
 // eslint-disable-next-line no-unused-vars
 type ResolvedParams = {
@@ -63,27 +64,28 @@ export default async function TreatmentDetailPage({ params: paramsPromise }: Pro
     provider: {
       '@type': 'Organization',
       name: 'Heavenly Treatments with Hayleybell',
-      // Add address, phone etc. if available globally or hardcoded
-      // address: { ... },
-      // telephone: "...",
+      url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/contact`,
+      address: contactInfo.address, 
+      telephone: contactInfo.phone,
+      email: contactInfo.email,
+      openingHours: contactInfo.openingHours,
+      hasMap: contactInfo.mapSrc,
     },
     // Define the offer (price)
     offers: {
       '@type': 'Offer',
-      price: treatment.price.replace('£', ''), // Extract numeric price
+      price: treatment.price.replace('£', ''), 
       priceCurrency: 'GBP',
-      // url: contactHref, // Optional: Link to booking/contact page
+      url: contactHref,
+      serviceDuration: treatment.duration,
+      category: treatment.category,
+      
     },
-    // Optional: Add service duration if parseable
-    // serviceDuration: 'PT...' // ISO 8601 duration format (e.g., PT1H30M for 90 mins)
-    // Optional: Add category
-    // category: treatment.category, 
   };
   // -------------------------------------
 
   return (
     <MainLayout>
-      {/* Inject JSON-LD Script */}
       <Script 
         id={`treatment-jsonld-${treatment.slug}`}
         type="application/ld+json"
