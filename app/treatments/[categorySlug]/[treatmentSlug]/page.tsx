@@ -152,11 +152,13 @@ export async function generateMetadata({ params: paramsPromise }: Props): Promis
   const description = treatment.description.substring(0, 160);
 
   return {
-    title: `${treatment.title}`, 
+    title: `${treatment.title}`,
     description: description,
     openGraph: {
       title: `${treatment.title} | Heavenly Treatments`,
       description: description,
+      url: `/treatments/${treatment.category}/${treatment.slug}`,
+      type: 'article',
       images: treatment.image
         ? [{ 
             url: treatment.image,
@@ -166,8 +168,6 @@ export async function generateMetadata({ params: paramsPromise }: Props): Promis
           }]
         : [],
     },
-
-    keywords: [treatment.title, treatment.category, 'Massage', 'Facial', 'Spa', 'Kelso', 'Scottish Borders', 'Heavenly Treatments', 'Heavenly Treatments with Hayleybell', 'Heavenly Treatments with Hayleybell Kelso', 'Scottish Borders Massage', 'Scottish Borders Facials', 'Scottish Borders Body Treatments'], 
   };
 }
 

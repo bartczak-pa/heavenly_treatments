@@ -44,7 +44,22 @@ export const metadata: Metadata = {
   },
   description: "Discover relaxing massage therapies, rejuvenating facials, and holistic body treatments in Biggleswade. Book your journey to wellness with Heavenly Treatments.",
   keywords: ['Massage', 'Facial', 'Reflexology', 'Body Treatments', 'Kelso', 'Wellness', 'Spa', 'Heavenly Treatments', 'Heavenly Treatments with Hayleybell', 'Heavenly Treatments with Hayleybell Kelso', 'Scottish Borders', 'Scottish Borders Massage', 'Scottish Borders Facials', 'Scottish Borders Body Treatments'],
-  
+  openGraph: {
+    type: 'website',
+    locale: 'en_GB',
+    url: process.env.NEXT_PUBLIC_BASE_URL || '',
+    siteName: 'Heavenly Treatments with Hayleybell',
+    title: 'Heavenly Treatments with Hayleybell - Wellness & Self-Care',
+    description: 'Relaxing massage, facial, reflexology, and body treatments in Biggleswade.',
+    images: [
+      {
+        url: '/images/logo.png',
+        width: 1200, // Standard OG width
+        height: 630, // Standard OG height
+        alt: 'Heavenly Treatments with Hayleybell logo',
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
