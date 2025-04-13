@@ -150,7 +150,13 @@ export async function POST(request: NextRequest) {
        return NextResponse.json({ success: false, message: 'Server configuration error.' },{ status: 500 });
     }
     
-    console.log(`API Route - Sending email from ${fromEmail} to ${toEmail} via Resend SDK...`);
+    
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`API Route - Sending email from ${fromEmail} to ${toEmail} via Resend SDK...`);
+    } else {
+      console.log('API Route - Sending email via Resend SDK...'); 
+    }
+
     const { data, error } = await resend.emails.send({
       from: fromEmail, 
       to: [toEmail], 
