@@ -22,6 +22,7 @@ interface Props {
   }>;
 }
 
+
 export default async function TreatmentDetailPage({ params: paramsPromise }: Props) { 
   const params = await paramsPromise; // Await the params promise
   
@@ -64,7 +65,7 @@ export default async function TreatmentDetailPage({ params: paramsPromise }: Pro
                 {treatment.description}
               </p>
               <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-muted-foreground">
-                <span className="flex items-center gap-1.5 text-lg font-medium text-primary/90">
+                <span className="flex items-center gap-0.5 text-lg font-medium text-primary/90">
                   <PoundSterling className="h-5 w-5" /> 
                   {treatment.price.replace('£', '')}
                 </span>
