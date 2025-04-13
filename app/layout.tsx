@@ -35,9 +35,16 @@ const openSans = Open_Sans({
 // Validate environment variables on startup
 validateEnv();
 
+// Base Metadata (can be overridden by pages)
 export const metadata: Metadata = {
-  title: "Heavenly Treatments",
-  description: "Your journey to wellness and self-care begins here",
+  metadataBase: process.env.NEXT_PUBLIC_BASE_URL ? new URL(process.env.NEXT_PUBLIC_BASE_URL) : undefined,
+  title: {
+    default: 'Heavenly Treatments with Hayleybell - Wellness & Self-Care',
+    template: '%s | Heavenly Treatments with Hayleybell', 
+  },
+  description: "Discover relaxing massage therapies, rejuvenating facials, and holistic body treatments in Biggleswade. Book your journey to wellness with Heavenly Treatments.",
+  keywords: ['Massage', 'Facial', 'Reflexology', 'Body Treatments', 'Kelso', 'Wellness', 'Spa', 'Heavenly Treatments', 'Heavenly Treatments with Hayleybell', 'Heavenly Treatments with Hayleybell Kelso', 'Scottish Borders', 'Scottish Borders Massage', 'Scottish Borders Facials', 'Scottish Borders Body Treatments'],
+  
 };
 
 export default function RootLayout({
