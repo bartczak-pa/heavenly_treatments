@@ -30,7 +30,33 @@ import { treatmentCategories, categoryIconMap } from '@/lib/data/treatments';
 import TreatmentCategoryLinks from './TreatmentCategoryLinks';
 import { cn } from '@/lib/utils';
 
+// --- Link Style Constants ---
+const desktopCategoryLinkClasses: string = "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground";
+const mobileCategoryLinkClasses: string = "text-sm text-muted-foreground hover:text-primary";
+// ---------------------------
+
 export default function Navbar() {
+  /**
+   * Navbar Component
+   * 
+   * A responsive navigation bar component that provides:
+   * - Desktop navigation with dropdown menus
+   * - Mobile navigation with a collapsible sheet
+   * - Treatment category navigation in both desktop and mobile views
+   * 
+   * Features:
+   * - Responsive design with mobile-first approach
+   * - Integration with TreatmentCategoryLinks component
+   * - Uses Radix UI components for accessibility
+   * 
+   * @component
+   * @example
+   * ```tsx
+   * <Navbar />
+   * ```
+   * 
+   * @returns {JSX.Element} A responsive navigation bar
+   */
   const [isMobileTreatmentsOpen, setIsMobileTreatmentsOpen] = useState(false);
 
   return (
@@ -81,7 +107,7 @@ export default function Navbar() {
                           <NavigationMenuLink asChild>
                             <Link
                               href={`/treatments/${category.slug}`}
-                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                              className={desktopCategoryLinkClasses}
                             >
                               <div className="flex items-center space-x-3">
                                 {IconComponent && <IconComponent className="h-4 w-4 flex-shrink-0 text-primary" />}
@@ -170,13 +196,13 @@ export default function Navbar() {
 
                   <CollapsibleContent>
                     <div className="flex flex-col space-y-2 pl-4 pt-2">
-                      <Link href="/treatments" className="text-sm text-muted-foreground hover:text-primary">
+                      <Link href="/treatments" className={mobileCategoryLinkClasses}>
                         All Treatments
                       </Link>
                       <TreatmentCategoryLinks 
                         categories={treatmentCategories} 
                         showIcon={true}
-                        baseLinkClasses="text-sm text-muted-foreground hover:text-primary"
+                        baseLinkClasses={mobileCategoryLinkClasses}
                         textClasses=""
                         iconClasses="h-4 w-4 flex-shrink-0 text-primary pr-0.5"
                       />
