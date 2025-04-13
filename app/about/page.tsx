@@ -1,16 +1,67 @@
-// app/about/page.tsx
-import React from 'react';
+import React, { JSX } from 'react';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import MeetTherapist from '@/components/Sections/meetTherapist';
 import MyStudio from '@/components/Sections/myStudio';
 import ContactInfo from '@/components/Sections/contactInfo';
 import CTASection from '../../components/Sections/cta';
 import { Button } from '@/components/ui/button';
+import { contactInfo } from '@/lib/data/contactInfo';
+import Script from 'next/script';
 
-export default function AboutPage() {
+
+export const metadata: Metadata = {
+  title: 'About Hayley - Therapist Profile',
+  description: 'Learn about Hayley, the qualified therapist behind Heavenly Treatments. Discover her qualifications, philosophy, and the tranquil studio environment.',
+};
+
+
+/**
+ * AboutPage Component
+ * 
+ * @component
+ * @description The About page component that displays information about the therapist, Hayley,
+ * including her background, philosophy, and the studio environment. The page includes several sections:
+ * - A main introduction section
+ * - MeetTherapist section
+ * - MyStudio section
+ * - ContactInfo section
+ * - A call-to-action section for booking appointments
+ * 
+ * @returns {JSX.Element} The rendered About page with all its sections
+ * 
+ * @example
+ * return (
+ *   <AboutPage />
+ * )
+ */
+
+const AboutPage: React.FC = (): JSX.Element => {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Heavenly Treatments',
+    url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/about`,
+    address: contactInfo.address,
+    telephone: contactInfo.phone,
+    email: contactInfo.email,
+    openingHours: contactInfo.openingHours,
+    hasMap: contactInfo.mapSrc,
+    image: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/images/logo.png`,
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: '55.584',
+      longitude: '-2.385',
+    },
+  }
   return (
     <MainLayout>
+      <Script 
+        id="about-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <main className="flex flex-col">
         <section className="py-16 md:py-24 bg-background">
           <div className="container mx-auto px-4">
@@ -55,3 +106,5 @@ export default function AboutPage() {
     </MainLayout>
   );
 }
+
+export default AboutPage;

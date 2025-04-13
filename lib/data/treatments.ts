@@ -14,8 +14,10 @@ export interface Treatment {
     id: string;
     title: string;
     slug: string;
-    description: string;
+    description: string; // TODO: Refine descriptions for better SEO and engagement.
     image: string; // Relative path to the image in /public
+    imageWidth?: number; // Optional: Add actual image width
+    imageHeight?: number; // Optional: Add actual image height
     duration: string;
     price: string;
     keyFeatures?: string[]; // Optional array of key features
@@ -30,7 +32,7 @@ export interface Treatment {
     slug: TreatmentCategorySlug;
     name: string;
     image: string; // Relative path to the image in /public
-    description: string; // Description for the category page
+    description: string; // TODO: Refine descriptions for better SEO and engagement.
     shortDescription: string; // Short description for Nav or previews
     iconName?: string; // Name of the Lucide icon
   }
@@ -103,6 +105,8 @@ export interface Treatment {
       // SEO Description
       description: 'Indulge in a full-body seasonal treat featuring a warm pumpkin pie spice scrub, massage, and pampering for hands and feet.',
       image: '/images/treatments/products_used_for_pumpkin_pie_pamper.jpg',
+      imageWidth: 800,
+      imageHeight: 600,
       duration: '70 mins',
       price: '£45',
       keyFeatures: [
@@ -122,6 +126,8 @@ export interface Treatment {
       slug: 'pumpkin-pie-back',
       description: 'Enjoy a focused seasonal back treatment with an exfoliating pumpkin pie scrub followed by a soothing massage.',
       image: '/images/treatments/spicy-pumpkin-latte-wooden-board-with-sweater_501050-260.jpg',
+      imageWidth: 800,
+      imageHeight: 600,
       duration: '40 mins',
       price: '£35',
       keyFeatures: [
@@ -138,6 +144,8 @@ export interface Treatment {
       slug: 'swedish-full-body-massage',
       description: 'Relax and unwind with a classic full-body Swedish massage tailored to your needs, improving circulation and easing muscle tension.',
       image: '/images/treatments/woman-getting-back-massage-from-masseur_23-2150461419.jpg',
+      imageWidth: 800,
+      imageHeight: 600,
       duration: '60 mins',
       price: '£40',
       keyFeatures: [
@@ -155,6 +163,8 @@ export interface Treatment {
       slug: 'swedish-back-neck-shoulders',
       description: 'Target tension in your back, neck, and shoulders with this focused Swedish massage designed for quick relief.',
       image: '/images/treatments/woman-getting-back-massage-from-female-masseur_23-2150461420.jpg',
+      imageWidth: 800,
+      imageHeight: 600,
       duration: '30 mins',
       price: '£25',
       keyFeatures: [
@@ -168,6 +178,8 @@ export interface Treatment {
       slug: 'swedish-full-body-express-facial',
       description: 'Combine full-body relaxation with facial rejuvenation in this 90-minute treatment featuring a Swedish massage and an express facial.',
       image: '/images/treatments/smiling-young-woman-procedure-face_7502-7528.avif',
+      imageWidth: 800,
+      imageHeight: 600,
       duration: '90 mins',
       price: '£50',
       keyFeatures: [
@@ -183,6 +195,8 @@ export interface Treatment {
       slug: 'back-cleanse-swedish-massage',
       description: 'Purify and relax with a back treatment including exfoliation, a mask application, and a soothing Swedish massage.',
       image: '/images/treatments/spa-concept-with-woman-massage_23-2147816926.jpg',
+      imageWidth: 800,
+      imageHeight: 600,
       duration: '50 mins',
       price: '£35',
       keyFeatures: [
@@ -201,6 +215,8 @@ export interface Treatment {
       slug: 'aromatherapy-full-body-massage',
       description: 'Enhance your relaxation with a soothing full-body aromatherapy massage using custom essential oil blends and inhalation.',
       image: '/images/treatments/young-woman-spa-environment_1098-1274.jpg',
+      imageWidth: 800,
+      imageHeight: 600,
       duration: '60 mins',
       price: '£45',
       keyFeatures: [
@@ -216,6 +232,8 @@ export interface Treatment {
       slug: 'aromatherapy-back-neck-shoulders',
       description: 'Soothe tension with a focused aromatherapy massage for your back, neck, and shoulders, enhanced with essential oils.',
       image: '/images/treatments/close-up-therapist-massaging-woman_23-2148815300.jpg',
+      imageWidth: 800,
+      imageHeight: 600,
       duration: '30 mins',
       price: '£30',
       keyFeatures: [
@@ -231,6 +249,8 @@ export interface Treatment {
       slug: 'sleep-well-treatment',
       description: 'Promote restful sleep with this calming treatment featuring lavender aromatherapy massage, hot compresses, and a relaxing scalp massage.',
       image: '/images/treatments/young-woman-relaxing-spa-salon_176420-7531.jpg',
+      imageWidth: 800,
+      imageHeight: 600,
       duration: '45 mins',
       price: '£35',
       keyFeatures: [
@@ -249,6 +269,8 @@ export interface Treatment {
       slug: 'seilich-meadowsweet-facial',
       description: 'Experience a luxurious facial using meadow-grown Seilich Botanicals products from Scotland, leaving your skin nourished and revitalized.',
       image: '/images/treatments/seilich_botanicals_products.jpg',
+      imageWidth: 800,
+      imageHeight: 600,
       duration: '60 mins',
       price: '£45',
       keyFeatures: [
@@ -270,6 +292,8 @@ export interface Treatment {
       slug: 'seilich-facial-back-massage',
       description: 'Combine a rejuvenating Seilich Botanicals facial with a relaxing 30-minute aromatherapy back massage for ultimate pampering.',
       image: '/images/treatments/seilich_botanicals_products.jpg',
+      imageWidth: 800,
+      imageHeight: 600,
       duration: '90 mins',
       price: '£55',
       keyFeatures: [
@@ -285,6 +309,8 @@ export interface Treatment {
       slug: 'neals-yard-holistic-facial',
       description: "Achieve a radiant glow with this holistic facial using organic Neal's Yard products, including massage and a nourishing mask.",
       image: '/images/treatments/neals_yard_facial_products.jpg',
+      imageWidth: 800,
+      imageHeight: 600,
       duration: '60 mins',
       price: '£40',
       keyFeatures: [
@@ -302,6 +328,8 @@ export interface Treatment {
       slug: 'express-facial',
       description: 'Refresh your skin quickly with this 30-minute express facial, including cleansing, exfoliation, and a mini massage.',
       image: '/images/treatments/young-woman-mask-face-relaxing-spa-salon_176420-7580.jpg',
+      imageWidth: 800,
+      imageHeight: 600,
       duration: '30 mins',
       price: '£25',
       keyFeatures: [
@@ -318,6 +346,8 @@ export interface Treatment {
        slug: 'luxury-facial-back-massage',
        description: 'Indulge in a 90-minute session combining a luxurious 60-minute facial with a relaxing back, neck, and shoulder massage.',
        image: '/images/treatments/cosmetologist-applying-mask-face-client-beauty-salon_1303-16777.avif',
+       imageWidth: 800,
+       imageHeight: 600,
        duration: '90 mins',
        price: '£50',
        keyFeatures: [
@@ -334,6 +364,8 @@ export interface Treatment {
        slug: 'back-cleanse',
        description: 'Deeply cleanse and purify your back with this treatment featuring exfoliation, a mask, foot massage, and back massage.',
        image: '/images/treatments/spa-concept-with-woman-massage_23-2147816926.jpg',
+       imageWidth: 800,
+       imageHeight: 600,
        duration: '45 mins',
        price: '£35',
        keyFeatures: [
@@ -351,6 +383,8 @@ export interface Treatment {
       slug: 'head-to-toe-treatment',
       description: 'Experience complete relaxation with this head-to-toe treatment including a back massage, express facial, and foot reflexology.',
       image: '/images/treatments/masseuse-doing-back-massage-with-skin-peeling-young-woman_1048944-1675079.jpg',
+      imageWidth: 800,
+      imageHeight: 600,
       duration: '90 mins',
       price: '£55',
       keyFeatures: [
@@ -368,6 +402,8 @@ export interface Treatment {
       slug: 'reflexology',
       description: 'Restore balance and promote well-being through the ancient art of reflexology, targeting pressure points on the feet.',
       image: '/images/categories/person_having_reflexology_treatment.png',
+      imageWidth: 800,
+      imageHeight: 600,
       duration: '45 mins',
       price: '£30',
       keyFeatures: [
@@ -382,6 +418,8 @@ export interface Treatment {
       slug: 'deluxe-spa-reflexology',
       description: 'Indulge in the ultimate pampering with our Deluxe Spa Reflexology. This luxurious treatment combines exfoliation, a nourishing masque, and targeted reflexology to restore balance and leave your feet feeling completely rejuvenated.',
       image: '/images/treatments/spa_reflexology_treatment.jpg', // TODO: Replace with a better image
+      imageWidth: 800,
+      imageHeight: 600,
       duration: '70 mins',
       price: '£40',
       keyFeatures: [

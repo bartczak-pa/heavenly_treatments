@@ -4,7 +4,8 @@ export const requiredEnvs: string[] = [//TODO: Add more envs as needed
     'EMAIL_FROM_ADDRESS',
     'CONTACT_EMAIL',
     'TURNSTILE_SECRET_KEY',
-    'NEXT_PUBLIC_TURNSTILE_SITE_KEY'
+    'NEXT_PUBLIC_TURNSTILE_SITE_KEY',
+    'NEXT_PUBLIC_GOOGLE_MAPS_EMBED_URL'
 ];
 
 export function validateEnv(): void {
