@@ -2,27 +2,37 @@ import React from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { MainLayout } from '@/components/Layout/MainLayout';
-import { getTreatmentBySlug, getTreatments } from '@/lib/data/treatments';
+import { getTreatmentBySlug, getTreatments, } from '@/lib/data/treatments';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Clock, PoundSterling, CheckCircle } from 'lucide-react';
+import { Metadata } from 'next';
 
+// eslint-disable-next-line no-unused-vars
 type ResolvedParams = {
   categorySlug: string;
   treatmentSlug: string;
 };
 
+// Define Props for Next.js 15+ 
+interface Props {
+  params: Promise<{ 
+    categorySlug: string; 
+    treatmentSlug: string; 
+  }>;
+}
 
-const TreatmentDetailPage = async ({ params: paramsPromise }: { params: Promise<ResolvedParams> }) => {
+export default async function TreatmentDetailPage({ params: paramsPromise }: Props) { 
+  const params = await paramsPromise; // Await the params promise
+  
+  const treatment = getTreatmentBySlug(params.treatmentSlug);
 
-  const params = await paramsPromise;
-  const { categorySlug, treatmentSlug } = params;
-
-  const treatment = getTreatmentBySlug(treatmentSlug);
-
-  if (!treatment || treatment.category !== categorySlug) {
+  if (!treatment) {
     notFound();
   }
+
+  // Construct the contact link
+  const contactHref = `/contact?treatment=${encodeURIComponent(treatment.title)}`;
 
   return (
     <MainLayout>
@@ -30,14 +40,20 @@ const TreatmentDetailPage = async ({ params: paramsPromise }: { params: Promise<
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start">
             <div className="relative w-full aspect-video md:aspect-square rounded-lg overflow-hidden shadow-lg">
-              <Image
-                src={treatment.image}
-                alt={treatment.title}
-                fill
-                style={{ objectFit: 'cover' }}
-                sizes="(max-width: 768px) 100vw, 50vw"
-                priority
-              />
+              {treatment.image ? (
+                <Image
+                  src={treatment.image}
+                  alt={treatment.title}
+                  fill
+                  priority
+                  style={{ objectFit: 'cover' }}
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              ) : (
+                <div className="w-full h-full bg-secondary/20 flex items-center justify-center">
+                  <span className="text-muted-foreground text-sm">Image coming soon</span>
+                </div>
+              )}
             </div>
 
             <div className="space-y-6">
@@ -72,24 +88,44 @@ const TreatmentDetailPage = async ({ params: paramsPromise }: { params: Promise<
                 </div>
               )}
 
-              <Button size="lg" asChild variant="default">
-                 <Link href="/#calendly-embed">
-                   Book This Treatment
-                 </Link>
-              </Button>
+              <div className="pt-4">
+                <Link href={contactHref}>
+                  <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90">
+                    Book This Treatment
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </section>
     </MainLayout>
   );
-};
+}
 
-export default TreatmentDetailPage;
+export async function generateMetadata({ params: paramsPromise }: Props): Promise<Metadata> {
+  const params = await paramsPromise; // Await params here too
+  const treatment = getTreatmentBySlug(params.treatmentSlug);
 
-export async function generateStaticParams(): Promise<ResolvedParams[]> {
+  if (!treatment) {
+    return {
+      title: "Treatment Not Found",
+    };
+  }
+
+  return {
+    title: `${treatment.title} | Heavenly Treatments`,
+    description: treatment.description || treatment.description.substring(0, 160), // Use shortDescription if available
+    openGraph: {
+      title: `${treatment.title} | Heavenly Treatments`,
+      description: treatment.description || treatment.description.substring(0, 160),
+      images: treatment.image ? [treatment.image] : [],
+    },
+  };
+}
+
+export async function generateStaticParams(): Promise<{ categorySlug: string; treatmentSlug: string }[]> {
   const treatments = getTreatments();
-
   return treatments.map((treatment) => ({
     categorySlug: treatment.category,
     treatmentSlug: treatment.slug,

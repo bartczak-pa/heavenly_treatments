@@ -15,7 +15,8 @@ export default async function TreatmentsPage(props: Props) {
   const awaitedParams = await props.params;
   const awaitedSearchParams = await props.searchParams;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  
+  // eslint-disable-next-line no-unused-vars
   const _params = awaitedParams; // Assign awaited params to unused variable
 
   const allTreatments = getTreatments();
