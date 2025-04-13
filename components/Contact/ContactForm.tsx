@@ -5,8 +5,9 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Turnstile from 'react-turnstile';
-import { getTreatments } from '@/lib/data/treatments';
+import { getTreatments, Treatment } from '@/lib/data/treatments';
 import { ContactFormData, contactFormSchema } from '@/lib/validations/contact';
+import { useContactFormToast } from '@/hooks/useContactFormToast';
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,26 +39,45 @@ interface ContactFormProps {
 
 export default function ContactForm({ initialTreatment }: ContactFormProps) {
 
-  /* 
-  This component is the main contact form component.
-  It uses the `useForm` hook from `react-hook-form` to manage the form state and validation.
-  It also uses the `Turnstile` component from `react-turnstile` to manage the Turnstile token.
-  It also uses the `Toast` component from `radix-ui` to manage the toast notifications.
-
-  @returns A React component that renders the contact form
-  @throws Error if the Turnstile token is not valid / form data is not valid / form submission fails
-  */
+  /**
+   * ContactForm Component
+   * 
+   * A form component for handling contact and booking requests. It includes:
+   * - Personal information fields (name, email, phone)
+   * - Treatment selection
+   * - Message and scheduling details
+   * - Turnstile verification
+   * - Toast notifications for feedback
+   * 
+   * Features:
+   * - Form validation using Zod
+   * - Cloudflare Turnstile integration for spam prevention
+   * - Responsive design
+   * - Accessible form controls
+   * - Toast notifications for success/error states
+   * 
+   * @component
+   * @example
+   * ```tsx
+   * // Basic usage
+   * <ContactForm />
+   * 
+   * // With initial treatment pre-selected
+   * <ContactForm initialTreatment="pumpkin-pie-pamper" />
+   * ```
+   * 
+   * @param {ContactFormProps} props - Component props
+   * @param {string} [props.initialTreatment] - Optional treatment slug to pre-select
+   * 
+   * @returns {JSX.Element} A contact form with validation and submission handling
+   */
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string>('');
-
-  // --- State for Radix Toast ---
-  const [toastOpen, setToastOpen] = useState(false);
-  const [toastTitle, setToastTitle] = useState("");
-  const [toastDescription, setToastDescription] = useState("");
-  const [toastVariant, setToastVariant] = useState<"success" | "error">("success");
-  // ---------------------------
   
-  const treatments = getTreatments();
+  // Use the custom hook for toast management
+  const { toastState, setToastOpen, showToast } = useContactFormToast();
+  
+  const treatments: Treatment[] = getTreatments();
 
   // 1. Initialize Form with react-hook-form + Zod
   const form = useForm<ContactFormData>({
@@ -77,22 +97,28 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
 
   // Handle Form Submission
   const onSubmit = async (data: ContactFormData) => {
-    /* 
-    This function handles the form submission.
-    It checks if the Turnstile token is valid, and if not, it sets the state for the Radix Toast to show a verification needed message.
-    If the token is valid, it sets the state for the Radix Toast to show a success message.
-    It then submits the form data to the server.
-
-    @param data - The form data
-    @returns void
-    @throws Error if the Turnstile token is not valid / form data is not valid / form submission fails
-    */
+    /**
+     * Handles the form submission process
+     * 
+     * This function:
+     * 1. Validates the Turnstile token
+     * 2. Submits the form data to the API endpoint
+     * 3. Handles success/error responses
+     * 4. Manages loading states
+     * 5. Provides user feedback via toast notifications
+     * 
+     * @param {ContactFormData} data - The validated form data
+     * @returns {Promise<void>}
+     * 
+     * @example
+     * ```tsx
+     * // Form submission triggered by user
+     * onSubmit(formData);
+     * ```
+     */
     if (!turnstileToken) {
-        // Set state to show Radix Toast for verification needed
-        setToastTitle("Verification Needed");
-        setToastDescription("Please complete the human verification step.");
-        setToastVariant("error");
-        setToastOpen(true);
+        // Use showToast from the hook
+        showToast("Verification Needed", "Please complete the human verification step.", "error");
         return;
     }
     
@@ -113,31 +139,19 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
       console.log("Client: Received response from API:", result);
 
       if (response.ok) {
-        // Set state for success toast
-        setToastTitle("Success");
-        setToastDescription(result.message || "Your message has been sent!");
-        setToastVariant("success");
-        setToastOpen(true);
-
+        // Use showToast from the hook
+        showToast("Success", result.message || "Your message has been sent! I will get back to you as soon as possible.", "success");
         form.reset(); 
         setTurnstileToken(''); 
       } else {
-        // Set state for error toast
-        setToastTitle("Submission Error");
-        setToastDescription(result.message || "An error occurred. Please try again.");
-        setToastVariant("error");
-        setToastOpen(true);
-
+        // Use showToast from the hook
+        showToast("Submission Error", result.message || "An error occurred. Please try again.", "error");
         setTurnstileToken('');
       }
     } catch (err) {
       console.error('Client-side submission error:', err);
-      // Set state for network error toast
-      setToastTitle("Network Error");
-      setToastDescription("Could not submit the form. Please check your connection and try again.");
-      setToastVariant("error");
-      setToastOpen(true);
-
+      // Use showToast from the hook
+      showToast("Network Error", "Could not submit the form. Please check your connection and try again.", "error");
       setTurnstileToken('');
     } finally {
       setIsSubmitting(false);
@@ -356,17 +370,16 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
 
       </form>
 
-      {/* --- Radix Toast Rendering --- */}
+      {/* --- Radix Toast Rendering (uses hook state) --- */}
       <Toast.Root 
-        open={toastOpen} 
+        open={toastState.open} 
         onOpenChange={setToastOpen}
-        className={`p-4 rounded-md shadow-lg ${toastVariant === 'error' ? 'bg-red-100 dark:bg-red-900' : 'bg-green-100 dark:bg-green-900'}`}
+        className={`p-4 rounded-md shadow-lg ${toastState.variant === 'error' ? 'bg-red-100 dark:bg-red-900' : 'bg-green-100 dark:bg-green-900'}`}
       >
-        <Toast.Title className={`font-medium ${toastVariant === 'error' ? 'text-red-800 dark:text-red-100' : 'text-green-800 dark:text-green-100'}`}>{toastTitle}</Toast.Title>
-        <Toast.Description className={`mt-1 text-sm ${toastVariant === 'error' ? 'text-red-700 dark:text-red-200' : 'text-green-700 dark:text-green-200'}`}>{toastDescription}</Toast.Description>
+        <Toast.Title className={`font-medium ${toastState.variant === 'error' ? 'text-red-800 dark:text-red-100' : 'text-green-800 dark:text-green-100'}`}>{toastState.title}</Toast.Title>
+        <Toast.Description className={`mt-1 text-sm ${toastState.variant === 'error' ? 'text-red-700 dark:text-red-200' : 'text-green-700 dark:text-green-200'}`}>{toastState.description}</Toast.Description>
         <Toast.Close className="absolute top-1 right-1 p-1 rounded-full text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700">
            <Cross2Icon className="h-4 w-4" />
-           
         </Toast.Close>
       </Toast.Root>
 
