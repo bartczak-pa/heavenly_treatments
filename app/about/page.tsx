@@ -1,6 +1,7 @@
 // app/about/page.tsx
 import React from 'react';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import MeetTherapist from '@/components/Sections/meetTherapist';
 import MyStudio from '@/components/Sections/myStudio';
@@ -8,7 +9,34 @@ import ContactInfo from '@/components/Sections/contactInfo';
 import CTASection from '../../components/Sections/cta';
 import { Button } from '@/components/ui/button';
 
-export default function AboutPage() {
+
+export const metadata: Metadata = {
+  title: 'About Hayley - Therapist Profile',
+  description: 'Learn about Hayley, the qualified therapist behind Heavenly Treatments. Discover her qualifications, philosophy, and the tranquil studio environment.',
+};
+
+
+/**
+ * AboutPage Component
+ * 
+ * @component
+ * @description The About page component that displays information about the therapist, Hayley,
+ * including her background, philosophy, and the studio environment. The page includes several sections:
+ * - A main introduction section
+ * - MeetTherapist section
+ * - MyStudio section
+ * - ContactInfo section
+ * - A call-to-action section for booking appointments
+ * 
+ * @returns {JSX.Element} The rendered About page with all its sections
+ * 
+ * @example
+ * return (
+ *   <AboutPage />
+ * )
+ */
+
+const AboutPage: React.FC = () => {
   return (
     <MainLayout>
       <main className="flex flex-col">
@@ -55,3 +83,5 @@ export default function AboutPage() {
     </MainLayout>
   );
 }
+
+export default AboutPage;
