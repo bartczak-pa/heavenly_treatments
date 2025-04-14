@@ -83,6 +83,11 @@ export function generateHealthAndBeautyBusinessJsonLd(contactInfo: ContactInfo) 
         email: contactInfo.email,
         openingHours: contactInfo.openingHours,
         hasMap: contactInfo.mapSrc,
+        geo: {
+            '@type': 'GeoCoordinates',
+            latitude: '55.584',
+            longitude: '-2.385',
+        },
     };
 }
 

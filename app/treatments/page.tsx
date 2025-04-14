@@ -8,9 +8,16 @@ import { contactInfo } from '@/lib/data/contactInfo';
 import Script from 'next/script';
 import { generateHealthAndBeautyBusinessJsonLd, ContactInfo } from '@/lib/jsonLsUtils';
 
+type Props = {
+  params: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
 export async function generateMetadata(
-  { searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } }
+  props: Props
 ): Promise<Metadata> {
+  const searchParams = await props.searchParams;
+
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
   const siteName = 'Heavenly Treatments with Hayleybell';
   const defaultTitle = 'Treatments Menu | Heavenly Treatments with Hayleybell';
@@ -60,11 +67,6 @@ export async function generateMetadata(
     },
   };
 }
-
-type Props = {
-  params: Promise<{ [key: string]: string | string[] | undefined }>;
-  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
-};
 
 /**
  * TreatmentsPage Component

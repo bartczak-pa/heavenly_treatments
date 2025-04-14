@@ -25,24 +25,7 @@ interface Props {
 }
 
 
-/**
- * TreatmentDetailPage Component
- * 
- * @component
- * @description The Treatment Detail page component that displays detailed information about a specific treatment.
- * It shows the treatment's image, title, description, price, duration, and key features. The page also includes
- * a call-to-action button for booking the treatment.
- * 
- * @param {Props} props - The component props
- * @param {Promise<{ categorySlug: string; treatmentSlug: string; }>} props.params - Route parameters containing the treatment category and treatment slugs
- * 
- * @returns {JSX.Element} The rendered Treatment Detail page with all treatment information
- * 
- * @example
- * return (
- *   <TreatmentDetailPage params={params} />
- * )
- */
+
 
 export default async function TreatmentDetailPage({ params: paramsPromise }: Props) { 
   const params = await paramsPromise;

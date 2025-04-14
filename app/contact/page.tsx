@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import type { Metadata } from 'next';
 import Script from 'next/script';
@@ -9,19 +7,45 @@ import ContactInfo from '@/components/Contact/ContactInfo';
 import MapEmbed from '@/components/Contact/MapEmbed';
 import ContactForm from '@/components/Contact/ContactForm';
 import { contactInfo } from '@/lib/data/contactInfo';
+import { generateHealthAndBeautyBusinessJsonLd, ContactInfo as ContactInfoType } from '@/lib/jsonLsUtils';
 
+export async function generateMetadata(): Promise<Metadata> {
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
+  const pageTitle = 'Contact & Booking | Heavenly Treatments with Hayleybell';
+  const pageDescription = 'Contact Heavenly Treatments to book an appointment or ask a question. Find our location, opening hours, and use our contact form.';
+  const imageUrl = `${BASE_URL}/images/logo.png`;
+  const siteName = 'Heavenly Treatments with Hayleybell';
+  const canonicalUrl = `${BASE_URL}/contact`;
 
-
-export const metadata: Metadata = {
-  title: 'Contact & Booking',
-  description: 'Contact Heavenly Treatments to book an appointment or ask a question. Find our location, opening hours, and use our contact form.',
-};
+  return {
+    title: pageTitle,
+    description: pageDescription,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: pageTitle,
+      description: pageDescription,
+      url: canonicalUrl,
+      siteName: siteName,
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: `${siteName} Contact Page Image`,
+        },
+      ],
+      locale: 'en_GB',
+      type: 'website',
+    },
+  };
+}
 
 interface ContactPageProps {
     params: Promise<Record<string, never>>; 
     searchParams?: Promise<{ [key: string]: string | string[] | undefined }>; 
 }
-
 
 export default async function ContactPage({ params, searchParams }: ContactPageProps) {
 
@@ -30,32 +54,12 @@ export default async function ContactPage({ params, searchParams }: ContactPageP
     const _params = await params; 
     const awaitedSearchParams = await searchParams;
     
-    // Extract the treatment title from awaited searchParams
     const initialTreatment = typeof awaitedSearchParams?.treatment === 'string' 
         ? awaitedSearchParams.treatment 
         : undefined;
 
-    // --- Prepare JSON-LD Structured Data for Local Business ---
-    const jsonLd = {
-        '@context': 'https://schema.org',
-        '@type': 'HealthAndBeautyBusiness', 
-        name: 'Heavenly Treatments with Hayleybell',
-        description: metadata.description,
-        url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/contact`,
-        telephone: contactInfo.phone,
-        email: contactInfo.email,
-        address: contactInfo.address,
-        image: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/images/logo.png`, 
 
-         geo: {
-            '@type': 'GeoCoordinates',
-            latitude: '55.584',
-            longitude: '-2.385',
- 
-         },
-        hasMap: contactInfo.mapSrc, 
-    };
-    // -------------------------------------------------------
+    const jsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfoType);
 
     return (
         <MainLayout>
