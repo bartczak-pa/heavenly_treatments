@@ -5,6 +5,13 @@ import Testimonials from '@/components/Sections/testimonials';
 import CTASection from '../components/Sections/cta';
 import MainHeader from '../components/Sections/mainHeader';
 import ServicesSection from '../components/Sections/services';
+import Script from 'next/script';
+import { contactInfo } from '@/lib/data/contactInfo';
+import { 
+  generateWebSiteJsonLd, 
+  generateHealthAndBeautyBusinessJsonLd, 
+  ContactInfo 
+} from '@/lib/jsonLsUtils';
 
 export const metadata: Metadata = {
   title: 'Heavenly Treatments with Hayleybell - Wellness & Self-Care',
@@ -41,8 +48,19 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const HomePage: React.FC = () => {
+  const webSiteJsonLd = generateWebSiteJsonLd();
+  const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfo);
+
   return (
     <MainLayout>
+      <Script 
+        id="homepage-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ 
+          __html: JSON.stringify([webSiteJsonLd, businessJsonLd])
+        }}
+      />
+
       <MainHeader />
 
       <ServicesSection />

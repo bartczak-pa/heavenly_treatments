@@ -64,5 +64,45 @@ export function generateServiceJsonLd(treatment: Treatment, contactInfo: Contact
 
 // Future functions for other schemas like Organization, WebSite, BreadcrumbList can be added here.
 // export function generateOrganizationJsonLd(contactInfo: ContactInfo) { ... }
-// export function generateWebSiteJsonLd() { ... }
-// export function generateBreadcrumbJsonLd(items: { name: string; item: string }[]) { ... }
+
+/**
+ * Generates JSON-LD structured data for a HealthAndBeautyBusiness schema.
+ * 
+ * @param contactInfo - The contact information object.
+ * @returns The JSON-LD object representing the business.
+ */
+export function generateHealthAndBeautyBusinessJsonLd(contactInfo: ContactInfo) {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'HealthAndBeautyBusiness',
+        name: 'Heavenly Treatments with Hayleybell',
+        url: `${BASE_URL}/treatments`,
+        image: `${BASE_URL}/images/logo.png`,
+        address: contactInfo.address,
+        telephone: contactInfo.phone,
+        email: contactInfo.email,
+        openingHours: contactInfo.openingHours,
+        hasMap: contactInfo.mapSrc,
+    };
+}
+
+/**
+ * Generates JSON-LD structured data for a WebSite schema.
+ * 
+ * @returns The JSON-LD object representing the website.
+ */
+export function generateWebSiteJsonLd() {
+    const searchUrl = `${BASE_URL}/search?q={search_term_string}`;
+
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'Heavenly Treatments with Hayleybell', // Site Name
+        url: BASE_URL, // Base URL of the website
+        potentialAction: { // Optional: Sitelinks Search Box
+            '@type': 'SearchAction',
+            target: `${searchUrl}`, 
+            'query-input': 'required name=search_term_string',
+        },
+    };
+}
