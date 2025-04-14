@@ -6,6 +6,7 @@ import { validateEnv } from '@/lib/env';
 import { Playfair_Display, Open_Sans } from 'next/font/google';
 import * as Toast from '@radix-ui/react-toast';
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/react"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -76,6 +77,7 @@ export default function RootLayout({
           {children}
           <Toast.Viewport className="fixed bottom-0 right-0 p-4" />
         </Toast.Provider>
+        <Analytics />
       </body>
     </html>
   );
