@@ -93,11 +93,11 @@
   - Define treatment categories and constants in /lib/constants/treatments.ts
 
 ## 6. SEO & Performance
-- [ ] Implement SEO optimization
-  - Create metadata for all pages
-  - Add Open Graph tags for social sharing
-  - Implement structured data for services
-  - Create robots.txt and sitemap.xml
+- [X] Implement SEO optimization
+  - [X] Create metadata for all pages (Title, Description, Canonical)
+  - [X] Add Open Graph tags for social sharing
+  - [X] Implement structured data (JSON-LD: Service, HealthAndBeautyBusiness, WebSite, BreadcrumbList)
+  - [ ] Create robots.txt and sitemap.xml
 - [ ] Optimize performance
   - Configure image optimization
   - Implement code splitting
