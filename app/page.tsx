@@ -13,11 +13,6 @@ import {
   ContactInfo 
 } from '@/lib/jsonLsUtils';
 
-export const metadata: Metadata = {
-  title: 'Heavenly Treatments with Hayleybell - Wellness & Self-Care',
-  description: 'Welcome to Heavenly Treatments in Kelso. Offering professional massage, facial, reflexology, and body treatments to help you relax and rejuvenate.',
-};
-
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
   const pageTitle = 'Heavenly Treatments with Hayleybell - Relax, Rejuvenate, Renew'; 
