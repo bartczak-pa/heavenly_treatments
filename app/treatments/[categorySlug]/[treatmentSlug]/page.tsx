@@ -2,14 +2,14 @@ import React from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { MainLayout } from '@/components/Layout/MainLayout';
-import { getTreatmentBySlug, getTreatments, } from '@/lib/data/treatments';
+import { getTreatmentBySlug, getTreatments, getCategories } from '@/lib/data/treatments';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Clock, PoundSterling, CheckCircle } from 'lucide-react';
 import { Metadata } from 'next';
 import Script from 'next/script';
 import { contactInfo } from '@/lib/data/contactInfo';
-import { generateServiceJsonLd, ContactInfo } from '@/lib/jsonLsUtils';
+import { generateServiceJsonLd, ContactInfo, generateBreadcrumbJsonLd } from '@/lib/jsonLsUtils';
 
 // eslint-disable-next-line no-unused-vars
 type ResolvedParams = {
@@ -35,18 +35,35 @@ export default async function TreatmentDetailPage({ params: paramsPromise }: Pro
     notFound();
   }
 
+  // Fetch category data for breadcrumb name
+  const categories = getCategories();
+  const categoryData = categories.find(cat => cat.slug === treatment.category);
+  const categoryName = categoryData ? categoryData.name : treatment.category; // Fallback to slug if name not found
+
   const contactHref = `/contact?treatment=${encodeURIComponent(treatment.title)}`;
 
-  // --- Prepare JSON-LD Structured Data using the utility function ---
-  const jsonLd = generateServiceJsonLd(treatment, contactInfo as ContactInfo);
-  // -------------------------------------
+  // --- Prepare Breadcrumb Data ---
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
+  const breadcrumbItems = [
+    { name: 'Home', item: BASE_URL },
+    { name: 'Treatments', item: `${BASE_URL}/treatments` },
+    { name: categoryName, item: `${BASE_URL}/treatments?category=${treatment.category}` },
+    { name: treatment.title, item: `${BASE_URL}/treatments/${treatment.category}/${treatment.slug}` },
+  ];
+  const breadcrumbJsonLd = generateBreadcrumbJsonLd(breadcrumbItems);
+  // -----------------------------
+
+  // --- Prepare Service JSON-LD ---
+  const serviceJsonLd = generateServiceJsonLd(treatment, contactInfo as ContactInfo);
+  // -----------------------------
 
   return (
     <MainLayout>
       <Script 
         id={`treatment-jsonld-${treatment.slug}`}
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        // Inject both schemas as an array
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([serviceJsonLd, breadcrumbJsonLd]) }}
       />
 
       <section className="py-16 md:py-24 bg-background">

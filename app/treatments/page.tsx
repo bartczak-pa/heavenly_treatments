@@ -6,7 +6,11 @@ import CategoryFilters from '@/components/Treatments/categoryFilters';
 import FilteredTreatmentsDisplay from '@/components/Treatments/FilteredTreatmentsDisplay';
 import { contactInfo } from '@/lib/data/contactInfo';
 import Script from 'next/script';
-import { generateHealthAndBeautyBusinessJsonLd, ContactInfo } from '@/lib/jsonLsUtils';
+import { 
+  generateHealthAndBeautyBusinessJsonLd, 
+  ContactInfo, 
+  generateBreadcrumbJsonLd 
+} from '@/lib/jsonLsUtils';
 
 type Props = {
   params: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -89,31 +93,49 @@ export async function generateMetadata(
  */
 
 export default async function TreatmentsPage(props: Props) { 
-
-  const jsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfo);
-    
+  
   const awaitedParams = await props.params;
   const awaitedSearchParams = await props.searchParams;
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
+  
+  // --- Business JSON-LD ---
+  const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfo);
+  // ----------------------
+  
+  // --- Prepare Breadcrumb Data ---
+  const allTreatments = getTreatments(); // Needed for filtering logic below
+  const categories: TreatmentCategory[] = getCategories(); // Needed for filters and breadcrumb name
+  const selectedCategorySlug = awaitedSearchParams?.category as TreatmentCategorySlug | undefined;
+  const categoryData = selectedCategorySlug ? categories.find(cat => cat.slug === selectedCategorySlug) : null;
+  const categoryName = categoryData ? categoryData.name : null;
 
+  let breadcrumbItems = [
+    { name: 'Home', item: BASE_URL },
+    { name: 'Treatments', item: `${BASE_URL}/treatments` },
+  ];
+
+  if (selectedCategorySlug && categoryName) {
+    breadcrumbItems.push({ 
+      name: categoryName, 
+      item: `${BASE_URL}/treatments?category=${selectedCategorySlug}` 
+    });
+  }
+  const breadcrumbJsonLd = generateBreadcrumbJsonLd(breadcrumbItems);
+  // -----------------------------
+  
   
   // eslint-disable-next-line no-unused-vars
   const _params = awaitedParams; // Assign awaited params to unused variable
 
-  const allTreatments = getTreatments();
-  const categories: TreatmentCategory[] = getCategories();
-
-  
-  const selectedCategorySlug = awaitedSearchParams?.category as TreatmentCategorySlug | null;
   const currentSelection: TreatmentCategorySlug | 'all' = 
-    selectedCategorySlug && categories.some(c => c.slug === selectedCategorySlug) 
+    selectedCategorySlug && categoryData 
       ? selectedCategorySlug 
       : 'all';
 
-  
   const currentCategoryData: TreatmentCategory | null = 
     currentSelection === 'all' 
       ? null 
-      : categories.find(cat => cat.slug === currentSelection) || null;
+      : categoryData ?? null; 
 
   
   const filteredTreatments = 
@@ -126,7 +148,8 @@ export default async function TreatmentsPage(props: Props) {
       <Script 
         id="treatments-jsonld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        // Inject both schemas as an array
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([businessJsonLd, breadcrumbJsonLd]) }}
       />
       <section className="py-16 md:py-24 bg-primary/10">
         <div className="container mx-auto px-4">
