@@ -9,6 +9,7 @@ import { Clock, PoundSterling, CheckCircle } from 'lucide-react';
 import { Metadata } from 'next';
 import Script from 'next/script';
 import { contactInfo } from '@/lib/data/contactInfo';
+import { generateServiceJsonLd, ContactInfo } from '@/lib/jsonLsUtils';
 
 // eslint-disable-next-line no-unused-vars
 type ResolvedParams = {
@@ -24,24 +25,7 @@ interface Props {
 }
 
 
-/**
- * TreatmentDetailPage Component
- * 
- * @component
- * @description The Treatment Detail page component that displays detailed information about a specific treatment.
- * It shows the treatment's image, title, description, price, duration, and key features. The page also includes
- * a call-to-action button for booking the treatment.
- * 
- * @param {Props} props - The component props
- * @param {Promise<{ categorySlug: string; treatmentSlug: string; }>} props.params - Route parameters containing the treatment category and treatment slugs
- * 
- * @returns {JSX.Element} The rendered Treatment Detail page with all treatment information
- * 
- * @example
- * return (
- *   <TreatmentDetailPage params={params} />
- * )
- */
+
 
 export default async function TreatmentDetailPage({ params: paramsPromise }: Props) { 
   const params = await paramsPromise;
@@ -53,35 +37,8 @@ export default async function TreatmentDetailPage({ params: paramsPromise }: Pro
 
   const contactHref = `/contact?treatment=${encodeURIComponent(treatment.title)}`;
 
-  // --- Prepare JSON-LD Structured Data ---
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Service',
-    name: treatment.title,
-    description: treatment.description.substring(0, 5000), // Use a longer description for schema
-    image: treatment.image ? `${process.env.NEXT_PUBLIC_BASE_URL || ''}${treatment.image}` : undefined,
-    url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/${treatment.image}`,
-    provider: {
-      '@type': 'Organization',
-      name: 'Heavenly Treatments with Hayleybell',
-      url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/contact`,
-      address: contactInfo.address, 
-      telephone: contactInfo.phone,
-      email: contactInfo.email,
-      openingHours: contactInfo.openingHours,
-      hasMap: contactInfo.mapSrc,
-    },
-    // Define the offer (price)
-    offers: {
-      '@type': 'Offer',
-      price: treatment.price.replace('£', ''), 
-      priceCurrency: 'GBP',
-      url: contactHref,
-      serviceDuration: treatment.duration,
-      category: treatment.category,
-      
-    },
-  };
+  // --- Prepare JSON-LD Structured Data using the utility function ---
+  const jsonLd = generateServiceJsonLd(treatment, contactInfo as ContactInfo);
   // -------------------------------------
 
   return (
@@ -196,11 +153,11 @@ export async function generateMetadata({ params: paramsPromise }: Props): Promis
     openGraph: {
       title: `${treatment.title} | Heavenly Treatments`,
       description: description,
-      url: `/treatments/${treatment.category}/${treatment.slug}`,
+      url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/treatments/${treatment.category}/${treatment.slug}`,
       type: 'article',
       images: treatment.image
         ? [{ 
-            url: treatment.image,
+            url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}${treatment.image}`,
             alt: `${treatment.title} - Heavenly Treatments Image`,
             width: 800, 
             height: 800, 

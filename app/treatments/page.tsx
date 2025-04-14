@@ -6,16 +6,67 @@ import CategoryFilters from '@/components/Treatments/categoryFilters';
 import FilteredTreatmentsDisplay from '@/components/Treatments/FilteredTreatmentsDisplay';
 import { contactInfo } from '@/lib/data/contactInfo';
 import Script from 'next/script';
-
-export const metadata: Metadata = {
-  title: 'Treatments Menu',
-  description: 'Explore my full menu of massage therapies, facials, reflexology, and body treatments. Find the perfect service for your relaxation and wellness needs.',
-};
+import { generateHealthAndBeautyBusinessJsonLd, ContactInfo } from '@/lib/jsonLsUtils';
 
 type Props = {
   params: Promise<{ [key: string]: string | string[] | undefined }>;
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 };
+
+export async function generateMetadata(
+  props: Props
+): Promise<Metadata> {
+  const searchParams = await props.searchParams;
+
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
+  const siteName = 'Heavenly Treatments with Hayleybell';
+  const defaultTitle = 'Treatments Menu | Heavenly Treatments with Hayleybell';
+  const defaultDescription = 'Explore my full menu of massage therapies, facials, reflexology, and body treatments. Find the perfect service for your relaxation and wellness needs.';
+  const defaultImageUrl = `${BASE_URL}/images/logo.png`;
+
+  let pageTitle = defaultTitle;
+  let pageDescription = defaultDescription;
+  let ogImageUrl = defaultImageUrl;
+  let canonicalUrl = `${BASE_URL}/treatments`;
+
+  const selectedCategorySlug = searchParams?.category as TreatmentCategorySlug | undefined;
+  
+  if (selectedCategorySlug) {
+    const categories = getCategories(); 
+    const categoryData = categories.find(cat => cat.slug === selectedCategorySlug);
+
+    if (categoryData) {
+      pageTitle = `${categoryData.name} Treatments | ${siteName}`;
+      pageDescription = categoryData.description || categoryData.shortDescription || defaultDescription;
+      ogImageUrl = categoryData.image ? `${BASE_URL}${categoryData.image}` : defaultImageUrl;
+      canonicalUrl = `${BASE_URL}/treatments?category=${selectedCategorySlug}`;
+    }
+  }
+
+  return {
+    title: pageTitle,
+    description: pageDescription,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: pageTitle,
+      description: pageDescription,
+      url: canonicalUrl, 
+      siteName: siteName,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: `${pageTitle} Image`,
+        },
+      ],
+      locale: 'en_GB',
+      type: 'website',
+    },
+  };
+}
 
 /**
  * TreatmentsPage Component
@@ -39,21 +90,8 @@ type Props = {
 
 export default async function TreatmentsPage(props: Props) { 
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'HealthAndBeautyBusiness',
-    name: 'Heavenly Treatments',
-    url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/treatments`,
-    address: contactInfo.address,
-    telephone: contactInfo.phone,
-    email: contactInfo.email,
-    openingHours: contactInfo.openingHours,
-    hasMap: contactInfo.mapSrc,
-    image: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/images/logo.png`,
-  }
+  const jsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfo);
     
-
-  
   const awaitedParams = await props.params;
   const awaitedSearchParams = await props.searchParams;
 
