@@ -111,3 +111,30 @@ export function generateWebSiteJsonLd() {
         },
     };
 }
+
+// Define the structure for a breadcrumb item
+interface BreadcrumbItem {
+  name: string;
+  item: string; // URL
+}
+
+/**
+ * Generates JSON-LD structured data for a BreadcrumbList schema.
+ * 
+ * @param items - An array of BreadcrumbItem objects, in order.
+ * @returns The JSON-LD object representing the breadcrumb list.
+ */
+export function generateBreadcrumbJsonLd(items: BreadcrumbItem[]) {
+  const itemListElement = items.map((item, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: item.name,
+    item: item.item, // URL for the breadcrumb item
+  }));
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: itemListElement,
+  };
+}
