@@ -37,14 +37,6 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: 'en_GB',
       type: 'website',
     },
-    
-    // Optional: Add Twitter specific tags if needed
-    // twitter: {
-    //   card: 'summary_large_image',
-    //   title: pageTitle,
-    //   description: pageDescription,
-    //   images: [imageUrl], // Must be an absolute URL
-    // },
   };
 }
 
