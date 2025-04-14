@@ -11,6 +11,43 @@ export const metadata: Metadata = {
   description: 'Welcome to Heavenly Treatments in Kelso. Offering professional massage, facial, reflexology, and body treatments to help you relax and rejuvenate.',
 };
 
+export async function generateMetadata(): Promise<Metadata> {
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
+  const pageTitle = 'Heavenly Treatments with Hayleybell - Relax, Rejuvenate, Renew'; 
+  const pageDescription = 'Discover relaxing massage therapies, facials, and beauty treatments designed to soothe your body and mind. Book your appointment today!';
+  const imageUrl = `${BASE_URL}/images/logo.png`; 
+  const siteName = 'Heavenly Treatments with Hayleybell';
+
+  return {
+    title: pageTitle,
+    description: pageDescription,
+    openGraph: {
+      title: pageTitle,
+      description: pageDescription,
+      url: BASE_URL,
+      siteName: siteName,
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: `${siteName} Logo`,
+        },
+      ],
+      locale: 'en_GB',
+      type: 'website',
+    },
+    
+    // Optional: Add Twitter specific tags if needed
+    // twitter: {
+    //   card: 'summary_large_image',
+    //   title: pageTitle,
+    //   description: pageDescription,
+    //   images: [imageUrl], // Must be an absolute URL
+    // },
+  };
+}
+
 const HomePage: React.FC = () => {
   return (
     <MainLayout>
