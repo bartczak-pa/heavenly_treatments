@@ -20,7 +20,7 @@ const MainHeader = () => {
             </div>
             <div className="relative z-20 container mx-auto px-4 flex flex-col items-center">
                 <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-4 drop-shadow-md text-primary">
-                    Step into a Haven of Relaxation
+                Professional Massage, Facials, Reflexology and Beauty Treatments in Kelso
                 </h1>
                 <p className="font-sans text-lg md:text-xl mb-8 max-w-2xl text-primary-foreground">
                     Revitalize Your Mind, Body, and Soul at Heavenly Treatments – Kelso&rsquo;s Hidden Gem for Relaxation and Wellness.

@@ -2,9 +2,9 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import Testimonials from '@/components/Sections/testimonials';
-// import CTASection from '../components/Sections/cta'; // Keep commented out
+
 import MainHeader from '../components/Sections/mainHeader';
-import ServicesSection from '../components/Sections/services'; // Uncomment import
+import ServicesSection from '../components/Sections/services';
 import Script from 'next/script';
 import { contactInfo } from '@/lib/data/contactInfo';
 import { 
@@ -18,7 +18,7 @@ import IntroductionSection from '@/components/Sections/Introduction';
 
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
-  const pageTitle = 'Heavenly Treatments with Hayleybell - Relax, Rejuvenate, Renew'; 
+  const pageTitle = 'My Kelso Cottage Spa | Massage & Beauty by Hayleybell'; 
   const pageDescription = 'Discover relaxing massage therapies, facials, and beauty treatments designed to soothe your body and mind. Book your appointment today!';
   const imageUrl = `${BASE_URL}/images/logo.png`; 
   const siteName = 'Heavenly Treatments with Hayleybell';
