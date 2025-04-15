@@ -24,7 +24,7 @@ export async function generateMetadata(
 
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
   const siteName = 'Heavenly Treatments with Hayleybell';
-  const defaultTitle = 'Treatments Menu | Heavenly Treatments with Hayleybell';
+  const defaultTitle = 'My Treatment Menu | Hayleybell\'s Cottage Spa';
   const defaultDescription = 'Explore my full menu of massage therapies, facials, reflexology, and body treatments. Find the perfect service for your relaxation and wellness needs.';
   const defaultImageUrl = `${BASE_URL}/images/logo.png`;
 

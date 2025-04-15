@@ -73,7 +73,7 @@ export default async function TreatmentDetailPage({ params: paramsPromise }: Pro
               {treatment.image ? (
                 <Image
                   src={treatment.image}
-                  alt={treatment.title}
+                  alt={`Image showing ${treatment.title.toLowerCase()} treatment being performed`}
                   fill
                   priority
                   style={{ objectFit: 'cover' }}
@@ -165,17 +165,17 @@ export async function generateMetadata({ params: paramsPromise }: Props): Promis
   const description = treatment.description.substring(0, 160);
 
   return {
-    title: `${treatment.title}`,
+    title: `${treatment.title} | My Cottage Spa Treatments`,
     description: description,
     openGraph: {
-      title: `${treatment.title} | Heavenly Treatments`,
+      title: `${treatment.title} | Hayleybell's Cottage Spa`,
       description: description,
       url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/treatments/${treatment.category}/${treatment.slug}`,
       type: 'article',
       images: treatment.image
         ? [{ 
             url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}${treatment.image}`,
-            alt: `${treatment.title} - Heavenly Treatments Image`,
+            alt: `Image showing ${treatment.title.toLowerCase()} treatment being performed`,
             width: 800, 
             height: 800, 
           }]

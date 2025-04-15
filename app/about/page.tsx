@@ -11,7 +11,7 @@ import { generateHealthAndBeautyBusinessJsonLd, ContactInfo as ContactInfoType }
 
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
-  const pageTitle = 'About Hayley - Therapist Profile | Heavenly Treatments';
+  const pageTitle = 'Meet Hayley | My Massage & Beauty Journey';
   const pageDescription = 'Learn about Hayley, the qualified therapist behind Heavenly Treatments. Discover her qualifications, philosophy, and the tranquil studio environment.';
   const imageUrl = `${BASE_URL}/images/logo.png`;
   const siteName = 'Heavenly Treatments with Hayleybell';

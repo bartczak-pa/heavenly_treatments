@@ -11,7 +11,7 @@ import { generateHealthAndBeautyBusinessJsonLd, ContactInfo as ContactInfoType }
 
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
-  const pageTitle = 'Contact & Booking | Heavenly Treatments with Hayleybell';
+  const pageTitle = 'Book Your Visit | Contact Hayleybell in Kelso';
   const pageDescription = 'Contact Heavenly Treatments to book an appointment or ask a question. Find our location, opening hours, and use our contact form.';
   const imageUrl = `${BASE_URL}/images/logo.png`;
   const siteName = 'Heavenly Treatments with Hayleybell';
