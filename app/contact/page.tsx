@@ -70,7 +70,7 @@ export default async function ContactPage({ params, searchParams }: ContactPageP
             />
 
             <HeroSection  
-                title="Get in Touch"
+                title="Book Your Visit at My Kelso Cottage Spa"
                 subtitle="I would love to hear from you! Please fill out the form below to inquire about bookings or ask any questions."
                 imageUrl="/images/contact/heavenly-treatments-from-outside.jpg"
             />

@@ -74,7 +74,7 @@ const AboutPage: React.FC = (): JSX.Element => {
       />
       <main className="flex flex-col">
       <h1 className="font-serif text-3xl md:text-4xl font-semibold text-primary text-center mt-10 mb-12">
-                About Me - Hayley
+                Meet Hayley - Your Kelso Massage & Beauty Therapist
               </h1> 
         
 
