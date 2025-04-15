@@ -8,8 +8,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
-const ServicesSection = () => {
-    const [showAll, setShowAll] = useState(false);
+interface ServicesSectionProps {
+  showAllButton?: boolean;
+}
+
+const ServicesSection: React.FC<ServicesSectionProps> = ({ showAllButton = true }) => {
+    const [showAll, setShowAll] = useState(!showAllButton);
     const totalCategories = treatmentCategories.length;
     const initialVisibleCount = 3;
 
@@ -27,10 +31,10 @@ const ServicesSection = () => {
                     {treatmentCategories.map((category, index) => (
                         <Link
                             key={category.id}
-                            href={`/treatments/${category.slug}`}
+                            href={`/treatments?category=${category.slug}`}
                             className={cn(
                                 'group block transition-all duration-300 ease-in-out hover:-translate-y-1',
-                                index >= initialVisibleCount && !showAll ? 'hidden' : 'block',
+                                showAllButton && index >= initialVisibleCount && !showAll ? 'hidden' : 'block',
                                 'md:block'
                              )}
                         >
@@ -66,14 +70,14 @@ const ServicesSection = () => {
                     ))}
                 </div>
 
-                {!showAll && totalCategories > initialVisibleCount && (
+                {showAllButton && !showAll && totalCategories > initialVisibleCount && (
                     <div className="text-center mt-12 md:hidden">
                         <Button onClick={(e) => { e.stopPropagation(); setShowAll(true); }} variant="outline" size="lg">
                             Show All Services ({totalCategories})
                         </Button>
                     </div>
                 )}
-                 <div className="text-center mt-12 hidden md:block">
+                 <div className="text-center mt-12">
                       <Button variant="default" size="lg" asChild>
                          <Link href="/treatments">View All Treatments</Link>
                       </Button>

@@ -2,16 +2,19 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import Testimonials from '@/components/Sections/testimonials';
-import CTASection from '../components/Sections/cta';
+// import CTASection from '../components/Sections/cta'; // Keep commented out
 import MainHeader from '../components/Sections/mainHeader';
-import ServicesSection from '../components/Sections/services';
+import ServicesSection from '../components/Sections/services'; // Uncomment import
 import Script from 'next/script';
 import { contactInfo } from '@/lib/data/contactInfo';
 import { 
   generateWebSiteJsonLd, 
   generateHealthAndBeautyBusinessJsonLd, 
-  ContactInfo 
+  ContactInfo as ContactInfoType 
 } from '@/lib/jsonLsUtils';
+import ExperienceSection from '@/components/Sections/Experience';
+import LocationAndBookingSection from '@/components/Sections/LocationAndBooking';
+import IntroductionSection from '@/components/Sections/Introduction';
 
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
@@ -44,7 +47,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const HomePage: React.FC = () => {
   const webSiteJsonLd = generateWebSiteJsonLd();
-  const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfo);
+  const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfoType);
 
   return (
     <MainLayout>
@@ -55,19 +58,17 @@ const HomePage: React.FC = () => {
           __html: JSON.stringify([webSiteJsonLd, businessJsonLd])
         }}
       />
-
       <MainHeader />
 
-      <ServicesSection />
+      <IntroductionSection />
+      <ServicesSection showAllButton={false} /> 
+
+     
+      <ExperienceSection />
+      
+      <LocationAndBookingSection />
 
       <Testimonials />
-
-      <CTASection
-        title="Ready to Experience Heaven?"
-        description="Book your appointment today and start your journey to relaxation and rejuvenation."
-        buttonText="Book Now"
-        buttonLink="/contact"
-      />
     </MainLayout>
   );
 };
