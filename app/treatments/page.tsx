@@ -154,7 +154,9 @@ export default async function TreatmentsPage(props: Props) {
       <section className="py-16 md:py-24 bg-primary/10">
         <div className="container mx-auto px-4">
           <h1 className="font-serif text-3xl md:text-4xl font-semibold text-primary text-center mb-8">
-            {currentCategoryData ? currentCategoryData.name : 'All Treatments'}
+            {currentCategoryData 
+              ? `${currentCategoryData.name} Treatments at My Kelso Cottage Spa` 
+              : 'Complete Treatment Menu | My Kelso Cottage Spa'}
           </h1>
 
           <div className="flex justify-center mb-2 lg:mb-12">
