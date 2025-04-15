@@ -7,6 +7,7 @@ import { Playfair_Display, Open_Sans } from 'next/font/google';
 import * as Toast from '@radix-ui/react-toast';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
+import Script from 'next/script';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -69,6 +70,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${openSans.variable} antialiased`}>
       <body className="font-sans min-h-screen bg-background text-foreground">
@@ -78,6 +81,30 @@ export default function RootLayout({
           <Toast.Viewport className="fixed bottom-0 right-0 p-4" />
         </Toast.Provider>
         <Analytics />
+        
+        {/* --- Google Analytics Scripts --- */}
+        {GA_MEASUREMENT_ID && (
+          <>
+            <Script 
+              strategy="afterInteractive" 
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+            />
+            <Script 
+              id="google-analytics"
+              strategy="afterInteractive" 
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${GA_MEASUREMENT_ID}');
+                `,
+              }}
+            />
+          </>
+        )}
+        {/* ---------------------------- */}
+        
       </body>
     </html>
   );
