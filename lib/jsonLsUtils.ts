@@ -39,6 +39,10 @@ export function generateServiceJsonLd(treatment: Treatment, contactInfo: Contact
         name: treatment.title,
         description: treatment.description.substring(0, 5000),
         image: treatment.image ? `${BASE_URL}${treatment.image}` : undefined,
+        sameAs: [
+            'https://www.facebook.com/heavenlytreatmentswithhayleybell',
+            'https://www.instagram.com/heavenlytreatments_hayleybell/'
+        ],
         url: `${BASE_URL}/treatments/${treatment.category}/${treatment.slug}`,
         provider: {
             '@type': 'Organization',
@@ -78,6 +82,10 @@ export function generateHealthAndBeautyBusinessJsonLd(contactInfo: ContactInfo) 
         name: 'Heavenly Treatments with Hayleybell',
         url: `${BASE_URL}/treatments`,
         image: `${BASE_URL}/images/logo.png`,
+        sameAs: [
+            'https://www.facebook.com/heavenlytreatmentswithhayleybell',
+            'https://www.instagram.com/heavenlytreatments_hayleybell/'
+        ],
         address: contactInfo.address,
         telephone: contactInfo.phone,
         email: contactInfo.email,
@@ -104,6 +112,10 @@ export function generateWebSiteJsonLd() {
         '@type': 'WebSite',
         name: 'Heavenly Treatments with Hayleybell', // Site Name
         url: BASE_URL, // Base URL of the website
+        sameAs: [
+            'https://www.facebook.com/heavenlytreatmentswithhayleybell',
+            'https://www.instagram.com/heavenlytreatments_hayleybell/'
+        ],
         potentialAction: { // Optional: Sitelinks Search Box
             '@type': 'SearchAction',
             target: `${searchUrl}`, 
