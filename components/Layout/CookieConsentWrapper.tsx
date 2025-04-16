@@ -31,8 +31,8 @@ const CookieConsentWrapper: React.FC = () => {
       onAccept={handleAccept}
       onDecline={handleDecline}
       style={{
-        background: 'hsl(var(--secondary))',
-        color: 'hsl(var(--secondary-foreground))',
+        background: 'hsl(var(--primary))',
+        color: 'hsl(var(--primary-foreground))',
         borderTop: '1px solid hsl(var(--border))',
         padding: '1rem',
       }}
