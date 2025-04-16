@@ -109,7 +109,7 @@ export default function Footer() {
             </p>
             {/* Legal Links Only */}
             <div className="flex gap-6">
-              <Link href="/privacy" className="text-sm text-muted-foreground hover:text-primary">
+              <Link href="/privacy-policy" className="text-sm text-muted-foreground hover:text-primary">
                 Privacy Policy
               </Link>
               <Link href="/terms" className="text-sm text-muted-foreground hover:text-primary">
