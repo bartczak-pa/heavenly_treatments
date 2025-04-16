@@ -12,13 +12,10 @@ const CookieConsentWrapper: React.FC = () => {
 
   const handleAccept = () => {
     Cookies.set(COOKIE_NAME, 'true', { expires: COOKIE_EXPIRY_DAYS });
-    // Optional: Reload or trigger analytics initialization if needed immediately
-    // window.location.reload(); 
   };
 
   const handleDecline = () => {
     Cookies.set(COOKIE_NAME, 'false', { expires: COOKIE_EXPIRY_DAYS });
-    // Optional: Remove existing analytics cookies if any
   };
 
   return (
@@ -31,13 +28,13 @@ const CookieConsentWrapper: React.FC = () => {
       onAccept={handleAccept}
       onDecline={handleDecline}
       style={{
-        background: 'hsl(var(--primary))',
+        background: 'var(--primary)',
         color: 'hsl(var(--primary-foreground))',
         borderTop: '1px solid hsl(var(--border))',
         padding: '1rem',
       }}
       buttonStyle={{
-        background: 'hsl(var(--primary))',
+        background: 'var(--secondary)',
         color: 'hsl(var(--primary-foreground))',
         fontSize: '13px',
         padding: '0.5rem 1rem',
@@ -45,7 +42,7 @@ const CookieConsentWrapper: React.FC = () => {
         marginRight: '10px',
       }}
       declineButtonStyle={{ 
-        background: 'hsl(var(--muted)) / 0.5',
+        background: 'var(--secondary)',
         color: 'hsl(var(--muted-foreground))',
         fontSize: '13px',
         padding: '0.5rem 1rem',
@@ -54,7 +51,7 @@ const CookieConsentWrapper: React.FC = () => {
       expires={COOKIE_EXPIRY_DAYS}
     >
       This website uses cookies, including Google Analytics for performance tracking, to enhance your experience. See our{' '}
-      <Link href="/cookie-policy" className="underline hover:text-primary">
+      <Link href="/cookie-policy" className="underline hover:text-background">
         Cookie Policy
       </Link>{' '}
       for details.

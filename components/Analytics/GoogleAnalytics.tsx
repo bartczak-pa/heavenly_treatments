@@ -33,11 +33,16 @@ const GoogleAnalytics: React.FC = () => {
   }, [pathname, consentGiven]); 
 
   if (!consentGiven || !GA_MEASUREMENT_ID) {
-    console.log('Google Analytics script not loaded due to lack of consent or missing ID.');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Google Analytics script not loaded due to lack of consent or missing ID.');
+    }
     return null;
   }
 
-  console.log('Loading Google Analytics script...');
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('Loading Google Analytics script...');
+  }
+
   return (
     <>
       <Script 

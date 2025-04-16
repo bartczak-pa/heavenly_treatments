@@ -10,6 +10,6 @@ interface ProcessEnv {
   NEXT_PUBLIC_BASE_URL: string;
   CALENDLY_API_KEY?: string;
   NEXT_PUBLIC_CALENDLY_USERNAME?: string;
-  NEXT_PUBLIC_GA_ID: string;
+  NEXT_PUBLIC_GA_MEASUREMENT_ID: string;
 }
 
