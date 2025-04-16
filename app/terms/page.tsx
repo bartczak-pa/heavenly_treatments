@@ -77,7 +77,7 @@ export default function TermsPage() {
               <li>Cancellations made less than 24 hours before your appointment: 50% of the treatment cost may be charged</li>
               <li>No-shows without any notice: full treatment cost may be charged</li>
             </ul>
-            <p>
+            <p className="mt-4">
               If you need to cancel, please let me know as soon as possible so I can offer your slot to another client.
               I reserve the right to waive cancellation fees in exceptional circumstances.
             </p>
@@ -109,7 +109,7 @@ export default function TermsPage() {
               <li>Modify treatments to accommodate health concerns</li>
               <li>Ask for a doctor&apos;s note for certain conditions before providing treatment</li>
             </ul>
-            <p>
+            <p className="mt-4">
               Please don&apos;t book if you have an infectious illness or condition that could spread to others.
               If you arrive for an appointment with such a condition, I reserve the right to cancel your treatment for safety reasons.
             </p>
@@ -129,12 +129,11 @@ export default function TermsPage() {
             
             <h2 className="text-2xl font-serif font-medium text-primary mt-8 mb-4">Age Restrictions</h2>
             <p>
-              Certain treatments have age restrictions:
+              My treatments have age restrictions:
             </p>
             <ul className="list-disc pl-6 space-y-2 mt-4">
-              <li>Clients under 16 must be accompanied by a parent or guardian who must remain on the premises during treatment</li>
-              <li>Some treatments may not be suitable for children or teenagers</li>
-              <li>Specific treatments may have their own age requirements, which will be communicated at the time of booking</li>
+              
+              <li>All treatments are suitable for clients aged 16 and over</li>
             </ul>
             
             <h2 className="text-2xl font-serif font-medium text-primary mt-8 mb-4">Liability</h2>
@@ -145,9 +144,8 @@ export default function TermsPage() {
               <li>I cannot accept liability for reactions or side effects that occur after treatment if you&apos;ve provided inaccurate health information</li>
               <li>I cannot guarantee specific results from treatments as each person responds differently</li>
               <li>I&apos;m not liable for damage to or loss of personal belongings while on the premises</li>
-              <li>My liability is limited to the cost of the treatment provided</li>
             </ul>
-            <p>
+            <p className="mt-4">
               I maintain professional liability insurance for your peace of mind.
             </p>
             
