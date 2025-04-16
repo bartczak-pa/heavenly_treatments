@@ -39,7 +39,7 @@ export interface Treatment {
   
   // Define slugs for type safety
   export type TreatmentCategorySlug =
-    | 'seasonal-treatments'
+    | 'hollistic-treatments'
     | 'massages'
     | 'facials'
     | 'body-treatments'
@@ -49,10 +49,10 @@ export interface Treatment {
   export const treatmentCategories: TreatmentCategory[] = [
     {
       id: 'cat-1',
-      slug: 'seasonal-treatments',
-      name: 'Seasonal Treatments',
-      description: 'Relax and rejuvenate with my range of seasonal treatments.',
-      shortDescription: 'Relax and rejuvenate with my range of seasonal treatments.',
+      slug: 'hollistic-treatments',
+      name: 'Hollistic Treatments',
+      description: 'Relax and rejuvenate with my range of hollistic treatments.',
+      shortDescription: 'Relax and rejuvenate with my range of hollistic treatments.',
       image: '/images/categories/products_used_for_seasonal_treatments.jpg',
       iconName: 'Sun',
     },
@@ -97,18 +97,18 @@ export interface Treatment {
 
   export const allTreatments: Treatment[] = [
 
-    // Seasonal Treatments
+    // Hollistic Treatments
     {
-      id: 'seasonal-1',
-      title: 'Pumpkin Pie Pamper',
-      slug: 'pumpkin-pie-pamper',
+      id: 'hollistic-1',
+      title: 'Scrub & Soothe',
+      slug: 'scrub-soothe',
       // SEO Description
       description: 'Indulge in a full-body seasonal treat featuring a warm pumpkin pie spice scrub, massage, and pampering for hands and feet.',
       image: '/images/treatments/products_used_for_pumpkin_pie_pamper.jpg',
       imageWidth: 800,
       imageHeight: 600,
       duration: '70 mins',
-      price: '£45',
+      price: '£50',
       keyFeatures: [
         'Pumpkin Pie back scrub',
         'Back, neck and shoulder massage',
@@ -118,24 +118,31 @@ export interface Treatment {
         'Scrub on hands',
         'Hand massage',
       ],
-      category: 'seasonal-treatments',
+      category: 'hollistic-treatments',
     },
     {
-      id: 'seasonal-2',
-      title: 'Pumpkin Pie - Back',
-      slug: 'pumpkin-pie-back',
-      description: 'Enjoy a focused seasonal back treatment with an exfoliating pumpkin pie scrub followed by a soothing massage.',
-      image: '/images/treatments/spicy-pumpkin-latte-wooden-board-with-sweater_501050-260.jpg',
+      id: 'hollistic-2',
+      title: 'Heal & Glow',
+      slug: 'heal-glow',
+      // SEO Description
+      description: 'Indulge in a hollistic treatment for your mind, body and soul using beautiful handmade products from Wild & Wood.',
+      image: '/images/treatments/heal_and_glow.jpeg',
       imageWidth: 800,
       imageHeight: 600,
-      duration: '40 mins',
-      price: '£35',
+      duration: '70 mins',
+      price: '£45',
       keyFeatures: [
-        'Pumpkin Pie back scrub',
-        'Followed by massage',
+        'Mini Facials with oil cleanse and sugar scrub',
+        'Healing balm facial massage',
+        'Facial mask',
+        'Foot massage with heated booties',
+        'Hand massage',
+        'Scalp massage',
+        'Botanical facial oil',
       ],
-      category: 'seasonal-treatments',
+      category: 'hollistic-treatments',
     },
+    
 
     // Massages - Swedish
     {
@@ -191,9 +198,9 @@ export interface Treatment {
     },
     {
       id: 'massage-4',
-      title: 'Back Cleanse & Swedish Massage',
-      slug: 'back-cleanse-swedish-massage',
-      description: 'Purify and relax with a back treatment including exfoliation, a mask application, and a soothing Swedish massage.',
+      title: 'Back Facial',
+      slug: 'back-facial',
+      description: 'Purify and relax with a back treatment including exfoliation, a mask application, and a soothing massage.',
       image: '/images/treatments/spa-concept-with-woman-massage_23-2147816926.jpg',
       imageWidth: 800,
       imageHeight: 600,
@@ -203,7 +210,7 @@ export interface Treatment {
         'Hot cloth exfoliation on the back',
         'Scrub application',
         'Masque application to the back',
-        'Followed by Swedish massage',
+        'Followed by massage',
       ],
       category: 'massages',
     },
@@ -211,40 +218,6 @@ export interface Treatment {
     // Massages - Aromatherapy
     {
       id: 'massage-5',
-      title: 'Aromatherapy Full Body Massage',
-      slug: 'aromatherapy-full-body-massage',
-      description: 'Enhance your relaxation with a soothing full-body aromatherapy massage using custom essential oil blends and inhalation.',
-      image: '/images/treatments/young-woman-spa-environment_1098-1274.jpg',
-      imageWidth: 800,
-      imageHeight: 600,
-      duration: '60 mins',
-      price: '£45',
-      keyFeatures: [
-        'Full body soothing massage',
-        'Uses your chosen essential oil blend',
-        'Includes inhalation bowl',
-      ],
-      category: 'massages',
-    },
-    {
-      id: 'massage-6',
-      title: 'Aromatherapy Back, Neck & Shoulders',
-      slug: 'aromatherapy-back-neck-shoulders',
-      description: 'Soothe tension with a focused aromatherapy massage for your back, neck, and shoulders, enhanced with essential oils.',
-      image: '/images/treatments/close-up-therapist-massaging-woman_23-2148815300.jpg',
-      imageWidth: 800,
-      imageHeight: 600,
-      duration: '30 mins',
-      price: '£30',
-      keyFeatures: [
-        'Back, neck and shoulder soothing massage',
-        'Uses your chosen essential oil blend',
-        'Includes inhalation bowl',
-      ],
-      category: 'massages',
-    },
-    {
-      id: 'massage-7',
       title: 'Sleep Well Treatment',
       slug: 'sleep-well-treatment',
       description: 'Promote restful sleep with this calming treatment featuring lavender aromatherapy massage, hot compresses, and a relaxing scalp massage.',
@@ -262,9 +235,36 @@ export interface Treatment {
       category: 'massages',
     },
 
+
     // Facials
+
     {
       id: 'facial-1',
+      title: 'Hydrating Jelly Mask Facial',
+      slug: 'hydrating-jelly-mask-facial',
+      description: 'Indulgent facial to leave your skin glowing and help to achieve the glass skin look.',
+      image: '/images/treatments/woman_having_jelly_mask.jpeg',
+      imageWidth: 800,
+      imageHeight: 600,
+      duration: '70 mins',
+      price: '£45',
+      keyFeatures: [
+        'Creamy Cleanse',
+        'Foaming Vitamin C Cleanse',
+        'Calming Exfoliation',
+        'Facial Massage with Lymphatic Drainage',
+        'Massage with Jade and Ice Rollers',
+        'JellyLab Jelly Mask',
+        'Chest, Neck and Shoulder Massage',
+        'Hand Massage',
+        'Energising Under Eye Mask',
+        'Scalp Massage with Jade Combs',
+        'Serum & Moisturiser',
+      ],
+      category: 'facials',
+    },
+    {
+      id: 'facial-2',
       title: 'Seilich Botanicals Meadowsweet Facial',
       slug: 'seilich-meadowsweet-facial',
       description: 'Experience a luxurious facial using meadow-grown Seilich Botanicals products from Scotland, leaving your skin nourished and revitalized.',
@@ -272,7 +272,7 @@ export interface Treatment {
       imageWidth: 800,
       imageHeight: 600,
       duration: '60 mins',
-      price: '£45',
+      price: '£40',
       keyFeatures: [
         'Double cleanse with Peppermint',
         'Hot towel steam',
@@ -287,7 +287,7 @@ export interface Treatment {
       category: 'facials',
     },
     {
-      id: 'facial-2',
+      id: 'facial-3',
       title: 'Seilich Facial with Back Massage',
       slug: 'seilich-facial-back-massage',
       description: 'Combine a rejuvenating Seilich Botanicals facial with a relaxing 30-minute aromatherapy back massage for ultimate pampering.',
@@ -295,7 +295,7 @@ export interface Treatment {
       imageWidth: 800,
       imageHeight: 600,
       duration: '90 mins',
-      price: '£55',
+      price: '£50',
       keyFeatures: [
         'Herbal Tea wildflower inhalation bowl',
         '30 minute aromatherapy back massage',
@@ -304,9 +304,9 @@ export interface Treatment {
       category: 'facials',
     },
     {
-      id: 'facial-3',
-      title: "Neal's Yard Holistic Facial",
-      slug: 'neals-yard-holistic-facial',
+      id: 'facial-4',
+      title: "Signature Facial",
+      slug: 'signature-facial',
       description: "Achieve a radiant glow with this holistic facial using organic Neal's Yard products, including massage and a nourishing mask.",
       image: '/images/treatments/neals_yard_facial_products.jpg',
       imageWidth: 800,
@@ -323,7 +323,7 @@ export interface Treatment {
       category: 'facials',
     },
     {
-      id: 'facial-4',
+      id: 'facial-5',
       title: 'Express Facial',
       slug: 'express-facial',
       description: 'Refresh your skin quickly with this 30-minute express facial, including cleansing, exfoliation, and a mini massage.',
@@ -341,9 +341,9 @@ export interface Treatment {
       category: 'facials',
     },
      {
-       id: 'facial-5',
-       title: 'Luxury Facial & Back Massage',
-       slug: 'luxury-facial-back-massage',
+       id: 'facial-6',
+       title: 'Signature Facial & Back Massage',
+       slug: 'signature-facial-back-massage',
        description: 'Indulge in a 90-minute session combining a luxurious 60-minute facial with a relaxing back, neck, and shoulder massage.',
        image: '/images/treatments/cosmetologist-applying-mask-face-client-beauty-salon_1303-16777.avif',
        imageWidth: 800,
