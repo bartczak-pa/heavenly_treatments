@@ -8,6 +8,7 @@ import Turnstile from 'react-turnstile';
 import { getTreatments, Treatment } from '@/lib/data/treatments';
 import { ContactFormData, contactFormSchema } from '@/lib/validations/contact';
 import { useContactFormToast } from '@/hooks/useContactFormToast';
+import { useRouter } from 'next/navigation';
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -71,6 +72,7 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
    * 
    * @returns {JSX.Element} A contact form with validation and submission handling
    */
+  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string>('');
   
@@ -143,6 +145,7 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
         showToast("Success", result.message || "Your message has been sent! I will get back to you as soon as possible.", "success");
         form.reset(); 
         setTurnstileToken(''); 
+        router.push('/booking-confirmation');
       } else {
         // Use showToast from the hook
         showToast("Submission Error", result.message || "An error occurred. Please try again.", "error");
@@ -192,7 +195,7 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
           />
         </div>
         
-        {/* Phone Field (Now standalone) */}
+        {/* Phone Field */}
         <FormField
           control={form.control}
           name="phone" 
