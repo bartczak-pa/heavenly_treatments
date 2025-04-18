@@ -11,5 +11,6 @@ interface ProcessEnv {
   CALENDLY_API_KEY?: string;
   NEXT_PUBLIC_CALENDLY_USERNAME?: string;
   NEXT_PUBLIC_GA_MEASUREMENT_ID: string;
+  NEXT_PUBLIC_GOOGLE_ADS_ID: string;
 }
 
