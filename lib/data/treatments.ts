@@ -394,6 +394,51 @@ export interface Treatment {
       ],
       category: 'body-treatments',
     },
+    {
+      id: 'body-3',
+      title: 'Fruity Bacial & Express Calming Facial',
+      slug: 'fruity-bacial-express-calming-facial',
+      description: 'This 90min treatment includes a sugar exfoliation on the back, a Mango Firming Body Mask on the back and décolleté to absorb excess oil and improve skin texture followed by a relaxing massage and mini facial. Perfect to prepare your skin for summer!',
+      image: '/images/treatments/bacial.png',
+      imageWidth: 800,
+      imageHeight: 600,
+      duration: '90 mins',
+      price: '£50',
+      keyFeatures: [
+        'Sugar back scrub to exfoliate and energise',
+        'Mango Firming mask to detoxify and deep cleanse',
+        'Foot and lower leg massage',
+        'Mini facial with double cleanse and exfoliation',
+        'Firming mask on décolleté and calming facial mask',
+        'Scalp and hand massage while the masks get to work',
+        'Finish with serum and moisturiser',
+      ],
+      category: 'body-treatments',
+    },
+    {
+      id: 'body-4',
+      title: 'Botanical Dry Head Spa with Mini Facial',
+      slug: 'botanical-dry-head-spa-with-mini-facial',
+      description: 'Want all the relaxing benefits of a head spa without getting your hair wet then this might be the treatment for you! This treatment is deeply relaxing and can promote a good nights sleep as well as relief from headaches and stress. ',
+      
+      image: '/images/treatments/dry_head_spa.jpg',
+      imageWidth: 800,
+      imageHeight: 600,
+      duration: '60 mins',
+      price: '£45',
+      keyFeatures: [
+        'Meadow blend tea inhalation bowl',
+        'Dry body brush of neck and shoulders',
+        'Neck and shoulder massage',
+        'Sensory massage of shoulders and scalp using tools and combs',
+        'Continuation of scalp massage',
+        'Mini Seilich Botanicals facial ~ double cleanse, tone and moisturise',
+        'Facial massage with lymphatic drainage and jade rollers using meadow face oil',
+        '£45 for 60mins or £55 to include full Botanical facial (90mins)',
+      ],
+      category: 'body-treatments',
+    },
+    
 
     // Reflexology
     {
