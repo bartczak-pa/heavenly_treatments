@@ -394,6 +394,28 @@ export interface Treatment {
       ],
       category: 'body-treatments',
     },
+    {
+      id: 'body-3',
+      title: 'Fruity Bacial & Express Calming Facial',
+      slug: 'fruity-bacial-express-calming-facial',
+      description: 'This 90min treatment includes a sugar exfoliation on the back, a Mango Firming Body Mask on the back and décolleté to absorb excess oil and improve skin texture followed by a relaxing massage and mini facial. Perfect to prepare your skin for summer!',
+      image: '/images/treatments/bacial.png',
+      imageWidth: 800,
+      imageHeight: 600,
+      duration: '90 mins',
+      price: '£50',
+      keyFeatures: [
+        'Sugar back srub to exfoliate and energise',
+        'Mango Firming mask to detoxify and deep cleanse',
+        'Foot and lower leg massage',
+        'Mini facial with double cleanse and exfoliation',
+        'Firming mask on décllete and and calming facial mask',
+        'Scalp and hand massage while the masks get to work',
+        'Finish with serum and moisturiser',
+      ],
+      category: 'body-treatments',
+    },
+    
 
     // Reflexology
     {
