@@ -49,7 +49,7 @@ export default function PrivacyPolicyPage() {
             </p>
             <p>
               <strong>Contact details:</strong><br />
-              Email: hayley@heavenlytreatments.co.uk<br />
+              Email: hayley@heavenly-treatments.co.uk<br />
               Phone: 0796 031 5337<br />
               Address: 6 Easter Softlaw Farm Cottage, TD5 8BJ Kelso
             </p>
@@ -203,7 +203,7 @@ export default function PrivacyPolicyPage() {
               If you have any questions about this privacy policy or how I handle your information, please contact me:
             </p>
             <ul className="list-disc pl-6 space-y-2 mt-4">
-              <li>By email: hayley@heavenlytreatments.co.uk</li>
+              <li>By email: hayley@heavenly-treatments.co.uk</li>
               <li>By phone: 0796 031 5337</li>
               <li>By post: 6 Easter Softlaw Farm Cottage, TD5 8BJ Kelso</li>
             </ul>

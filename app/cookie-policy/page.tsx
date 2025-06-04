@@ -139,7 +139,7 @@ export default function CookiePolicyPage() {
               If you have any questions about my cookie policy, please contact me:
             </p>
             <ul className="list-disc pl-6 space-y-2 mt-4">
-              <li>By email: hayley@heavenlytreatments.co.uk</li>
+              <li>By email: hayley@heavenly-treatments.co.uk</li>
               <li>By phone: 0796 031 5337</li>
             </ul>
           </div>

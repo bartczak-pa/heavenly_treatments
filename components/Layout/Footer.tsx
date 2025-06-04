@@ -53,7 +53,7 @@ export default function Footer() {
                 Phone: <a href="tel:07960315337" className="hover:text-primary transition-colors">0796 031 5337</a>
               </li>
               <li>
-                Email: <a href="mailto:hayley@heavenlytreatments.co.uk" className="hover:text-primary transition-colors">hayley@heavenlytreatments.co.uk</a>
+                Email: <a href="mailto:hayley@heavenly-treatments.co.uk" className="hover:text-primary transition-colors">hayley@heavenly-treatments.co.uk</a>
               </li>
             </ul>
           </div>

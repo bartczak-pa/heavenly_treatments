@@ -200,7 +200,7 @@ export default function TermsPage() {
               If you have any questions about these terms, please contact me:
             </p>
             <ul className="list-disc pl-6 space-y-2 mt-4">
-              <li>By email: hayley@heavenlytreatments.co.uk</li>
+              <li>By email: hayley@heavenly-treatments.co.uk</li>
               <li>By phone: 0796 031 5337</li>
               <li>By post: 6 Easter Softlaw Farm Cottage, TD5 8BJ Kelso</li>
             </ul>
