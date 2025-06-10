@@ -9,19 +9,25 @@ export default function ExperienceSection() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-4">
                <h2 className="font-serif text-3xl md:text-4xl font-semibold text-primary">
-                 Your Sanctuary for Relaxation in Kelso
+               Visit my Treatment Room in Kelso for a relaxing experience
               </h2>
               <p className="font-sans text-lg text-muted-foreground leading-relaxed">
-                From the moment you enter my treatment room, you&apos;ll feel the stresses of everyday life begin to melt away. I&apos;ve created a peaceful environment where soft lighting, calming music, and subtle aromatherapy work together to enhance your treatment experience.
+              Take some time for you by visiting my treatment room in a cosy cottage, nestled away in the picturesque countryside of the Scottish Borders.
               </p>
               <p className="font-sans text-lg text-muted-foreground leading-relaxed">
-                Each visit begins with a warm welcome and a brief consultation, ensuring your treatment is perfectly aligned with your current needs. Throughout your session, your comfort is my priority—with adjustable heating, proper draping, and attention to pressure preferences.
+              Each appointment will begin with a brief consultation to ensure the treatment is aligned with your needs.
+
               </p>
               <p className="font-sans text-lg text-muted-foreground leading-relaxed">
-                I use only premium-quality products selected for their effectiveness and natural ingredients. After your treatment, you&apos;ll be offered refreshment and given time to slowly transition back to your day, carrying the benefits of your treatment with you.
+              I use high quality professional products in my treatments with primarily organic and natural ingredients to provide you with the best results.
               </p>
               <p className="font-sans text-lg text-muted-foreground leading-relaxed">
-                Many of my clients describe their time at Heavenly Treatments as a transformative experience—not just a beauty treatment, but a genuine investment in their wellbeing and self-care.
+              Everything I use in the treatment room is also vegan and cruelty free. 
+
+
+              </p>
+              <p className="font-sans text-lg text-muted-foreground leading-relaxed">
+              I look forward to welcoming you soon xx 
               </p>
             </div>
             <div className="relative aspect-square rounded-lg overflow-hidden shadow-lg">

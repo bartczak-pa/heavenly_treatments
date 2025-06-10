@@ -9,19 +9,19 @@ export default function LocationAndBookingSection() {
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center space-y-4">
             <h2 className="font-serif text-3xl md:text-4xl font-semibold text-primary">
-              Conveniently Located in Kelso
+            Book your Appointment Now
             </h2>
             <p className="font-sans text-lg text-muted-foreground leading-relaxed">
-              Heavenly Treatments is situated in a charming cozy cottage in Kelso, easily accessible with nearby parking. My treatment room provides a private oasis where you can escape and unwind.
+            Heavenly Treatments is conveniently located about 5 minutes drive from the centre of Kelso with parking availability right outside the door.
             </p>
             <p className="font-sans text-lg text-muted-foreground leading-relaxed">
-              I serve clients throughout the Scottish Borders including Kelso, Jedburgh, and surrounding areas, welcoming both local residents and visitors to the region seeking quality massage and beauty treatments.
+            Appointments are available Monday to Sunday from 10am to 5pm, although some evenings are also available.
             </p>
             <p className="font-sans text-lg text-muted-foreground leading-relaxed">
-              Appointments are available Monday to Sunday. I recommend booking in advance to secure your preferred time slot, especially for weekend appointments which tend to fill quickly.
+            Use the simple online form below to get in touch and I will get back to you as soon as possible with my availability.
             </p>
             <p className="font-sans text-lg text-muted-foreground leading-relaxed">
-              Ready to experience the Heavenly Treatments difference? Book your appointment today through my simple online form or contact me directly. Your journey to relaxation and rejuvenation begins here. 
+            Your journey to relaxation starts here!
             </p>
              <div className="mt-8">
               <Button asChild variant="default" size="lg">
