@@ -20,10 +20,10 @@ const MeetTherapist = () => {
               </div>
               <div className="md:w-2/3">
                 <p className="text-gray-700 mb-4">
-                  I&apos;ve always had a passion for healing and relaxation, knowing from a young age that my purpose was to help others find solace in the chaos. This led me to pursue a career in the spa industry.
+                I began my journey into spa therapy training at the prestigious Mary Reid Spa Academy in Edinburgh in 2007.  I gained further experience working in 5 star spas such as the Sheraton Hotel One Spa and Schloss as well as busy salons.
                 </p>
                 <p className="text-gray-700">
-                  At the prestigious Mary Reid International Spa Academy, I honed my skills and learned essential techniques. From soothing massages to rejuvenating facials, I immersed myself in the art of pampering.
+                I am now using all this experience to bring you the best possible treatments using brands and products I am passionate about.
                 </p>
               </div>
             </div>
