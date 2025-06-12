@@ -276,7 +276,7 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
               <FormLabel>Message *</FormLabel>
               <FormControl>
                 <Textarea 
-                  placeholder="Please let me know of any allergies or medical conditions ie. pregnancy"
+                  placeholder="Please let me know of any allergies or medical conditions ie. pregnancy. Sorry, not currently offering treatments for male customers."
                   className="resize-none min-h-[120px]" 
                   {...field} 
                 />
