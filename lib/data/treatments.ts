@@ -462,7 +462,7 @@ export interface Treatment {
       title: 'Deluxe Spa Reflexology',
       slug: 'deluxe-spa-reflexology',
       description: 'Indulge in the ultimate pampering with our Deluxe Spa Reflexology. This luxurious treatment combines exfoliation, a nourishing masque, and targeted reflexology to restore balance and leave your feet feeling completely rejuvenated.',
-      image: '/images/treatments/spa_reflexology_treatment.jpg', // TODO: Replace with a better image
+      image: '/images/categories/person_having_reflexology_treatment.webp',
       imageWidth: 800,
       imageHeight: 600,
       duration: '70 mins',
