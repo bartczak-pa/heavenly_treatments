@@ -16,12 +16,13 @@ const MainHeader = ({ priority = false }: MainHeaderProps) => {
             <div className="absolute inset-0 z-0"> 
                 <Image
                     src={hero}
-                    alt="Young woman having face massage relaxing in a spa salon"
+                    alt=""
                     fill
                     className="object-cover"
                     sizes="100vw"
                     placeholder="blur"
                     priority={priority}
+                    aria-hidden="true"
                 />
                 <div className="absolute inset-0 bg-black/50 z-10 pointer-events-none"></div> 
             </div>
