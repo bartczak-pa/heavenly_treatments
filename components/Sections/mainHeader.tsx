@@ -15,7 +15,6 @@ const MainHeader = () => {
                     fill
                     style={{ objectFit: 'cover' }}
                     sizes="100vw"
-                    quality={90}
                     priority
                 />
                 <div className="absolute inset-0 bg-black/50 z-10"></div> 
