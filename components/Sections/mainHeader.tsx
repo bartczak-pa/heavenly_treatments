@@ -14,9 +14,11 @@ const MainHeader = () => {
                     alt="Young woman having face massage relaxing in a spa salon"
                     fill
                     style={{ objectFit: 'cover' }}
+                    sizes="100vw"
+                    quality={90}
                     priority
                 />
-                <div className="absolute inset-0 bg-black/50 z-1"></div> 
+                <div className="absolute inset-0 bg-black/50 z-10"></div> 
             </div>
             <div className="relative z-20 container mx-auto px-4 flex flex-col items-center">
                 <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-4 drop-shadow-md text-primary">
