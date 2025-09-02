@@ -10,7 +10,7 @@ const MainHeader = () => {
         <section className="relative h-[60vh] md:h-[70vh] w-full flex items-center justify-center text-center text-white overflow-hidden">
             <div className="absolute inset-0 z-0"> 
                 <Image
-                    src="/images/mainPage/young-woman-having-face-massage-relaxing-spa-salon.jpg" 
+                    src="/images/mainPage/young-woman-having-face-massage-relaxing-spa-salon.webp" 
                     alt="Young woman having face massage relaxing in a spa salon"
                     fill
                     style={{ objectFit: 'cover' }}
