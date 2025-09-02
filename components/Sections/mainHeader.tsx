@@ -4,19 +4,27 @@ import React from 'react';
 import { Button } from '../ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
+import hero from '@/public/images/mainPage/young-woman-having-face-massage-relaxing-spa-salon.webp';
 
-const MainHeader = () => {
+interface MainHeaderProps {
+    priority?: boolean;
+}
+
+const MainHeader = ({ priority = false }: MainHeaderProps) => {
     return (
         <section className="relative h-[60vh] md:h-[70vh] w-full flex items-center justify-center text-center text-white overflow-hidden">
             <div className="absolute inset-0 z-0"> 
                 <Image
-                    src="/images/mainPage/young-woman-having-face-massage-relaxing-spa-salon.jpg" 
-                    alt="Young woman having face massage relaxing in a spa salon"
+                    src={hero}
+                    alt=""
                     fill
-                    style={{ objectFit: 'cover' }}
-                    priority
+                    className="object-cover"
+                    sizes="100vw"
+                    placeholder="blur"
+                    priority={priority}
+                    aria-hidden="true"
                 />
-                <div className="absolute inset-0 bg-black/50 z-1"></div> 
+                <div className="absolute inset-0 bg-black/50 z-10 pointer-events-none" aria-hidden="true"></div>
             </div>
             <div className="relative z-20 container mx-auto px-4 flex flex-col items-center">
                 <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-4 drop-shadow-md text-primary">

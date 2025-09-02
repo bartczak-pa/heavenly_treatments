@@ -23,7 +23,7 @@ export interface Treatment {
     keyFeatures?: string[]; // Optional array of key features
     category: TreatmentCategorySlug; // Link to the category
   }
-  
+
   /**
    * Represents the different categories of treatments.
    */
@@ -36,7 +36,7 @@ export interface Treatment {
     shortDescription: string; // Short description for Nav or previews
     iconName?: string; // Name of the Lucide icon
   }
-  
+
   // Define slugs for type safety
   export type TreatmentCategorySlug =
     | 'hollistic-treatments'
@@ -44,7 +44,7 @@ export interface Treatment {
     | 'facials'
     | 'body-treatments'
     | 'reflexology';
-  
+
   // --- Treatment Categories ---
   export const treatmentCategories: TreatmentCategory[] = [
     {
@@ -62,7 +62,7 @@ export interface Treatment {
       name: 'Massages',
       description: 'Revitalize your skin with my range of massages.',
       shortDescription: 'Melt away tension with my range of massages',
-      image: '/images/categories/woman-with-closed-eyes-enjoying-massage.jpg',
+      image: '/images/categories/woman-with-closed-eyes-enjoying-massage.webp',
       iconName: 'HandHelping',
     },
     {
@@ -71,7 +71,7 @@ export interface Treatment {
       name: 'Facials',
       description: 'Nourish and pamper your body from head to toe.',
       shortDescription: 'Achieve glowing skin with my facial treatments',
-      image: '/images/categories/woman-salon-making-beauty-treatment-with-gua-sha-stone.jpg',
+      image: '/images/categories/woman-salon-making-beauty-treatment-with-gua-sha-stone.webp',
       iconName: 'SmilePlus',
     },
     {
@@ -89,11 +89,11 @@ export interface Treatment {
       name: 'Reflexology',
       description: 'Relax and rejuvenate with my range of reflexology treatments.',
       shortDescription: 'Heal from within with reflexology treatments',
-      image: '/images/categories/person_having_reflexology_treatment.png',
+      image: '/images/categories/person_having_reflexology_treatment.webp',
       iconName: 'Footprints',
     },
   ];
-  
+
 
   export const allTreatments: Treatment[] = [
 
@@ -142,7 +142,7 @@ export interface Treatment {
       ],
       category: 'hollistic-treatments',
     },
-    
+
 
     // Massages - Swedish
     {
@@ -398,10 +398,10 @@ export interface Treatment {
       id: 'body-3',
       title: 'Fruity Bacial & Express Calming Facial',
       slug: 'fruity-bacial-express-calming-facial',
-      description: 'This 90min treatment includes a sugar exfoliation on the back, a Mango Firming Body Mask on the back and décolleté to absorb excess oil and improve skin texture followed by a relaxing massage and mini facial. Perfect to prepare your skin for summer!',
-      image: '/images/treatments/bacial.png',
-      imageWidth: 800,
-      imageHeight: 600,
+      description: 'This 90 min treatment includes a sugar exfoliation on the back, a Mango Firming Body Mask on the back and décolleté to absorb excess oil and improve skin texture followed by a relaxing massage and mini facial. Perfect to prepare your skin for summer!',
+      image: '/images/treatments/bacial.webp',
+      imageWidth: 1500,
+      imageHeight: 1000,
       duration: '90 mins',
       price: '£50',
       keyFeatures: [
@@ -420,7 +420,7 @@ export interface Treatment {
       title: 'Botanical Dry Head Spa with Mini Facial',
       slug: 'botanical-dry-head-spa-with-mini-facial',
       description: 'Want all the relaxing benefits of a head spa without getting your hair wet then this might be the treatment for you! This treatment is deeply relaxing and can promote a good nights sleep as well as relief from headaches and stress. ',
-      
+
       image: '/images/treatments/dry_head_spa.jpg',
       imageWidth: 800,
       imageHeight: 600,
@@ -438,7 +438,7 @@ export interface Treatment {
       ],
       category: 'body-treatments',
     },
-    
+
 
     // Reflexology
     {
@@ -446,7 +446,7 @@ export interface Treatment {
       title: 'Reflexology',
       slug: 'reflexology',
       description: 'Restore balance and promote well-being through the ancient art of reflexology, targeting pressure points on the feet.',
-      image: '/images/categories/person_having_reflexology_treatment.png',
+      image: '/images/categories/person_having_reflexology_treatment.webp',
       imageWidth: 800,
       imageHeight: 600,
       duration: '45 mins',
@@ -462,7 +462,7 @@ export interface Treatment {
       title: 'Deluxe Spa Reflexology',
       slug: 'deluxe-spa-reflexology',
       description: 'Indulge in the ultimate pampering with our Deluxe Spa Reflexology. This luxurious treatment combines exfoliation, a nourishing masque, and targeted reflexology to restore balance and leave your feet feeling completely rejuvenated.',
-      image: '/images/treatments/spa_reflexology_treatment.jpg', // TODO: Replace with a better image
+      image: '/images/categories/person_having_reflexology_treatment.webp',
       imageWidth: 800,
       imageHeight: 600,
       duration: '70 mins',
@@ -479,9 +479,9 @@ export interface Treatment {
       category: 'reflexology',
     },
   ];
-  
+
   // --- Helper Functions  ---
-  
+
   /**
    * Gets all treatments.
    * @returns An array of all treatments.
@@ -489,7 +489,7 @@ export interface Treatment {
   export const getTreatments = (): Treatment[] => {
     return allTreatments;
   };
-  
+
   /**
    * Gets a specific treatment by its slug.
    * @param slug - The slug of the treatment to find.
@@ -498,7 +498,7 @@ export interface Treatment {
   export const getTreatmentBySlug = (slug: string): Treatment | undefined => {
     return allTreatments.find((treatment) => treatment.slug === slug);
   };
-  
+
   /**
    * Gets all treatment categories.
    * @returns An array of all treatment categories.
@@ -506,7 +506,7 @@ export interface Treatment {
   export const getCategories = (): TreatmentCategory[] => {
     return treatmentCategories;
   };
-  
+
   /**
    * Gets treatments belonging to a specific category.
    * @param categorySlug - The slug of the category.

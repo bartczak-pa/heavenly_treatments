@@ -1,6 +1,38 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  
+  // Image optimization configuration
+  images: {
+    // Modern image formats - order matters (AVIF preferred, WebP fallback)
+    formats: ['image/avif', 'image/webp'],
+    
+    // Device breakpoints for responsive images
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    
+    // Image sizes for smaller images (icons, thumbnails)
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    
+    // Quality levels - optimize for performance vs. visual quality
+    qualities: [25, 50, 75, 90],
+    
+    // Cache optimized images for 31 days
+    minimumCacheTTL: 2678400,
+    
+    // Allow local images from these patterns
+    localPatterns: [
+      {
+        pathname: '/images/**',
+        search: '',
+      },
+    ],
+  },
+
+  // Performance optimizations
+  experimental: {
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+  },
+
   async rewrites() {
     return [
       {
