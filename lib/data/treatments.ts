@@ -396,9 +396,9 @@ export interface Treatment {
     },
     {
       id: 'body-3',
-      title: 'Fruity Facial & Express Calming Facial',
-      slug: 'fruity-facial-express-calming-facial',
-      description: 'This 90min treatment includes a sugar exfoliation on the back, a Mango Firming Body Mask on the back and décolleté to absorb excess oil and improve skin texture followed by a relaxing massage and mini facial. Perfect to prepare your skin for summer!',
+      title: 'Fruity Bacial & Express Calming Facial',
+      slug: 'fruity-bacial-express-calming-facial',
+      description: 'This 90 min treatment includes a sugar exfoliation on the back, a Mango Firming Body Mask on the back and décolleté to absorb excess oil and improve skin texture followed by a relaxing massage and mini facial. Perfect to prepare your skin for summer!',
       image: '/images/treatments/bacial.webp',
       imageWidth: 1500,
       imageHeight: 1000,
