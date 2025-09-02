@@ -200,7 +200,7 @@ lib/
 
 ```bash
 # ALL CRITICAL FILES OPTIMIZED:
-bacial.png: 39MB → bacial.webp: 104KB (99.73% reduction) ✅
+bacial.webp: 104KB (99.73% reduction from 39MB bacial.png) ✅
 reflexology.png: 27MB → reflexology.webp: 120KB (99.56% reduction) ✅
 hero.jpg: 12MB → hero.webp: 102KB (99.15% reduction) ✅
 woman-salon.jpg: 11MB → woman-salon.webp: 111KB (99.00% reduction) ✅

@@ -84,7 +84,7 @@ Your `HeroSection.tsx` uses priority loading:
 
 ```bash
 # All critical files have been optimized:
-bacial.png: 39MB → bacial.webp: 104KB (99.73% reduction) ✅
+bacial.webp: 104KB (99.73% reduction from 39MB bacial.png) ✅
 reflexology.png: 27MB → reflexology.webp: 120KB (99.56% reduction) ✅
 hero.jpg: 12MB → hero.webp: 102KB (99.15% reduction) ✅
 woman-salon.jpg: 11MB → woman-salon.webp: 111KB (99.00% reduction) ✅
@@ -172,7 +172,7 @@ lighthouse http://localhost:3000 \
 
 ```bash
 # BEFORE (Original files - ALL DELETED):
-bacial.png: 39MB → REMOVED ✅
+bacial.webp: 104KB (replaced 39MB bacial.png) ✅
 reflexology.png: 27MB → REMOVED ✅
 hero.jpg: 12MB → REMOVED ✅
 woman-salon.jpg: 11MB → REMOVED ✅
