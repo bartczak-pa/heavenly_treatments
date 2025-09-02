@@ -136,7 +136,6 @@ Status: ✅ COMPLETED (2025-09-02)
 | Dev Dashboard | Real-time metrics display (development only) | ✅ Active |
 
 Metrics Tracked:
-
 - ✅ LCP (Largest Contentful Paint) — Loading
 - ✅ INP (Interaction to Next Paint) — Interactivity
 - ✅ CLS (Cumulative Layout Shift) — Visual stability

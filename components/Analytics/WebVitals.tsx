@@ -84,10 +84,24 @@ export function WebVitals({ debug = false, onMetric }: WebVitalsProps) {
 
         // Use sendBeacon for reliable unload-time delivery
         if (navigator.sendBeacon) {
-          navigator.sendBeacon(
+          const blob = new Blob([payload], { type: 'application/json' });
+          const queued = navigator.sendBeacon(
             process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT,
-            payload
+            blob
           );
+          if (!queued) {
+            // Fallback to fetch with keepalive if queuing failed
+            fetch(process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: payload,
+              keepalive: true,
+            }).catch(() => {
+              if (debug) {
+                console.warn('Analytics beacon failed, using best-effort delivery');
+              }
+            });
+          }
         } else {
           // Fallback to fetch with keepalive
           fetch(process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT, {

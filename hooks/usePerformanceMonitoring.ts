@@ -195,12 +195,12 @@ export function useRenderPerformance(componentName: string) {
     
     totalRenderTimeRef.current += renderTime;
     
-    renderMetricsRef.current = {
-      renderCount: renderCountRef.current,
-      lastRenderTime: renderTime,
-      averageRenderTime: totalRenderTimeRef.current / renderCountRef.current,
-      totalRenderTime: totalRenderTimeRef.current,
-    };
+    // Mutate fields on the existing object to keep its reference stable
+    const m = renderMetricsRef.current;
+    m.renderCount = renderCountRef.current;
+    m.lastRenderTime = renderTime;
+    m.totalRenderTime = totalRenderTimeRef.current;
+    m.averageRenderTime = m.totalRenderTime / m.renderCount;
 
     if (process.env.NODE_ENV === 'development') {
       console.log(
