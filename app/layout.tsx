@@ -7,6 +7,8 @@ import { Playfair_Display, Open_Sans } from 'next/font/google';
 import * as Toast from '@radix-ui/react-toast';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
+import { WebVitals } from '@/components/Analytics/WebVitals';
+import { PerformanceDashboard } from '@/components/Analytics/PerformanceDashboard';
 import Script from 'next/script';
 
 const geistSans = Geist({
@@ -77,11 +79,13 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${openSans.variable} antialiased`}>
       <body className="font-sans min-h-screen bg-background text-foreground">
         <SpeedInsights />
+        <WebVitals debug={process.env.NODE_ENV === 'development'} />
         <Toast.Provider swipeDirection="right">
           {children}
           <Toast.Viewport className="fixed bottom-0 right-0 p-4" />
         </Toast.Provider>
         <Analytics />
+        <PerformanceDashboard />
         
         {/* --- Google Analytics Scripts --- */}
         {GA_MEASUREMENT_ID && (
