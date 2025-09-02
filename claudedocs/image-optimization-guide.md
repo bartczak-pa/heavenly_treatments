@@ -12,17 +12,17 @@
 images: {
   // Modern formats - AVIF preferred, WebP fallback
   formats: ['image/avif', 'image/webp'],
-  
+
   // Responsive breakpoints
   deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
   imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-  
+
   // Quality optimization levels
   qualities: [25, 50, 75, 90],
-  
+
   // 31-day cache for optimized images
   minimumCacheTTL: 2678400,
-  
+
   // Local image patterns allowed
   localPatterns: [{ pathname: '/images/**', search: '' }],
 }
@@ -39,12 +39,12 @@ images: {
 
 ### Expected Performance Improvements
 
-| Aspect | Before | After | Improvement |
-|--------|--------|--------|-------------|
-| **Image Format** | PNG/JPEG only | AVIF/WebP preferred | 60-80% smaller |
-| **Responsive Delivery** | Full-size always | Device-appropriate | smaller |
-| **Cache Duration** | Default (60s) | 31 days | Better caching |
-| **Load Performance** | 8-12s | 2-3s | 75% faster |
+| Aspect                  | Before           | After               | Improvement    |
+| ----------------------- | ---------------- | ------------------- | -------------- |
+| **Image Format**        | PNG/JPEG only    | AVIF/WebP preferred | 60-80% smaller |
+| **Responsive Delivery** | Full-size always | Device-appropriate  | smaller        |
+| **Cache Duration**      | Default (60s)    | 31 days             | Better caching |
+| **Load Performance**    | 8-12s            | 2-3s                | 75% faster     |
 
 ## Usage Examples
 
@@ -57,7 +57,7 @@ Your `TreatmentCard.tsx` already uses proper `next/image`:
   src={treatment.image}
   alt={treatment.title}
   fill
-  style={{ objectFit: 'cover' }}
+  style={{ objectFit: "cover" }}
   className="transition-transform duration-300 group-hover:scale-105"
   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
 />
@@ -73,8 +73,8 @@ Your `HeroSection.tsx` uses priority loading:
   alt={title}
   fill
   className="object-cover"
-  sizes="100vw"  // ← Full-width hero image
-  priority       // ← Critical for above-fold images
+  sizes="100vw" // ← Full-width hero image
+  priority // ← Critical for above-fold images
 />
 ```
 
@@ -87,7 +87,7 @@ Your `HeroSection.tsx` uses priority loading:
 bacial.png: 39MB → bacial.webp: 104KB (99.73% reduction) ✅
 reflexology.png: 27MB → reflexology.webp: 120KB (99.56% reduction) ✅
 hero.jpg: 12MB → hero.webp: 102KB (99.15% reduction) ✅
-woman-salon.jpg: 11MB → woman-salon.webp: 111KB (99.00% reduction) ✅  
+woman-salon.jpg: 11MB → woman-salon.webp: 111KB (99.00% reduction) ✅
 woman-massage.jpg: 7MB → woman-massage.webp: 105KB (98.50% reduction) ✅
 ```
 
@@ -173,7 +173,7 @@ lighthouse http://localhost:3000 \
 ```bash
 # BEFORE (Original files - ALL DELETED):
 bacial.png: 39MB → REMOVED ✅
-reflexology.png: 27MB → REMOVED ✅  
+reflexology.png: 27MB → REMOVED ✅
 hero.jpg: 12MB → REMOVED ✅
 woman-salon.jpg: 11MB → REMOVED ✅
 woman-massage.jpg: 7MB → REMOVED ✅
@@ -183,7 +183,7 @@ ORIGINAL TOTAL: 96MB
 bacial.webp: 104KB (99.73% reduction!)
 reflexology.webp: 120KB (99.56% reduction!)
 hero.webp: 102KB (99.15% reduction!)
-woman-salon.webp: 111KB (99.00% reduction!)  
+woman-salon.webp: 111KB (99.00% reduction!)
 woman-massage.webp: 105KB (98.50% reduction!)
 NEW TOTAL: 542KB
 
