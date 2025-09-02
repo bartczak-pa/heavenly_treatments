@@ -24,7 +24,7 @@ const MainHeader = ({ priority = false }: MainHeaderProps) => {
                     priority={priority}
                     aria-hidden="true"
                 />
-                <div className="absolute inset-0 bg-black/50 z-10 pointer-events-none"></div> 
+                <div className="absolute inset-0 bg-black/50 z-10 pointer-events-none" aria-hidden="true"></div>
             </div>
             <div className="relative z-20 container mx-auto px-4 flex flex-col items-center">
                 <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-4 drop-shadow-md text-primary">
