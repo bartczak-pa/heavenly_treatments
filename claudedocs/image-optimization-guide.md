@@ -39,12 +39,12 @@ images: {
 
 ### Expected Performance Improvements
 
-| Aspect                  | Before           | After               | Improvement    |
-| ----------------------- | ---------------- | ------------------- | -------------- |
-| **Image Format**        | PNG/JPEG only    | AVIF/WebP preferred | 60-80% smaller |
-| **Responsive Delivery** | Full-size always | Device-appropriate  | smaller        |
-| **Cache Duration**      | Default (60s)    | 31 days             | Better caching |
-| **Load Performance**    | 8-12s            | 2-3s                | 75% faster     |
+| Aspect              | Before         | After             | Improvement    |
+| ------------------- | -------------- | ----------------- | -------------- |
+| **Image Format**    | PNG/JPEG only  | AVIF/WebP         | 60-80% smaller |
+| **Responsive**      | Full-size      | Device-optimized  | 50-90% smaller |
+| **Cache Duration**  | Default (60s)  | 31 days           | Better caching |
+| **Load Performance** | 8-12s         | 2-3s              | 75% faster     |
 
 ## Usage Examples
 

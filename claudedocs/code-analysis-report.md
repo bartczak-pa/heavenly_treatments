@@ -24,9 +24,9 @@ technical debt and good security posture.
 
 - **Files Analyzed**: 58 TypeScript/React files
 - **Total LOC**: ~690K (including dependencies)
-- **Framework**: Next.js 15.2.4 with React 19
-- **Language**: TypeScript with strict typing
-- **Styling**: Tailwind CSS + shadcn/ui components
+- **Framework**: Next.js (see package.json) with React 19+
+- **Language**: TypeScript 5+ with strict typing
+- **Styling**: Tailwind CSS 4+ + shadcn/ui components
 - **Lint Status**: ✅ No warnings or errors
 - **Type Check**: ✅ No type errors
 
@@ -129,12 +129,15 @@ completely addressed through comprehensive image optimization.
 
 ```text
 app/
-├── api/contact/          # API routes
-├── [pages]/             # Route pages
+├── about/               # About page
+├── api/contact/         # API routes  
+├── contact/             # Contact page
+├── treatments/          # Treatments pages
+└── [other-routes]/      # Additional routes
 components/
 ├── Contact/             # Contact functionality
 ├── Treatments/          # Treatment displays
-├── ui/                  # shadcn components
+└── ui/                  # shadcn components
 lib/
 ├── data/                # Static data
 ├── validations/         # Zod schemas
@@ -216,6 +219,37 @@ TOTAL SPACE SAVED: 95.46MB
 | Lighthouse score   | ~60    | ~95         | **+35 points**           |
 | Mobile performance | Poor   | Outstanding | **Major transformation** |
 
+### Reproduction Instructions
+
+**Environment:**
+
+- Analysis date: 2025-09-01
+- Branch: fixes-2.0
+- Node.js: Latest LTS
+- Browser: Chrome/Edge (latest)
+
+**Lighthouse Performance Test:**
+
+```bash
+# Install Lighthouse globally
+npm install -g lighthouse
+
+# Test performance (development)
+lighthouse http://localhost:3000 --only-categories=performance
+
+# Test performance (production)
+lighthouse https://your-production-url.com --only-categories=performance
+```
+
+**Image Size Verification:**
+
+```bash
+# Check optimized image sizes
+du -sh public/images/treatments/bacial.webp
+du -sh public/images/categories/person_having_reflexology_treatment.webp
+du -sh public/images/mainPage/young-woman-having-face-massage-relaxing-spa-salon.webp
+```
+
 **✅ IMPLEMENTED SOLUTIONS:**
 
 - ✅ Next.js AVIF/WebP configuration active
@@ -241,10 +275,10 @@ TOTAL SPACE SAVED: 95.46MB
 
 **Current Stack** ✅
 
-- Next.js 15.2.4 (Latest stable)
-- React 19 (Latest)
-- TypeScript 5 (Latest)
-- Tailwind CSS 4 (Latest)
+- Next.js (per package.json - latest stable)
+- React 19+ (per package.json)
+- TypeScript 5+ (per package.json)
+- Tailwind CSS 4+ (per package.json)
 
 ### Suggested Additions
 
