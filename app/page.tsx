@@ -58,7 +58,7 @@ const HomePage: React.FC = () => {
           __html: JSON.stringify([webSiteJsonLd, businessJsonLd])
         }}
       />
-      <MainHeader />
+      <MainHeader priority={true} />
 
       <IntroductionSection />
       <ServicesSection showAllButton={false} /> 
