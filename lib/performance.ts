@@ -1,6 +1,7 @@
 /**
  * Performance monitoring utilities for Core Web Vitals and custom metrics
  */
+import { onCLS, onLCP, onTTFB, onFCP, onINP } from 'web-vitals';
 
 export interface PerformanceMetrics {
   // Core Web Vitals
@@ -135,72 +136,114 @@ export function monitorImagePerformance(): Promise<number> {
 }
 
 /**
- * Performance observer for Core Web Vitals
+ * Performance observer for Core Web Vitals using official web-vitals library
  */
 export class WebVitalsObserver {
-  private observers: PerformanceObserver[] = [];
   private metrics: Partial<PerformanceMetrics> = {};
   // eslint-disable-next-line no-unused-vars
   private callbacks: Array<(metrics: Partial<PerformanceMetrics>) => void> = [];
 
-  constructor() {
+  // eslint-disable-next-line no-unused-vars
+  constructor(options?: { onMetric?: (metric: any) => void }) {
     if (typeof window !== 'undefined') {
-      this.initObservers();
+      this.initWebVitals();
+    }
+
+    if (options?.onMetric) {
+      this.onMetricUpdate((metrics) => {
+        Object.entries(metrics).forEach(([name, value]) => {
+          if (value !== undefined) {
+            options.onMetric?.({
+              name,
+              value,
+              id: `${name}-${Date.now()}`,
+              rating: getPerformanceRating(name as keyof PerformanceThresholds, value),
+            });
+          }
+        });
+      });
     }
   }
 
-  private initObservers() {
-    // Observe LCP
-    if ('PerformanceObserver' in window) {
-      try {
-        const lcpObserver = new PerformanceObserver((list) => {
-          const entries = list.getEntries();
-          const lastEntry = entries[entries.length - 1] as any;
-          this.updateMetric('LCP', lastEntry.startTime);
-        });
-        lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
-        this.observers.push(lcpObserver);
-      } catch {
-        console.warn('LCP observer not supported');
-      }
+  private initWebVitals() {
+    // Use official web-vitals library for accurate tracking with error handling
+    try {
+      onLCP((metric: any) => {
+        this.updateMetric('LCP', metric.value);
+      });
+    } catch (error) {
+      console.warn('LCP tracking failed:', error);
+    }
 
-      // Observe CLS
-      try {
-        let clsValue = 0;
-        const clsObserver = new PerformanceObserver((list) => {
-          const entries = list.getEntries();
-          for (const entry of entries) {
-            if (!(entry as any).hadRecentInput) {
-              clsValue += (entry as any).value;
-              this.updateMetric('CLS', clsValue);
-            }
-          }
-        });
-        clsObserver.observe({ entryTypes: ['layout-shift'] });
-        this.observers.push(clsObserver);
-      } catch {
-        console.warn('CLS observer not supported');
-      }
+    try {
+      onCLS((metric: any) => {
+        this.updateMetric('CLS', metric.value);
+      });
+    } catch (error) {
+      console.warn('CLS tracking failed:', error);
+    }
 
-      // Observe FID/INP
-      try {
+    // FID tracking through PerformanceObserver (legacy support)
+    try {
+      if ('PerformanceObserver' in window) {
         const fidObserver = new PerformanceObserver((list) => {
           const entries = list.getEntries();
           for (const entry of entries) {
-            this.updateMetric('FID', (entry as any).processingStart - entry.startTime);
+            const fidValue = (entry as any).processingStart - entry.startTime;
+            this.updateMetric('FID', fidValue);
           }
         });
         fidObserver.observe({ entryTypes: ['first-input'] });
-        this.observers.push(fidObserver);
-      } catch {
-        console.warn('FID observer not supported');
       }
+    } catch (error) {
+      console.warn('FID tracking failed:', error);
+    }
+
+    try {
+      onFCP((metric: any) => {
+        this.updateMetric('FCP', metric.value);
+      });
+    } catch (error) {
+      console.warn('FCP tracking failed:', error);
+    }
+
+    try {
+      onTTFB((metric: any) => {
+        this.updateMetric('TTFB', metric.value);
+      });
+    } catch (error) {
+      console.warn('TTFB tracking failed:', error);
+    }
+
+    try {
+      // Finally implement proper INP tracking
+      onINP((metric: any) => {
+        this.updateMetric('INP', metric.value);
+      });
+    } catch (error) {
+      console.warn('INP tracking failed:', error);
     }
   }
 
   private updateMetric(name: keyof PerformanceMetrics, value: number) {
+    // Validate metric value to prevent NaN/invalid values
+    if (!Number.isFinite(value) || value < 0) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(`Invalid ${name} value: ${value}. Skipping update.`);
+      }
+      return;
+    }
+    
     this.metrics[name] = value;
-    this.callbacks.forEach(callback => callback(this.metrics));
+    this.callbacks.forEach(callback => {
+      try {
+        callback(this.metrics);
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          console.error(`Error in performance callback for ${name}:`, error);
+        }
+      }
+    });
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -213,9 +256,8 @@ export class WebVitalsObserver {
   }
 
   public disconnect() {
-    this.observers.forEach(observer => observer.disconnect());
-    this.observers = [];
     this.callbacks = [];
+    this.metrics = {};
   }
 }
 

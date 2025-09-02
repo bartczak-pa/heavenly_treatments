@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { getWebVitalsObserver, getPerformanceMetrics, monitorImagePerformance, logPerformanceMetrics, type PerformanceMetrics } from '@/lib/performance';
 
 export interface PerformanceData extends PerformanceMetrics {
@@ -34,6 +34,7 @@ export function usePerformanceMonitoring(options: {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
+    let isMounted = true;
     startTimeRef.current = performance.now();
 
     // Initialize Web Vitals observer
@@ -41,6 +42,8 @@ export function usePerformanceMonitoring(options: {
     
     // Listen for metric updates
     vitalsObserverRef.current.onMetricUpdate((metrics) => {
+      if (!isMounted) return;
+      
       setPerformanceData(prev => ({
         ...prev,
         ...metrics,
@@ -54,23 +57,29 @@ export function usePerformanceMonitoring(options: {
 
     // Get initial performance metrics
     const initialMetrics = getPerformanceMetrics();
-    setPerformanceData(prev => ({
-      ...prev,
-      ...initialMetrics,
-    }));
+    if (isMounted) {
+      setPerformanceData(prev => ({
+        ...prev,
+        ...initialMetrics,
+        isLoading: false,
+      }));
+    }
 
     // Monitor image loading if enabled
     if (enableImageMonitoring) {
       monitorImagePerformance().then((imageLoadTime) => {
-        setPerformanceData(prev => ({
-          ...prev,
-          imageLoadTime,
-        }));
+        if (isMounted) {
+          setPerformanceData(prev => ({
+            ...prev,
+            imageLoadTime,
+          }));
+        }
       });
     }
 
     // Clean up on unmount
     return () => {
+      isMounted = false;
       if (vitalsObserverRef.current) {
         vitalsObserverRef.current.disconnect();
       }
@@ -167,47 +176,39 @@ export function usePerformanceMonitoring(options: {
  */
 export function useRenderPerformance(componentName: string) {
   const renderCountRef = useRef(0);
-  const lastRenderTimeRef = useRef(0);
-  const [renderMetrics, setRenderMetrics] = useState({
+  const totalRenderTimeRef = useRef(0);
+  const renderMetricsRef = useRef({
     renderCount: 0,
     lastRenderTime: 0,
     averageRenderTime: 0,
     totalRenderTime: 0,
   });
 
-  useEffect(() => {
-    const renderStart = performance.now();
-    renderCountRef.current += 1;
+  // Capture render start time without triggering re-renders
+  const renderStart = performance.now();
+  renderCountRef.current += 1;
 
-    // Measure render time on next tick
-    const timeoutId = setTimeout(() => {
-      const renderEnd = performance.now();
-      const renderTime = renderEnd - renderStart;
-      lastRenderTimeRef.current = renderTime;
-
-      setRenderMetrics(prev => {
-        const newTotalTime = prev.totalRenderTime + renderTime;
-        const newAverageTime = newTotalTime / renderCountRef.current;
-
-        return {
-          renderCount: renderCountRef.current,
-          lastRenderTime: renderTime,
-          averageRenderTime: newAverageTime,
-          totalRenderTime: newTotalTime,
-        };
-      });
-
-      if (process.env.NODE_ENV === 'development') {
-        console.log(
-          `🔄 ${componentName} render #${renderCountRef.current}: ${renderTime.toFixed(2)}ms`
-        );
-      }
-    }, 0);
-
-    return () => {
-      clearTimeout(timeoutId);
+  // Use layout effect to measure after render is complete
+  useLayoutEffect(() => {
+    const renderEnd = performance.now();
+    const renderTime = renderEnd - renderStart;
+    
+    totalRenderTimeRef.current += renderTime;
+    
+    renderMetricsRef.current = {
+      renderCount: renderCountRef.current,
+      lastRenderTime: renderTime,
+      averageRenderTime: totalRenderTimeRef.current / renderCountRef.current,
+      totalRenderTime: totalRenderTimeRef.current,
     };
+
+    if (process.env.NODE_ENV === 'development') {
+      console.log(
+        `🔄 ${componentName} render #${renderCountRef.current}: ${renderTime.toFixed(2)}ms`
+      );
+    }
   });
 
-  return renderMetrics;
+  // Return current metrics without causing re-renders
+  return renderMetricsRef.current;
 }

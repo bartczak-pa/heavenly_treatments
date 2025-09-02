@@ -13,7 +13,7 @@ Implemented comprehensive Core Web Vitals tracking system for the Heavenly Treat
 ### 1. WebVitals Component (`/components/Analytics/WebVitals.tsx`)
 
 Enhanced Next.js `useReportWebVitals` hook implementation that:
-- ✅ Tracks all Core Web Vitals (LCP, FID, CLS, FCP, TTFB, INP)
+- ✅ Tracks Core Web Vitals (LCP, CLS, FCP, TTFB, FID). INP planned for future implementation
 - ✅ Integrates with Google Analytics via gtag events
 - ✅ Supports custom analytics endpoints
 - ✅ Development debugging with detailed console logging
@@ -35,12 +35,13 @@ Comprehensive performance measurement library providing:
 - ✅ Color-coded console logging for development
 
 **Metrics Tracked:**
+
 - **LCP** (Largest Contentful Paint): Loading performance
-- **FID** (First Input Delay): Interactivity 
-- **CLS** (Cumulative Layout Shift): Visual stability
+- **CLS** (Cumulative Layout Shift): Visual stability  
 - **FCP** (First Contentful Paint): Loading performance
 - **TTFB** (Time to First Byte): Server responsiveness
-- **INP** (Interaction to Next Paint): Interactivity
+- **FID** (First Input Delay): Legacy (tracked for comparison)
+- **INP** (Interaction to Next Paint): Planned for future implementation
 
 ### 3. Performance Monitoring Hook (`/hooks/usePerformanceMonitoring.ts`)
 
@@ -91,14 +92,14 @@ Updated `/app/layout.tsx` to include:
 
 Following Google's official Core Web Vitals thresholds:
 
-| Metric | Good | Needs Improvement | Poor | Unit |
-|--------|------|-------------------|------|------|
-| LCP | ≤2.5s | ≤4.0s | >4.0s | seconds |
-| FID | ≤100ms | ≤300ms | >300ms | milliseconds |
-| CLS | ≤0.1 | ≤0.25 | >0.25 | score |
-| FCP | ≤1.8s | ≤3.0s | >3.0s | seconds |
-| TTFB | ≤800ms | ≤1.8s | >1.8s | milliseconds |
-| INP | ≤200ms | ≤500ms | >500ms | milliseconds |
+| Metric | Good | Needs Improvement | Poor | Unit | Status |
+|--------|------|-------------------|------|------|---------|
+| LCP | ≤2.5s | ≤4.0s | >4.0s | seconds | ✅ Core Web Vital |
+| INP | ≤200ms | ≤500ms | >500ms | milliseconds | ✅ Core Web Vital |
+| CLS | ≤0.1 | ≤0.25 | >0.25 | score | ✅ Core Web Vital |
+| FCP | ≤1.8s | ≤3.0s | >3.0s | seconds | ✅ Supplemental |
+| TTFB | ≤800ms | ≤1.8s | >1.8s | milliseconds | ✅ Supplemental |
+| FID | ≤100ms | ≤300ms | >300ms | milliseconds | ⚠️ Legacy (for comparison) |
 
 ## Usage Examples
 
@@ -161,12 +162,15 @@ addCustomMetric('user-interaction-time', 150);
 ## Analytics Integration
 
 ### Google Analytics Events
-Automatically sends Web Vitals as GA4 events:
+Automatically sends Web Vitals as GA4 events with optimized schema:
 ```javascript
-gtag('event', 'LCP', {
-  value: Math.round(metric.value),
-  event_category: 'Web Vitals',
-  event_label: metric.id,
+gtag('event', 'web_vital', {
+  metric_name: 'LCP',
+  metric_value: Math.round(metric.value),
+  metric_id: metric.id,
+  metric_rating: 'good',
+  page_location: window.location.href,
+  transport_type: 'beacon',
   non_interaction: true,
 });
 ```

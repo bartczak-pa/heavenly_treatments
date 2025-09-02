@@ -8,7 +8,7 @@ export interface WebVitalsMetric {
   value: number;
   delta: number;
   rating: 'good' | 'needs-improvement' | 'poor';
-  entries?: any[];
+  entries?: PerformanceEntry[];
 }
 
 interface WebVitalsProps {
@@ -57,41 +57,52 @@ export function WebVitals({ debug = false, onMetric }: WebVitalsProps) {
       onMetric(metric);
     }
 
-    // Send to Google Analytics if available
+    // Send to Google Analytics if available - GA4 optimized schema
     if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', metric.name, {
-        value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
-        event_category: 'Web Vitals',
-        event_label: metric.id,
+      window.gtag('event', 'web_vital', {
+        metric_name: metric.name,
+        metric_value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
+        metric_id: metric.id,
+        metric_rating: metric.rating,
+        page_location: window.location.href,
+        transport_type: 'beacon',
         non_interaction: true,
-        custom_map: {
-          metric_id: 'custom_parameter_1',
-          metric_value: 'custom_parameter_2',
-          metric_delta: 'custom_parameter_3',
-        },
       });
     }
 
-    // Send to any other analytics service
+    // Send to custom analytics service with reliable transport
     try {
-      // Example: Send to custom endpoint
       if (process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT) {
-        fetch(process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            type: 'web-vitals',
-            metric: metric.name,
-            value: metric.value,
-            rating: metric.rating,
-            url: window.location.href,
-            timestamp: new Date().toISOString(),
-          }),
-        }).catch(err => {
-          if (debug) console.warn('Failed to send metrics:', err);
+        const payload = JSON.stringify({
+          type: 'web-vitals',
+          metric: metric.name,
+          value: metric.value,
+          rating: metric.rating,
+          url: window.location.href,
+          timestamp: new Date().toISOString(),
         });
+
+        // Use sendBeacon for reliable unload-time delivery
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon(
+            process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT,
+            payload
+          );
+        } else {
+          // Fallback to fetch with keepalive
+          fetch(process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: payload,
+            keepalive: true,
+          }).catch(() => {
+            if (debug) {
+              console.warn('Analytics beacon failed, using best-effort delivery');
+            }
+          });
+        }
       }
     } catch (error) {
       if (debug) console.warn('Analytics error:', error);

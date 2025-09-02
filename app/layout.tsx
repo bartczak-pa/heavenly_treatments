@@ -85,7 +85,7 @@ export default function RootLayout({
           <Toast.Viewport className="fixed bottom-0 right-0 p-4" />
         </Toast.Provider>
         <Analytics />
-        <PerformanceDashboard />
+        {process.env.NODE_ENV === 'development' && <PerformanceDashboard />}
         
         {/* --- Google Analytics Scripts --- */}
         {GA_MEASUREMENT_ID && (
