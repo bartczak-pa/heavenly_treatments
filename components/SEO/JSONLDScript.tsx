@@ -2,8 +2,22 @@
 
 import { useEffect } from 'react';
 
+function stableStringify(value: unknown): string {
+  return JSON.stringify(value, function (_k, v) {
+    if (v && typeof v === 'object' && !Array.isArray(v)) {
+      const obj = v as Record<string, unknown>;
+      const sorted: Record<string, unknown> = {};
+      for (const key of Object.keys(obj).sort()) {
+        sorted[key] = obj[key];
+      }
+      return sorted;
+    }
+    return v;
+  });
+}
+
 interface JSONLDScriptProps {
-  data: object | object[];
+  data: Record<string, unknown> | Array<Record<string, unknown>>;
   id: string;
   nonce?: string; // optional: pass from server; falls back to <meta name="csp-nonce">
 }
@@ -19,7 +33,7 @@ export function JSONLDScript({ data, id, nonce }: JSONLDScriptProps) {
     const script = document.createElement('script');
     script.type = 'application/ld+json';
     script.id = id;
-    script.textContent = JSON.stringify(data);
+    script.textContent = stableStringify(data);
     
     // Resolve nonce (prop takes precedence)
     const metaNonce = document.querySelector('meta[name="csp-nonce"]')?.getAttribute('content') || '';

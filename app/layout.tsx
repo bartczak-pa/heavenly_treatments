@@ -87,7 +87,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${openSans.variable} antialiased`}>
       <head>
-        <meta name="csp-nonce" content={nonce || ''} />
+        {nonce ? <meta name="csp-nonce" content={nonce} /> : null}
       </head>
       <body className="font-sans min-h-screen bg-background text-foreground">
         <SpeedInsights />
