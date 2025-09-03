@@ -5,6 +5,7 @@ export function middleware(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
   const isDev = process.env.NODE_ENV === 'development';
 
+
   // Define CSP directives with necessary third-party integrations
   const cspHeader = `
     default-src 'self';
@@ -35,7 +36,7 @@ export function middleware(request: NextRequest) {
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';
-    upgrade-insecure-requests;
+    ${!isDev ? 'upgrade-insecure-requests;' : ''}
   `.replace(/\s{2,}/g, ' ').trim();
 
   // Clone request headers and add nonce
@@ -52,6 +53,11 @@ export function middleware(request: NextRequest) {
 
   // Set CSP header on response
   response.headers.set('Content-Security-Policy', cspHeader);
+  
+  // Prevent HTTPS upgrades in development
+  if (isDev) {
+    response.headers.set('Strict-Transport-Security', 'max-age=0');
+  }
 
   return response;
 }

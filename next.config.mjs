@@ -2,6 +2,24 @@
 const nextConfig = {
   reactStrictMode: true,
   
+  // Prevent HTTPS upgrades for development
+  async headers() {
+    if (process.env.NODE_ENV === 'development') {
+      return [
+        {
+          source: '/(.*)',
+          headers: [
+            {
+              key: 'Strict-Transport-Security',
+              value: 'max-age=0',
+            },
+          ],
+        },
+      ];
+    }
+    return [];
+  },
+  
   // Image optimization configuration
   images: {
     // Modern image formats - order matters (AVIF preferred, WebP fallback)
