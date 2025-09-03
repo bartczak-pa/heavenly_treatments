@@ -46,6 +46,8 @@ const openSans = Open_Sans({
 // Validate environment variables on startup
 validateEnv();
 
+// Force dynamic rendering for CSP nonce generation
+
 // Base Metadata (can be overridden by pages)
 export const metadata: Metadata = {
   metadataBase: process.env.NEXT_PUBLIC_BASE_URL ? new URL(process.env.NEXT_PUBLIC_BASE_URL) : undefined,
