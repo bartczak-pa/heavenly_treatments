@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
+import { headers } from 'next/headers';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import { getTreatmentBySlug, getTreatments, getCategories } from '@/lib/data/treatments';
 import { notFound } from 'next/navigation';
@@ -57,11 +58,14 @@ export default async function TreatmentDetailPage({ params: paramsPromise }: Pro
   const serviceJsonLd = generateServiceJsonLd(treatment, contactInfo as ContactInfo);
   // -----------------------------
 
+  const nonce = (await headers()).get('x-nonce');
+
   return (
     <MainLayout>
       <Script 
         id={`treatment-jsonld-${treatment.slug}`}
         type="application/ld+json"
+        nonce={nonce || undefined}
         // Inject both schemas as an array
         dangerouslySetInnerHTML={{ __html: JSON.stringify([serviceJsonLd, breadcrumbJsonLd]) }}
       />

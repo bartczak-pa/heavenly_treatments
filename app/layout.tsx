@@ -10,6 +10,7 @@ import { Analytics } from "@vercel/analytics/react"
 import { WebVitals } from '@/components/Analytics/WebVitals';
 import Script from 'next/script';
 import dynamic from 'next/dynamic';
+import { headers } from 'next/headers';
 
 // Do not statically import PerformanceDashboard in prod paths
 const DevPerformanceDashboard = dynamic(
@@ -72,13 +73,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
   const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
+  const nonce = (await headers()).get('x-nonce');
 
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${openSans.variable} antialiased`}>
@@ -98,10 +100,12 @@ export default function RootLayout({
             <Script 
               strategy="afterInteractive" 
               src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+              nonce={nonce || undefined}
             />
             <Script 
               id="google-analytics"
-              strategy="afterInteractive" 
+              strategy="afterInteractive"
+              nonce={nonce || undefined}
               dangerouslySetInnerHTML={{
                 __html: `
                   window.dataLayer = window.dataLayer || [];
@@ -121,8 +125,9 @@ export default function RootLayout({
             <Script 
               strategy="afterInteractive" 
               src={`https://www.googletagmanager.com/gtag/js?id=${googleAdsId}`}
+              nonce={nonce || undefined}
             />
-            <Script id="google-ads-config" strategy="afterInteractive"> 
+            <Script id="google-ads-config" strategy="afterInteractive" nonce={nonce || undefined}> 
               {`
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}

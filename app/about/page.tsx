@@ -1,6 +1,7 @@
 import React, { JSX } from 'react';
 import type { Metadata } from 'next';
 import { MainLayout } from '@/components/Layout/MainLayout';
+import { headers } from 'next/headers';
 import MeetTherapist from '@/components/Sections/meetTherapist';
 import MyStudio from '@/components/Sections/myStudio';
 import ContactInfo from '@/components/Sections/contactInfo';
@@ -62,14 +63,16 @@ export async function generateMetadata(): Promise<Metadata> {
  * )
  */
 
-const AboutPage: React.FC = (): JSX.Element => {
+const AboutPage: React.FC = async (): Promise<JSX.Element> => {
   const jsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfoType);
+  const nonce = (await headers()).get('x-nonce');
 
   return (
     <MainLayout>
       <Script 
         id="about-jsonld"
         type="application/ld+json"
+        nonce={nonce || undefined}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <main className="flex flex-col">

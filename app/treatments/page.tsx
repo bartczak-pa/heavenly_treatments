@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { getTreatments, getCategories, TreatmentCategorySlug, TreatmentCategory } from '@/lib/data/treatments';
+import { headers } from 'next/headers';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import CategoryFilters from '@/components/Treatments/categoryFilters';
 import FilteredTreatmentsDisplay from '@/components/Treatments/FilteredTreatmentsDisplay';
@@ -143,11 +144,14 @@ export default async function TreatmentsPage(props: Props) {
       ? allTreatments
       : allTreatments.filter(treatment => treatment.category === currentSelection);
 
+  const nonce = (await headers()).get('x-nonce');
+
   return (
     <MainLayout>
       <Script 
         id="treatments-jsonld"
         type="application/ld+json"
+        nonce={nonce || undefined}
         dangerouslySetInnerHTML={{ __html: JSON.stringify([businessJsonLd, breadcrumbJsonLd]) }}
       />
       <section className="py-16 md:py-24 bg-primary/10">

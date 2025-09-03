@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import { headers } from 'next/headers';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import HeroSection from '@/components/Shared/HeroSection';
 import ContactInfo from '@/components/Contact/ContactInfo';
@@ -60,12 +61,14 @@ export default async function ContactPage({ params, searchParams }: ContactPageP
 
 
     const jsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfoType);
+    const nonce = (await headers()).get('x-nonce');
 
     return (
         <MainLayout>
             <Script 
                 id="localbusiness-jsonld"
                 type="application/ld+json"
+                nonce={nonce || undefined}
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 

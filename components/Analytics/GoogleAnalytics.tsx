@@ -16,7 +16,11 @@ declare global {
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 
-const GoogleAnalytics: React.FC = () => {
+interface GoogleAnalyticsProps {
+  nonce?: string | null;
+}
+
+const GoogleAnalytics: React.FC<GoogleAnalyticsProps> = ({ nonce }) => {
   const pathname = usePathname();
   const consentGiven = hasConsent(); 
 
@@ -48,10 +52,12 @@ const GoogleAnalytics: React.FC = () => {
       <Script 
         strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+        nonce={nonce || undefined}
       />
       <Script 
         id="google-analytics"
         strategy="afterInteractive"
+        nonce={nonce || undefined}
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];
