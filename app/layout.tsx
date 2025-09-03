@@ -8,8 +8,13 @@ import * as Toast from '@radix-ui/react-toast';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
 import { WebVitals } from '@/components/Analytics/WebVitals';
-import { PerformanceDashboard } from '@/components/Analytics/PerformanceDashboard';
 import Script from 'next/script';
+import dynamic from 'next/dynamic';
+
+// Do not statically import PerformanceDashboard in prod paths
+const DevPerformanceDashboard = dynamic(
+  () => import('@/components/Analytics/PerformanceDashboard').then(m => ({ default: m.PerformanceDashboard }))
+);
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -85,7 +90,7 @@ export default function RootLayout({
           <Toast.Viewport className="fixed bottom-0 right-0 p-4" />
         </Toast.Provider>
         <Analytics />
-        <PerformanceDashboard />
+        {process.env.NODE_ENV === 'development' && <DevPerformanceDashboard />}
         
         {/* --- Google Analytics Scripts --- */}
         {GA_MEASUREMENT_ID && (

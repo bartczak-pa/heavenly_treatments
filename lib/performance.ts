@@ -1,6 +1,8 @@
 /**
  * Performance monitoring utilities for Core Web Vitals and custom metrics
  */
+import { onCLS, onLCP, onTTFB, onFCP, onINP } from 'web-vitals';
+import type { Metric } from 'web-vitals';
 
 export interface PerformanceMetrics {
   // Core Web Vitals
@@ -135,72 +137,148 @@ export function monitorImagePerformance(): Promise<number> {
 }
 
 /**
- * Performance observer for Core Web Vitals
+ * Performance observer for Core Web Vitals using official web-vitals library
  */
 export class WebVitalsObserver {
-  private observers: PerformanceObserver[] = [];
   private metrics: Partial<PerformanceMetrics> = {};
   // eslint-disable-next-line no-unused-vars
   private callbacks: Array<(metrics: Partial<PerformanceMetrics>) => void> = [];
+  private fidObserver?: PerformanceObserver;
+  // Optional outbound metric bridge (analytics)
+  // eslint-disable-next-line no-unused-vars
+  private onMetric?: (metric: {
+    name: keyof PerformanceThresholds;
+    value: number;
+    id: string;
+    rating: 'good' | 'needs-improvement' | 'poor';
+  }) => void;
 
-  constructor() {
+  // eslint-disable-next-line no-unused-vars
+  constructor(options?: { onMetric?: (metric: any) => void }) {
+    this.onMetric = options?.onMetric;
     if (typeof window !== 'undefined') {
-      this.initObservers();
+      this.initWebVitals();
     }
   }
 
-  private initObservers() {
-    // Observe LCP
-    if ('PerformanceObserver' in window) {
-      try {
-        const lcpObserver = new PerformanceObserver((list) => {
-          const entries = list.getEntries();
-          const lastEntry = entries[entries.length - 1] as any;
-          this.updateMetric('LCP', lastEntry.startTime);
+  private initWebVitals() {
+    // Use official web-vitals library for accurate tracking with error handling
+    try {
+      onLCP((metric: Metric) => {
+        this.updateMetric('LCP', metric.value);
+        this.onMetric?.({
+          name: 'LCP',
+          value: metric.value,
+          id: metric.id,
+          rating: getPerformanceRating('LCP', metric.value),
         });
-        lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
-        this.observers.push(lcpObserver);
-      } catch {
-        console.warn('LCP observer not supported');
-      }
+      });
+    } catch (error) {
+      console.warn('LCP tracking failed:', error);
+    }
 
-      // Observe CLS
-      try {
-        let clsValue = 0;
-        const clsObserver = new PerformanceObserver((list) => {
+    try {
+      onCLS((metric: Metric) => {
+        this.updateMetric('CLS', metric.value);
+        this.onMetric?.({
+          name: 'CLS',
+          value: metric.value,
+          id: metric.id,
+          rating: getPerformanceRating('CLS', metric.value),
+        });
+      });
+    } catch (error) {
+      console.warn('CLS tracking failed:', error);
+    }
+
+    // FID tracking through PerformanceObserver (legacy support)
+    try {
+      if ('PerformanceObserver' in window) {
+        this.fidObserver = new PerformanceObserver((list) => {
           const entries = list.getEntries();
           for (const entry of entries) {
-            if (!(entry as any).hadRecentInput) {
-              clsValue += (entry as any).value;
-              this.updateMetric('CLS', clsValue);
-            }
+            const fidValue = (entry as any).processingStart - entry.startTime;
+            this.updateMetric('FID', fidValue);
+            const id =
+              globalThis.crypto?.randomUUID?.() ??
+              `FID-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+            this.onMetric?.({
+              name: 'FID',
+              value: fidValue,
+              id,
+              rating: getPerformanceRating('FID', fidValue),
+            });
           }
         });
-        clsObserver.observe({ entryTypes: ['layout-shift'] });
-        this.observers.push(clsObserver);
-      } catch {
-        console.warn('CLS observer not supported');
+        this.fidObserver.observe({ entryTypes: ['first-input'] });
       }
+    } catch (error) {
+      console.warn('FID tracking failed:', error);
+    }
 
-      // Observe FID/INP
-      try {
-        const fidObserver = new PerformanceObserver((list) => {
-          const entries = list.getEntries();
-          for (const entry of entries) {
-            this.updateMetric('FID', (entry as any).processingStart - entry.startTime);
-          }
+    try {
+      onFCP((metric: Metric) => {
+        this.updateMetric('FCP', metric.value);
+        this.onMetric?.({
+          name: 'FCP',
+          value: metric.value,
+          id: metric.id,
+          rating: getPerformanceRating('FCP', metric.value),
         });
-        fidObserver.observe({ entryTypes: ['first-input'] });
-        this.observers.push(fidObserver);
-      } catch {
-        console.warn('FID observer not supported');
-      }
+      });
+    } catch (error) {
+      console.warn('FCP tracking failed:', error);
+    }
+
+    try {
+      onTTFB((metric: Metric) => {
+        this.updateMetric('TTFB', metric.value);
+        this.onMetric?.({
+          name: 'TTFB',
+          value: metric.value,
+          id: metric.id,
+          rating: getPerformanceRating('TTFB', metric.value),
+        });
+      });
+    } catch (error) {
+      console.warn('TTFB tracking failed:', error);
+    }
+
+    try {
+      // Finally implement proper INP tracking
+      onINP((metric: Metric) => {
+        this.updateMetric('INP', metric.value);
+        this.onMetric?.({
+          name: 'INP',
+          value: metric.value,
+          id: metric.id,
+          rating: getPerformanceRating('INP', metric.value),
+        });
+      });
+    } catch (error) {
+      console.warn('INP tracking failed:', error);
     }
   }
 
   private updateMetric(name: keyof PerformanceMetrics, value: number) {
+    // Validate metric value to prevent NaN/invalid values
+    if (!Number.isFinite(value) || value < 0) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(`Invalid ${name} value: ${value}. Skipping update.`);
+      }
+      return;
+    }
+    
     this.metrics[name] = value;
-    this.callbacks.forEach(callback => callback(this.metrics));
+    this.callbacks.forEach(callback => {
+      try {
+        callback(this.metrics);
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          console.error(`Error in performance callback for ${name}:`, error);
+        }
+      }
+    });
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -213,9 +291,10 @@ export class WebVitalsObserver {
   }
 
   public disconnect() {
-    this.observers.forEach(observer => observer.disconnect());
-    this.observers = [];
     this.callbacks = [];
+    this.metrics = {};
+    this.fidObserver?.disconnect();
+    this.fidObserver = undefined;
   }
 }
 

@@ -38,7 +38,7 @@ export function PerformanceDashboard({
     return null;
   }
 
-  const positionClasses = {
+  const positionClasses: Record<NonNullable<PerformanceDashboardProps['position']>, string> = {
     'top-left': 'top-4 left-4',
     'top-right': 'top-4 right-4',
     'bottom-left': 'bottom-4 left-4',
@@ -95,7 +95,7 @@ export function PerformanceDashboard({
                   Core Web Vitals
                 </h4>
                 
-                {performanceData.LCP && (
+                {performanceData.LCP !== undefined && (
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-gray-600">LCP:</span>
                     <span className={getMetricColor('LCP', performanceData.LCP)}>
@@ -104,7 +104,7 @@ export function PerformanceDashboard({
                   </div>
                 )}
                 
-                {performanceData.FID && (
+                {performanceData.FID !== undefined && (
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-gray-600">FID:</span>
                     <span className={getMetricColor('FID', performanceData.FID)}>
@@ -122,7 +122,7 @@ export function PerformanceDashboard({
                   </div>
                 )}
                 
-                {performanceData.FCP && (
+                {performanceData.FCP !== undefined && (
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-gray-600">FCP:</span>
                     <span className={getMetricColor('FCP', performanceData.FCP)}>
@@ -131,7 +131,7 @@ export function PerformanceDashboard({
                   </div>
                 )}
                 
-                {performanceData.TTFB && (
+                {performanceData.TTFB !== undefined && (
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-gray-600">TTFB:</span>
                     <span className={getMetricColor('TTFB', performanceData.TTFB)}>
