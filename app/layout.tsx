@@ -9,11 +9,11 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
 import { WebVitals } from '@/components/Analytics/WebVitals';
 import Script from 'next/script';
-import dynamic from 'next/dynamic';
+import nextDynamic from 'next/dynamic';
 import { headers } from 'next/headers';
 
 // Do not statically import PerformanceDashboard in prod paths
-const DevPerformanceDashboard = dynamic(
+const DevPerformanceDashboard = nextDynamic(
   () => import('@/components/Analytics/PerformanceDashboard').then(m => ({ default: m.PerformanceDashboard }))
 );
 
@@ -47,6 +47,7 @@ const openSans = Open_Sans({
 validateEnv();
 
 // Force dynamic rendering for CSP nonce generation
+export const dynamic = 'force-dynamic';
 
 // Base Metadata (can be overridden by pages)
 export const metadata: Metadata = {
@@ -99,45 +100,21 @@ export default async function RootLayout({
         <Analytics />
         {process.env.NODE_ENV === 'development' && <DevPerformanceDashboard />}
         
-        {/* --- Google Analytics Scripts --- */}
-        {GA_MEASUREMENT_ID && (
+        {/* --- Google (Analytics/Ads) unified gtag loader --- */}
+        {(GA_MEASUREMENT_ID || googleAdsId) && (
           <>
-            <Script 
-              strategy="afterInteractive" 
-              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-              nonce={nonce ?? undefined}
-            />
-            <Script 
-              id="google-analytics"
+            <Script
               strategy="afterInteractive"
-              nonce={nonce ?? undefined}
-              dangerouslySetInnerHTML={{
-                __html: `
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-                  gtag('config', '${GA_MEASUREMENT_ID}');
-                `,
-              }}
-            />
-          </>
-        )}
-        {/* ---------------------------- */}
-        
-        {/* Google Tag Manager (gtag.js) */}  
-        {googleAdsId && (
-          <>
-            <Script 
-              strategy="afterInteractive" 
-              src={`https://www.googletagmanager.com/gtag/js?id=${googleAdsId}`}
+              src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA_MEASUREMENT_ID ?? googleAdsId!)}`}
               nonce={nonce ?? undefined}
             />
-            <Script id="google-ads-config" strategy="afterInteractive" nonce={nonce ?? undefined}> 
+            <Script id="gtag-init" strategy="afterInteractive" nonce={nonce ?? undefined}>
               {`
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
-                gtag('config', '${googleAdsId}');
+                ${GA_MEASUREMENT_ID ? `gtag('config', '${GA_MEASUREMENT_ID}');` : ''}
+                ${googleAdsId ? `gtag('config', '${googleAdsId}');` : ''}
               `}
             </Script>
           </>
