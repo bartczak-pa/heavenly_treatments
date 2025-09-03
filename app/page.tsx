@@ -7,6 +7,7 @@ import MainHeader from '../components/Sections/mainHeader';
 import ServicesSection from '../components/Sections/services';
 import Script from 'next/script';
 import { contactInfo } from '@/lib/data/contactInfo';
+import { headers } from 'next/headers';
 import { 
   generateWebSiteJsonLd, 
   generateHealthAndBeautyBusinessJsonLd, 
@@ -45,15 +46,17 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const HomePage: React.FC = () => {
+export default async function HomePage() {
   const webSiteJsonLd = generateWebSiteJsonLd();
   const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfoType);
+  const nonce = (await headers()).get('x-nonce');
 
   return (
     <MainLayout>
       <Script 
         id="homepage-jsonld"
         type="application/ld+json"
+        nonce={nonce ?? undefined}
         dangerouslySetInnerHTML={{ 
           __html: JSON.stringify([webSiteJsonLd, businessJsonLd])
         }}
@@ -71,6 +74,4 @@ const HomePage: React.FC = () => {
       <Testimonials />
     </MainLayout>
   );
-};
-
-export default HomePage;
+}

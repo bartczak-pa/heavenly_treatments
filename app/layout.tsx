@@ -9,10 +9,11 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
 import { WebVitals } from '@/components/Analytics/WebVitals';
 import Script from 'next/script';
-import dynamic from 'next/dynamic';
+import nextDynamic from 'next/dynamic';
+import { headers } from 'next/headers';
 
 // Do not statically import PerformanceDashboard in prod paths
-const DevPerformanceDashboard = dynamic(
+const DevPerformanceDashboard = nextDynamic(
   () => import('@/components/Analytics/PerformanceDashboard').then(m => ({ default: m.PerformanceDashboard }))
 );
 
@@ -45,6 +46,9 @@ const openSans = Open_Sans({
 // Validate environment variables on startup
 validateEnv();
 
+// Force dynamic rendering for CSP nonce generation
+export const dynamic = 'force-dynamic';
+
 // Base Metadata (can be overridden by pages)
 export const metadata: Metadata = {
   metadataBase: process.env.NEXT_PUBLIC_BASE_URL ? new URL(process.env.NEXT_PUBLIC_BASE_URL) : undefined,
@@ -52,7 +56,7 @@ export const metadata: Metadata = {
     default: 'Heavenly Treatments with Hayleybell - Wellness & Self-Care',
     template: '%s | Heavenly Treatments with Hayleybell', 
   },
-  description: "Discover relaxing massage therapies, rejuvenating facials, and holistic body treatments in Biggleswade. Book your journey to wellness with Heavenly Treatments.",
+  description: "Discover relaxing massage therapies, rejuvenating facials, and holistic body treatments in Kelso. Book your journey to wellness with Heavenly Treatments.",
   keywords: ['Massage', 'Facial', 'Reflexology', 'Body Treatments', 'Kelso', 'Wellness', 'Spa', 'Heavenly Treatments', 'Heavenly Treatments with Hayleybell', 'Heavenly Treatments with Hayleybell Kelso', 'Scottish Borders', 'Scottish Borders Massage', 'Scottish Borders Facials', 'Scottish Borders Body Treatments'],
   openGraph: {
     type: 'website',
@@ -60,7 +64,7 @@ export const metadata: Metadata = {
     url: process.env.NEXT_PUBLIC_BASE_URL || '',
     siteName: 'Heavenly Treatments with Hayleybell',
     title: 'Heavenly Treatments with Hayleybell - Wellness & Self-Care',
-    description: 'Relaxing massage, facial, reflexology, and body treatments in Biggleswade.',
+    description: 'Relaxing massage, facial, reflexology, and body treatments in Kelso.',
     images: [
       {
         url: '/images/logo.png',
@@ -72,16 +76,23 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
   const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
+  const nonce = (await headers()).get('x-nonce');
+  
+  // Normalize gtag ID - prefer GA_MEASUREMENT_ID, fallback to googleAdsId, ensure non-empty
+  const gtagId = (GA_MEASUREMENT_ID && GA_MEASUREMENT_ID.trim()) || (googleAdsId && googleAdsId.trim()) || null;
 
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${openSans.variable} antialiased`}>
+      <head>
+        {nonce ? <meta name="csp-nonce" content={nonce} /> : null}
+      </head>
       <body className="font-sans min-h-screen bg-background text-foreground">
         <SpeedInsights />
         <WebVitals debug={process.env.NODE_ENV === 'development'} />
@@ -92,42 +103,21 @@ export default function RootLayout({
         <Analytics />
         {process.env.NODE_ENV === 'development' && <DevPerformanceDashboard />}
         
-        {/* --- Google Analytics Scripts --- */}
-        {GA_MEASUREMENT_ID && (
+        {/* --- Google (Analytics/Ads) unified gtag loader --- */}
+        {gtagId && (
           <>
-            <Script 
-              strategy="afterInteractive" 
-              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+            <Script
+              strategy="afterInteractive"
+              src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gtagId)}`}
+              nonce={nonce ?? undefined}
             />
-            <Script 
-              id="google-analytics"
-              strategy="afterInteractive" 
-              dangerouslySetInnerHTML={{
-                __html: `
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-                  gtag('config', '${GA_MEASUREMENT_ID}');
-                `,
-              }}
-            />
-          </>
-        )}
-        {/* ---------------------------- */}
-        
-        {/* Google Tag Manager (gtag.js) */}  
-        {googleAdsId && (
-          <>
-            <Script 
-              strategy="afterInteractive" 
-              src={`https://www.googletagmanager.com/gtag/js?id=${googleAdsId}`}
-            />
-            <Script id="google-ads-config" strategy="afterInteractive"> 
+            <Script id="gtag-init" strategy="afterInteractive" nonce={nonce ?? undefined}>
               {`
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
-                gtag('config', '${googleAdsId}');
+                ${GA_MEASUREMENT_ID ? `gtag('config', '${GA_MEASUREMENT_ID}');` : ''}
+                ${googleAdsId ? `gtag('config', '${googleAdsId}');` : ''}
               `}
             </Script>
           </>

@@ -7,9 +7,9 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Clock, PoundSterling, CheckCircle } from 'lucide-react';
 import { Metadata } from 'next';
-import Script from 'next/script';
 import { contactInfo } from '@/lib/data/contactInfo';
 import { generateServiceJsonLd, ContactInfo, generateBreadcrumbJsonLd } from '@/lib/jsonLsUtils';
+import { JSONLDScript } from '@/components/SEO/JSONLDScript';
 
 // eslint-disable-next-line no-unused-vars
 type ResolvedParams = {
@@ -59,11 +59,9 @@ export default async function TreatmentDetailPage({ params: paramsPromise }: Pro
 
   return (
     <MainLayout>
-      <Script 
+      <JSONLDScript 
+        data={[serviceJsonLd, breadcrumbJsonLd]}
         id={`treatment-jsonld-${treatment.slug}`}
-        type="application/ld+json"
-        // Inject both schemas as an array
-        dangerouslySetInnerHTML={{ __html: JSON.stringify([serviceJsonLd, breadcrumbJsonLd]) }}
       />
 
       <section className="py-16 md:py-24 bg-background">
