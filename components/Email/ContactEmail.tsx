@@ -97,11 +97,11 @@ export const ContactEmail: React.FC<Readonly<ContactEmailProps>> = ({ formData }
             <span style={emailStyles.label}>Name:</span> {firstName}
           </li>
           <li style={emailStyles.listItem}>
-            <span style={emailStyles.label}>Email:</span> {email}
+            <span style={emailStyles.label}>Email:</span> <a href={`mailto:${email}`}>{email}</a>
           </li>
           {phone && (
             <li style={emailStyles.listItem}>
-              <span style={emailStyles.label}>Phone:</span> {phone}
+              <span style={emailStyles.label}>Phone:</span> <a href={`tel:${phone}`}>{phone}</a>
             </li>
           )}
           {treatment && (

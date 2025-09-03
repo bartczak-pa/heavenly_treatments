@@ -125,7 +125,7 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
     }
     
     setIsSubmitting(true);
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV !== 'production') {
         console.log("Client: Form submitted with data:", data);
         console.log("Client: Using Turnstile token:", turnstileToken);
     }
@@ -328,7 +328,11 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
         {/* 5. Bot Protection with Turnstile Widget */}
         <div className="flex flex-col items-center space-y-2 my-4">
           <Turnstile
-            sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'}
+            sitekey={
+              process.env.NODE_ENV !== 'production'
+                ? (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA')
+                : (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY as string)
+            }
             theme="light"
             onVerify={(token) => {
               if (process.env.NODE_ENV !== 'production') {
