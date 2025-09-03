@@ -39,6 +39,7 @@ interface ContactFormProps {
 }
 
 export default function ContactForm({ initialTreatment }: ContactFormProps) {
+  const isDev = process.env.NODE_ENV !== 'production';
 
   /**
    * ContactForm Component
@@ -125,7 +126,7 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
     }
     
     setIsSubmitting(true);
-    if (process.env.NODE_ENV !== 'production') {
+    if (isDev) {
         console.log("Client: Form submitted with data:", data);
         console.log("Client: Using Turnstile token:", turnstileToken);
     }
@@ -138,7 +139,7 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
       });
 
       const result = await response.json();
-      if (process.env.NODE_ENV !== 'production') {
+      if (isDev) {
         console.log("Client: Received response from API:", result);
       }
 
@@ -329,13 +330,13 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
         <div className="flex flex-col items-center space-y-2 my-4">
           <Turnstile
             sitekey={
-              process.env.NODE_ENV !== 'production'
+              isDev
                 ? (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA')
                 : (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY as string)
             }
             theme="light"
             onVerify={(token) => {
-              if (process.env.NODE_ENV !== 'production') {
+              if (isDev) {
                 console.log('Client: Turnstile Verified:', token);
               }
               setTurnstileToken(token);
@@ -343,7 +344,7 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
               form.clearErrors('turnstileToken');
             }}
             onError={() => {
-              if (process.env.NODE_ENV !== 'production') {
+              if (isDev) {
                 console.log('Client: Turnstile Error');
               }
               setTurnstileToken('');
@@ -351,7 +352,7 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
               form.setError('turnstileToken', { type: 'manual', message: 'Verification failed. Please refresh or try again.' });
             }}
             onExpire={() => {
-              if (process.env.NODE_ENV !== 'production') {
+              if (isDev) {
                 console.log('Client: Turnstile Expired');
               }
               setTurnstileToken('');

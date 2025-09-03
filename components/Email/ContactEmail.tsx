@@ -9,6 +9,10 @@ interface ContactEmailProps {
 // Simple functional component for the email body
 export const ContactEmail: React.FC<Readonly<ContactEmailProps>> = ({ formData }) => {
   const { firstName, email, phone, treatment, message, preferredDate, preferredTime } = formData;
+  
+  // Sanitize email and phone for links
+  const mailHref = `mailto:${encodeURIComponent(email)}`;
+  const telHref = `tel:${(phone ?? '').replace(/[^\d+]/g, '')}`;
 
   const emailStyles = {
     container: {
@@ -81,6 +85,10 @@ export const ContactEmail: React.FC<Readonly<ContactEmailProps>> = ({ formData }
       color: '#7f8c8d',
       fontStyle: 'italic',
     },
+    link: {
+      color: 'inherit',
+      textDecoration: 'underline',
+    },
   };
 
   return (
@@ -97,11 +105,17 @@ export const ContactEmail: React.FC<Readonly<ContactEmailProps>> = ({ formData }
             <span style={emailStyles.label}>Name:</span> {firstName}
           </li>
           <li style={emailStyles.listItem}>
-            <span style={emailStyles.label}>Email:</span> <a href={`mailto:${email}`}>{email}</a>
+            <span style={emailStyles.label}>Email:</span>{' '}
+            <a href={mailHref} style={emailStyles.link}>
+              {email}
+            </a>
           </li>
           {phone && (
             <li style={emailStyles.listItem}>
-              <span style={emailStyles.label}>Phone:</span> <a href={`tel:${phone}`}>{phone}</a>
+              <span style={emailStyles.label}>Phone:</span>{' '}
+              <a href={telHref} style={emailStyles.link}>
+                {phone}
+              </a>
             </li>
           )}
           {treatment && (
