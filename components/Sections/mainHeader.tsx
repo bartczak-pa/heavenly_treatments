@@ -18,7 +18,7 @@ const MainHeader = ({ priority = false }: MainHeaderProps) => {
                     src={hero}
                     alt=""
                     fill
-                    className="object-cover absolute inset-0 w-full h-full"
+                    className="object-cover"
                     sizes="100vw"
                     placeholder="blur"
                     priority={priority}
