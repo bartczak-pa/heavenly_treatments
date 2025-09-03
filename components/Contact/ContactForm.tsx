@@ -1,5 +1,6 @@
 'use client';
 
+const isDev = process.env.NODE_ENV !== 'production';
 
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -39,7 +40,6 @@ interface ContactFormProps {
 }
 
 export default function ContactForm({ initialTreatment }: ContactFormProps) {
-
   /**
    * ContactForm Component
    * 
@@ -125,7 +125,7 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
     }
     
     setIsSubmitting(true);
-    if (process.env.NODE_ENV === 'development') {
+    if (isDev) {
         console.log("Client: Form submitted with data:", data);
         console.log("Client: Using Turnstile token:", turnstileToken);
     }
@@ -138,7 +138,9 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
       });
 
       const result = await response.json();
-      console.log("Client: Received response from API:", result);
+      if (isDev) {
+        console.log("Client: Received response from API:", result);
+      }
 
       if (response.ok) {
         // Use showToast from the hook
@@ -160,6 +162,22 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
       setIsSubmitting(false);
     }
   };
+
+  // Validate Turnstile site key in production
+  const siteKey = isDev
+    ? (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA')
+    : process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+
+  if (!isDev && !siteKey) {
+    console.error('Missing NEXT_PUBLIC_TURNSTILE_SITE_KEY in production.');
+    // Show error state instead of form
+    return (
+      <div className="p-6 text-center bg-red-50 border border-red-200 rounded-lg">
+        <h3 className="text-lg font-semibold text-red-800 mb-2">Configuration Error</h3>
+        <p className="text-red-600">The contact form is temporarily unavailable due to a configuration issue.</p>
+      </div>
+    );
+  }
 
   return (
     <Form {...form}>
@@ -326,22 +344,28 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
         {/* 5. Bot Protection with Turnstile Widget */}
         <div className="flex flex-col items-center space-y-2 my-4">
           <Turnstile
-            sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'}
+            sitekey={siteKey as string}
             theme="light"
             onVerify={(token) => {
-              console.log('Client: Turnstile Verified:', token);
+              if (isDev) {
+                console.log('Client: Turnstile Verified:', token);
+              }
               setTurnstileToken(token);
               form.setValue('turnstileToken', token);
               form.clearErrors('turnstileToken');
             }}
             onError={() => {
-              console.log('Client: Turnstile Error');
+              if (isDev) {
+                console.log('Client: Turnstile Error');
+              }
               setTurnstileToken('');
               form.setValue('turnstileToken', '');
               form.setError('turnstileToken', { type: 'manual', message: 'Verification failed. Please refresh or try again.' });
             }}
             onExpire={() => {
-              console.log('Client: Turnstile Expired');
+              if (isDev) {
+                console.log('Client: Turnstile Expired');
+              }
               setTurnstileToken('');
               form.setValue('turnstileToken', '');
               form.setError('turnstileToken', { type: 'manual', message: 'Verification expired. Please complete it again.' });

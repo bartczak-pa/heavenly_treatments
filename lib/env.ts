@@ -1,5 +1,5 @@
 // Ensure this list matches the required status in env.d.ts
-export const requiredEnvs: string[] = [//TODO: Add more envs as needed
+export const requiredEnvs: string[] = [
     'RESEND_API_KEY',
     'EMAIL_FROM_ADDRESS',
     'CONTACT_EMAIL',
