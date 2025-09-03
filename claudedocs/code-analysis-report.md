@@ -15,9 +15,9 @@ technical debt and good security posture.
 
 | Domain           | Score  | Status         | Change      |
 | ---------------- | ------ | -------------- | ----------- |
-| **Quality**      | 9.0/10 | 🚀 Outstanding | ⬆️ **+0.5** |
+| **Quality**      | 9.0/10 | 🚀 Outstanding | (↑ +0.5)   |
 | **Security**     | 8.0/10 | ✅ Good        | -           |
-| **Performance**  | 9.8/10 | 🚀 Outstanding | ⬆️ **+1.8** |
+| **Performance**  | 9.8/10 | 🚀 Outstanding | (↑ +1.8)   |
 | **Architecture** | 8.5/10 | ✅ Excellent   | -           |
 
 ## Project Metrics

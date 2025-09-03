@@ -11,8 +11,10 @@ export const ContactEmail: React.FC<Readonly<ContactEmailProps>> = ({ formData }
   const { firstName, email, phone, treatment, message, preferredDate, preferredTime } = formData;
   
   // Sanitize email and phone for links
-  const mailHref = `mailto:${encodeURIComponent(email)}`;
-  const telHref = `tel:${(phone ?? '').replace(/[^\d+]/g, '')}`;
+  const trimmedEmail = (email ?? '').trim();
+  const sanitizedTel = (phone ?? '').replace(/[^\d+]/g, '');
+  const mailHref = `mailto:${encodeURIComponent(trimmedEmail)}`;
+  const telHref = `tel:${sanitizedTel}`;
 
   const emailStyles = {
     container: {
@@ -110,7 +112,7 @@ export const ContactEmail: React.FC<Readonly<ContactEmailProps>> = ({ formData }
               {email}
             </a>
           </li>
-          {phone && (
+          {sanitizedTel && (
             <li style={emailStyles.listItem}>
               <span style={emailStyles.label}>Phone:</span>{' '}
               <a href={telHref} style={emailStyles.link}>

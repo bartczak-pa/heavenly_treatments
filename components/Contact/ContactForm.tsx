@@ -1,5 +1,6 @@
 'use client';
 
+const isDev = process.env.NODE_ENV !== 'production';
 
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -39,8 +40,6 @@ interface ContactFormProps {
 }
 
 export default function ContactForm({ initialTreatment }: ContactFormProps) {
-  const isDev = process.env.NODE_ENV !== 'production';
-
   /**
    * ContactForm Component
    * 
@@ -163,6 +162,22 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
       setIsSubmitting(false);
     }
   };
+
+  // Validate Turnstile site key in production
+  const siteKey = isDev
+    ? (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA')
+    : process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+
+  if (!isDev && !siteKey) {
+    console.error('Missing NEXT_PUBLIC_TURNSTILE_SITE_KEY in production.');
+    // Show error state instead of form
+    return (
+      <div className="p-6 text-center bg-red-50 border border-red-200 rounded-lg">
+        <h3 className="text-lg font-semibold text-red-800 mb-2">Configuration Error</h3>
+        <p className="text-red-600">The contact form is temporarily unavailable due to a configuration issue.</p>
+      </div>
+    );
+  }
 
   return (
     <Form {...form}>
@@ -329,11 +344,7 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
         {/* 5. Bot Protection with Turnstile Widget */}
         <div className="flex flex-col items-center space-y-2 my-4">
           <Turnstile
-            sitekey={
-              isDev
-                ? (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA')
-                : (process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY as string)
-            }
+            sitekey={siteKey as string}
             theme="light"
             onVerify={(token) => {
               if (isDev) {
