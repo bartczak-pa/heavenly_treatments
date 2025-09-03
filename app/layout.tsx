@@ -86,6 +86,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${openSans.variable} antialiased`}>
+      <head>
+        <meta name="csp-nonce" content={nonce || ''} />
+      </head>
       <body className="font-sans min-h-screen bg-background text-foreground">
         <SpeedInsights />
         <WebVitals debug={process.env.NODE_ENV === 'development'} />

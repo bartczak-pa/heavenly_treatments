@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 interface JSONLDScriptProps {
   data: object | object[];
   id: string;
+  nonce?: string; // optional: pass from server; falls back to <meta name="csp-nonce">
 }
 
 /**
@@ -12,13 +13,24 @@ interface JSONLDScriptProps {
  * This avoids the need for server-side headers() call, preserving SSG
  * Uses DOM manipulation to avoid CSP issues with dangerouslySetInnerHTML
  */
-export function JSONLDScript({ data, id }: JSONLDScriptProps) {
+export function JSONLDScript({ data, id, nonce }: JSONLDScriptProps) {
   useEffect(() => {
     // Create script element for JSON-LD
     const script = document.createElement('script');
     script.type = 'application/ld+json';
     script.id = id;
     script.textContent = JSON.stringify(data);
+    
+    // Resolve nonce (prop takes precedence)
+    const metaNonce = document.querySelector('meta[name="csp-nonce"]')?.getAttribute('content') || '';
+    const effectiveNonce = nonce ?? metaNonce;
+    if (effectiveNonce) {
+      script.setAttribute('nonce', effectiveNonce);
+    }
+    
+    // Remove existing script if it exists before appending
+    const existing = document.getElementById(id);
+    if (existing) existing.remove();
     
     // Append to head
     document.head.appendChild(script);
@@ -30,7 +42,7 @@ export function JSONLDScript({ data, id }: JSONLDScriptProps) {
         document.head.removeChild(existingScript);
       }
     };
-  }, [data, id]);
+  }, [data, id, nonce]);
 
   return null; // This component doesn't render anything
 }
