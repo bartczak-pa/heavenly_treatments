@@ -151,7 +151,7 @@ export default async function TreatmentsPage(props: Props) {
       <Script 
         id="treatments-jsonld"
         type="application/ld+json"
-        nonce={nonce || undefined}
+        nonce={nonce ?? undefined}
         dangerouslySetInnerHTML={{ __html: JSON.stringify([businessJsonLd, breadcrumbJsonLd]) }}
       />
       <section className="py-16 md:py-24 bg-primary/10">

@@ -68,7 +68,7 @@ export default async function ContactPage({ params, searchParams }: ContactPageP
             <Script 
                 id="localbusiness-jsonld"
                 type="application/ld+json"
-                nonce={nonce || undefined}
+                nonce={nonce ?? undefined}
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 

@@ -100,12 +100,12 @@ export default async function RootLayout({
             <Script 
               strategy="afterInteractive" 
               src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-              nonce={nonce || undefined}
+              nonce={nonce ?? undefined}
             />
             <Script 
               id="google-analytics"
               strategy="afterInteractive"
-              nonce={nonce || undefined}
+              nonce={nonce ?? undefined}
               dangerouslySetInnerHTML={{
                 __html: `
                   window.dataLayer = window.dataLayer || [];
@@ -125,9 +125,9 @@ export default async function RootLayout({
             <Script 
               strategy="afterInteractive" 
               src={`https://www.googletagmanager.com/gtag/js?id=${googleAdsId}`}
-              nonce={nonce || undefined}
+              nonce={nonce ?? undefined}
             />
-            <Script id="google-ads-config" strategy="afterInteractive" nonce={nonce || undefined}> 
+            <Script id="google-ads-config" strategy="afterInteractive" nonce={nonce ?? undefined}> 
               {`
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}

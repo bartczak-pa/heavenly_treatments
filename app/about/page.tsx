@@ -63,7 +63,7 @@ export async function generateMetadata(): Promise<Metadata> {
  * )
  */
 
-const AboutPage: React.FC = async (): Promise<JSX.Element> => {
+export default async function AboutPage(): Promise<JSX.Element> {
   const jsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfoType);
   const nonce = (await headers()).get('x-nonce');
 
@@ -72,7 +72,7 @@ const AboutPage: React.FC = async (): Promise<JSX.Element> => {
       <Script 
         id="about-jsonld"
         type="application/ld+json"
-        nonce={nonce || undefined}
+        nonce={nonce ?? undefined}
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <main className="flex flex-col">
@@ -96,5 +96,3 @@ const AboutPage: React.FC = async (): Promise<JSX.Element> => {
     </MainLayout>
   );
 }
-
-export default AboutPage;

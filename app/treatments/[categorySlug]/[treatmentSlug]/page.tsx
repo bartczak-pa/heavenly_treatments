@@ -65,7 +65,7 @@ export default async function TreatmentDetailPage({ params: paramsPromise }: Pro
       <Script 
         id={`treatment-jsonld-${treatment.slug}`}
         type="application/ld+json"
-        nonce={nonce || undefined}
+        nonce={nonce ?? undefined}
         // Inject both schemas as an array
         dangerouslySetInnerHTML={{ __html: JSON.stringify([serviceJsonLd, breadcrumbJsonLd]) }}
       />

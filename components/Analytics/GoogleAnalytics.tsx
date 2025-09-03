@@ -52,12 +52,12 @@ const GoogleAnalytics: React.FC<GoogleAnalyticsProps> = ({ nonce }) => {
       <Script 
         strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-        nonce={nonce || undefined}
+        nonce={nonce ?? undefined}
       />
       <Script 
         id="google-analytics"
         strategy="afterInteractive"
-        nonce={nonce || undefined}
+        nonce={nonce ?? undefined}
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];

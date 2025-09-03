@@ -46,7 +46,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const HomePage: React.FC = async () => {
+export default async function HomePage() {
   const webSiteJsonLd = generateWebSiteJsonLd();
   const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfoType);
   const nonce = (await headers()).get('x-nonce');
@@ -56,7 +56,7 @@ const HomePage: React.FC = async () => {
       <Script 
         id="homepage-jsonld"
         type="application/ld+json"
-        nonce={nonce || undefined}
+        nonce={nonce ?? undefined}
         dangerouslySetInnerHTML={{ 
           __html: JSON.stringify([webSiteJsonLd, businessJsonLd])
         }}
@@ -74,6 +74,4 @@ const HomePage: React.FC = async () => {
       <Testimonials />
     </MainLayout>
   );
-};
-
-export default HomePage;
+}
