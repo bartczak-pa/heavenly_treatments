@@ -33,7 +33,7 @@ const MainHeader = ({ priority = false }: MainHeaderProps) => {
                 <p className="font-sans text-lg md:text-xl mb-12 sm:mb-24 max-w-2xl text-primary-foreground">
                     Revitalize Your Mind, Body, and Soul at Heavenly Treatments – Kelso&rsquo;s Hidden Gem for Relaxation and Wellness.
                 </p>
-                <Button size="xl" asChild className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/80 hover:to-primary text-primary-foreground shadow-lg">
+                <Button size="xl" variant="gradient" asChild>
                     <Link href="/treatments">Explore Treatments</Link>
                 </Button>
             </div>

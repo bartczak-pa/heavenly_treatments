@@ -2,16 +2,25 @@
 const nextConfig = {
   reactStrictMode: true,
   
-  // Prevent HTTPS upgrades for development
+  // Environment-specific HSTS
   async headers() {
-    if (process.env.NODE_ENV === 'development') {
+    const env = process.env.NODE_ENV;
+    if (env === 'development') {
+      return [
+        {
+          source: '/(.*)',
+          headers: [{ key: 'Strict-Transport-Security', value: 'max-age=0' }],
+        },
+      ];
+    }
+    if (env === 'production') {
       return [
         {
           source: '/(.*)',
           headers: [
             {
               key: 'Strict-Transport-Security',
-              value: 'max-age=0',
+              value: 'max-age=63072000; includeSubDomains; preload',
             },
           ],
         },

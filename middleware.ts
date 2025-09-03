@@ -53,11 +53,6 @@ export function middleware(request: NextRequest) {
 
   // Set CSP header on response
   response.headers.set('Content-Security-Policy', cspHeader);
-  
-  // Prevent HTTPS upgrades in development
-  if (isDev) {
-    response.headers.set('Strict-Transport-Security', 'max-age=0');
-  }
 
   return response;
 }
