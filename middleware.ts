@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export function middleware(request: NextRequest) {
   // Generate a unique nonce for each request
-  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
+// Edge-safe nonce (base64 of 16 random bytes)
+const nonce = btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(16))));
   const isDev = process.env.NODE_ENV === 'development';
 
 
