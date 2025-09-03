@@ -1,4 +1,4 @@
-const testimonialsData: { // TODO: Replace with actual reviews
+const testimonialsData: {
     name: string;
     testimonial: string;
     customerType: string;

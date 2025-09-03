@@ -47,7 +47,9 @@ async function verifyTurnstileToken(token: string): Promise<boolean> {
   const timeoutId = setTimeout(() => controller.abort(), 5000); // 5-second timeout
 
   try {
-    console.log('API Route - Sending request to Turnstile...');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('API Route - Sending request to Turnstile...');
+    }
     const response = await fetch(TURNSTILE_VERIFY_URL, {
       method: 'POST', 
       body: formData,
@@ -59,7 +61,9 @@ async function verifyTurnstileToken(token: string): Promise<boolean> {
       return false;
     }
     const data = await response.json();
-    console.log('Turnstile verification response:', data); 
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Turnstile verification response:', data);
+    } 
     return data.success === true;
 
   } catch (error: unknown) {
@@ -107,7 +111,9 @@ export async function POST(request: NextRequest) {
    * @throws {Error} If Turnstile verification fails
    * @throws {Error} If email sending fails
    */
-  console.log('API Route /api/contact POST request received');
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('API Route /api/contact POST request received');
+  }
 
   // --- Envs validated at startup --- 
   const fromEmail = process.env.EMAIL_FROM_ADDRESS;
@@ -116,11 +122,15 @@ export async function POST(request: NextRequest) {
   try {
     // 1. Parse request body
     const body = await request.json();
-    console.log('API Route - Received contact form submission.'); 
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('API Route - Received contact form submission.');
+    } 
 
     // 2. Validate data using Zod schema
     const validatedData = contactFormSchema.parse(body);
-    console.log('API Route - Validation successful');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('API Route - Validation successful');
+    }
 
     // 3. Verify Turnstile token
     const isHuman = await verifyTurnstileToken(validatedData.turnstileToken);
@@ -131,18 +141,24 @@ export async function POST(request: NextRequest) {
         { status: 422 } // Unprocessable Entity
       );
     }
-    console.log('API Route - Turnstile verification successful');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('API Route - Turnstile verification successful');
+    }
 
     // 4. Prepare email data (remove token)
     // eslint-disable-next-line no-unused-vars
     const { turnstileToken, ...emailData } = validatedData;
 
     // 5. Render email template
-    console.log('API Route - Rendering email template...');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('API Route - Rendering email template...');
+    }
     const emailHtml = await render(
       createElement(ContactEmail, { formData: emailData })
     );
-    console.log('API Route - Email template rendered.');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('API Route - Email template rendered.');
+    }
 
     // 6. Send email using Resend SDK (ensure fromEmail/toEmail were loaded)
     if (!fromEmail || !toEmail) { // Minimal check here in case startup validation failed silently
@@ -178,7 +194,9 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    console.log('API Route - Email sent successfully via Resend. ID:', data?.id);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('API Route - Email sent successfully via Resend. ID:', data?.id);
+    }
     return NextResponse.json(
       { success: true, message: 'Thank you! Your message has been sent successfully.' },
       { status: 200 }

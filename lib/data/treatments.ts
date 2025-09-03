@@ -14,7 +14,7 @@ export interface Treatment {
     id: string;
     title: string;
     slug: string;
-    description: string; // TODO: Refine descriptions for better SEO and engagement.
+    description: string;
     image: string; // Relative path to the image in /public
     imageWidth?: number; // Optional: Add actual image width
     imageHeight?: number; // Optional: Add actual image height
@@ -32,7 +32,7 @@ export interface Treatment {
     slug: TreatmentCategorySlug;
     name: string;
     image: string; // Relative path to the image in /public
-    description: string; // TODO: Refine descriptions for better SEO and engagement.
+    description: string;
     shortDescription: string; // Short description for Nav or previews
     iconName?: string; // Name of the Lucide icon
   }

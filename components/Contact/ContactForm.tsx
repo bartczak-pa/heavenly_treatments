@@ -138,7 +138,9 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
       });
 
       const result = await response.json();
-      console.log("Client: Received response from API:", result);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log("Client: Received response from API:", result);
+      }
 
       if (response.ok) {
         // Use showToast from the hook
@@ -329,19 +331,25 @@ export default function ContactForm({ initialTreatment }: ContactFormProps) {
             sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'}
             theme="light"
             onVerify={(token) => {
-              console.log('Client: Turnstile Verified:', token);
+              if (process.env.NODE_ENV !== 'production') {
+                console.log('Client: Turnstile Verified:', token);
+              }
               setTurnstileToken(token);
               form.setValue('turnstileToken', token);
               form.clearErrors('turnstileToken');
             }}
             onError={() => {
-              console.log('Client: Turnstile Error');
+              if (process.env.NODE_ENV !== 'production') {
+                console.log('Client: Turnstile Error');
+              }
               setTurnstileToken('');
               form.setValue('turnstileToken', '');
               form.setError('turnstileToken', { type: 'manual', message: 'Verification failed. Please refresh or try again.' });
             }}
             onExpire={() => {
-              console.log('Client: Turnstile Expired');
+              if (process.env.NODE_ENV !== 'production') {
+                console.log('Client: Turnstile Expired');
+              }
               setTurnstileToken('');
               form.setValue('turnstileToken', '');
               form.setError('turnstileToken', { type: 'manual', message: 'Verification expired. Please complete it again.' });

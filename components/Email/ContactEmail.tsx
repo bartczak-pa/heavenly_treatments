@@ -7,40 +7,125 @@ interface ContactEmailProps {
 }
 
 // Simple functional component for the email body
-// TODO: Add styling to the email
 export const ContactEmail: React.FC<Readonly<ContactEmailProps>> = ({ formData }) => {
   const { firstName, email, phone, treatment, message, preferredDate, preferredTime } = formData;
 
+  const emailStyles = {
+    container: {
+      fontFamily: 'Arial, sans-serif',
+      lineHeight: '1.6',
+      color: '#333333',
+      maxWidth: '600px',
+      margin: '0 auto',
+      padding: '20px',
+      backgroundColor: '#ffffff',
+    },
+    header: {
+      backgroundColor: '#f8f9fa',
+      padding: '20px',
+      borderRadius: '8px 8px 0 0',
+      borderBottom: '3px solid #e9ecef',
+    },
+    title: {
+      margin: '0 0 10px 0',
+      color: '#2c3e50',
+      fontSize: '24px',
+    },
+    subtitle: {
+      margin: '0',
+      color: '#7f8c8d',
+      fontSize: '16px',
+    },
+    section: {
+      padding: '20px',
+      backgroundColor: '#ffffff',
+    },
+    sectionTitle: {
+      margin: '0 0 15px 0',
+      color: '#2c3e50',
+      fontSize: '18px',
+      borderBottom: '2px solid #3498db',
+      paddingBottom: '5px',
+    },
+    list: {
+      margin: '0',
+      padding: '0',
+      listStyle: 'none',
+    },
+    listItem: {
+      margin: '0 0 10px 0',
+      padding: '8px 0',
+      borderBottom: '1px solid #ecf0f1',
+    },
+    label: {
+      fontWeight: 'bold',
+      color: '#2c3e50',
+      display: 'inline-block',
+      minWidth: '140px',
+    },
+    message: {
+      whiteSpace: 'pre-wrap' as const,
+      backgroundColor: '#f8f9fa',
+      padding: '15px',
+      borderRadius: '5px',
+      border: '1px solid #e9ecef',
+      fontSize: '14px',
+      lineHeight: '1.5',
+    },
+    footer: {
+      backgroundColor: '#ecf0f1',
+      padding: '15px 20px',
+      borderRadius: '0 0 8px 8px',
+      textAlign: 'center' as const,
+      fontSize: '12px',
+      color: '#7f8c8d',
+      fontStyle: 'italic',
+    },
+  };
+
   return (
-    <div>
-      <h1>New Contact Form Submission</h1>
-      <p>You received a new contact form submission from your website.</p>
-      
-      <hr />
+    <div style={emailStyles.container}>
+      <div style={emailStyles.header}>
+        <h1 style={emailStyles.title}>New Contact Form Submission</h1>
+        <p style={emailStyles.subtitle}>You received a new inquiry from your Heavenly Treatments website.</p>
+      </div>
 
-      <h2>Contact Information</h2>
-      <ul>
-        <li><strong>Name:</strong> {firstName}</li>
-        <li><strong>Email:</strong> {email}</li>
-        {phone && <li><strong>Phone:</strong> {phone}</li>}
-        {treatment && <li><strong>Treatment Inquiry:</strong> {treatment}</li>}
-        {(preferredDate || preferredTime) && (
-          <li>
-            <strong>Preferred Booking:</strong> 
-            {preferredDate}{preferredDate && preferredTime ? ' at ' : ''}{preferredTime}
+      <div style={emailStyles.section}>
+        <h2 style={emailStyles.sectionTitle}>Contact Information</h2>
+        <ul style={emailStyles.list}>
+          <li style={emailStyles.listItem}>
+            <span style={emailStyles.label}>Name:</span> {firstName}
           </li>
-        )}
-      </ul>
+          <li style={emailStyles.listItem}>
+            <span style={emailStyles.label}>Email:</span> {email}
+          </li>
+          {phone && (
+            <li style={emailStyles.listItem}>
+              <span style={emailStyles.label}>Phone:</span> {phone}
+            </li>
+          )}
+          {treatment && (
+            <li style={emailStyles.listItem}>
+              <span style={emailStyles.label}>Treatment Inquiry:</span> {treatment}
+            </li>
+          )}
+          {(preferredDate || preferredTime) && (
+            <li style={emailStyles.listItem}>
+              <span style={emailStyles.label}>Preferred Booking:</span> 
+              {preferredDate}{preferredDate && preferredTime ? ' at ' : ''}{preferredTime}
+            </li>
+          )}
+        </ul>
+      </div>
 
-      <hr />
+      <div style={emailStyles.section}>
+        <h2 style={emailStyles.sectionTitle}>Message</h2>
+        <div style={emailStyles.message}>{message}</div>
+      </div>
 
-      <h2>Message</h2>
-      <p style={{ whiteSpace: 'pre-wrap' }}>{message}</p> 
-
-      <hr />
-      <p style={{ fontSize: '12px', color: '#666' }}>
+      <div style={emailStyles.footer}>
         This email was sent from your Heavenly Treatments website contact form.
-      </p>
+      </div>
     </div>
   );
 };
