@@ -84,6 +84,9 @@ export default async function RootLayout({
   const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
   const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
   const nonce = (await headers()).get('x-nonce');
+  
+  // Normalize gtag ID - prefer GA_MEASUREMENT_ID, fallback to googleAdsId, ensure non-empty
+  const gtagId = (GA_MEASUREMENT_ID && GA_MEASUREMENT_ID.trim()) || (googleAdsId && googleAdsId.trim()) || null;
 
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${openSans.variable} antialiased`}>
@@ -101,11 +104,11 @@ export default async function RootLayout({
         {process.env.NODE_ENV === 'development' && <DevPerformanceDashboard />}
         
         {/* --- Google (Analytics/Ads) unified gtag loader --- */}
-        {(GA_MEASUREMENT_ID || googleAdsId) && (
+        {gtagId && (
           <>
             <Script
               strategy="afterInteractive"
-              src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA_MEASUREMENT_ID ?? googleAdsId!)}`}
+              src={`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gtagId)}`}
               nonce={nonce ?? undefined}
             />
             <Script id="gtag-init" strategy="afterInteractive" nonce={nonce ?? undefined}>
