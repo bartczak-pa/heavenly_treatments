@@ -102,7 +102,8 @@ export default function Navbar({ className }: NavbarProps = {}) {
 
   // Helper function to determine active navigation state
   const isActivePage = useCallback((href: string) => {
-    return pathname === href;
+    if (href === '/') return pathname === '/';
+    return pathname === href || pathname.startsWith(href + '/');
   }, [pathname]);
 
   return (
@@ -115,8 +116,8 @@ export default function Navbar({ className }: NavbarProps = {}) {
         Skip to main content
       </a>
 
-      <header className={cn("w-full border-b bg-secondary/15 backdrop-blur supports-[backdrop-filter]:bg-secondary/15 sticky z-40", className)}>
-        <nav className="w-full flex h-16 items-center" role="navigation" aria-label="Main navigation">
+      <header className={cn("w-full border-b bg-secondary/15 backdrop-blur supports-[backdrop-filter]:bg-secondary/15 relative z-40", className)}>
+        <nav className="w-full flex h-16 items-center" aria-label="Main navigation">
           <div className="flex items-center w-full px-4 sm:px-6 lg:px-8">
 
         {/* Left Navigation Menu - Desktop */}
@@ -210,7 +211,6 @@ export default function Navbar({ className }: NavbarProps = {}) {
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Toggle main menu">
                 <Menu className="h-5 w-5" aria-hidden="true" />
-                <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[400px] z-50 bg-secondary border-l-0">
@@ -254,7 +254,6 @@ export default function Navbar({ className }: NavbarProps = {}) {
                           variant="ghost"
                           size="sm"
                           className={cn("w-9 p-0 ml-2", STYLES.focusRing)}
-                          aria-expanded={isMobileTreatmentsOpen}
                           aria-label="Toggle treatment categories"
                         >
                           {isMobileTreatmentsOpen ? (
