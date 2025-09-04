@@ -88,12 +88,12 @@ export default function Navbar({ className }: NavbarProps = {}) {
   const [isMobileTreatmentsOpen, setIsMobileTreatmentsOpen] = useState(false);
 
   // Memoized category data with icons to prevent unnecessary re-computation
-  const categoriesWithIcons = useMemo((): CategoryWithIcon[] =>
+  const categoriesWithIcons = useMemo((): CategoryWithIcon[] => (
     treatmentCategories.map((category) => ({
       ...category,
-      IconComponent: category.iconName ? categoryIconMap[category.iconName] : null
-    })), []
-  );
+      IconComponent: category.iconName ? categoryIconMap[category.iconName] : null,
+    }))
+  ), [treatmentCategories, categoryIconMap]);
 
   // Callback to prevent unnecessary re-renders
   const handleMobileTreatmentsToggle = useCallback((open: boolean) => {
@@ -193,7 +193,7 @@ export default function Navbar({ className }: NavbarProps = {}) {
         {/* Centered Logo */}
         <div className="flex-1 flex justify-center">
           <Link href="/" className="flex items-center space-x-2">
-            <span className="text-md sm:text-base md:text-lg lg:text-base xl:text-xl font-bold font-serif text-primary whitespace-nowrap">Heavenly Treatments with Hayleybell</span>
+            <span className="text-base sm:text-base md:text-lg lg:text-base xl:text-xl font-bold font-serif text-primary whitespace-nowrap">Heavenly Treatments with Hayleybell</span>
           </Link>
         </div>
 
@@ -262,7 +262,6 @@ export default function Navbar({ className }: NavbarProps = {}) {
                           ) : (
                             <ChevronRight className="h-4 w-4 text-primary" aria-hidden="true" />
                           )}
-                          <span className="sr-only">Toggle Treatments</span>
                         </Button>
                       </CollapsibleTrigger>
                   </div>
