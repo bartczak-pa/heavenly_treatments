@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -55,9 +55,15 @@ const NAVIGATION_ITEMS: readonly NavigationItem[] = [
 // --- Style Constants ---
 const STYLES = {
   desktopCategoryLink: "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-  mobileCategoryLink: "text-sm text-foreground hover:text-primary",
+  mobileCategoryLink: "text-sm hover:text-primary",
   focusRing: "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
 } as const;
+
+// --- Computed Constants ---
+const categoriesWithIcons: CategoryWithIcon[] = treatmentCategories.map((category) => ({
+  ...category,
+  IconComponent: category.iconName ? categoryIconMap[category.iconName] : null,
+}));
 
 export default function Navbar({ className }: NavbarProps = {}) {
   /**
@@ -86,14 +92,6 @@ export default function Navbar({ className }: NavbarProps = {}) {
    */
   const pathname = usePathname();
   const [isMobileTreatmentsOpen, setIsMobileTreatmentsOpen] = useState(false);
-
-  // Memoized category data with icons to prevent unnecessary re-computation
-  const categoriesWithIcons = useMemo((): CategoryWithIcon[] => (
-    treatmentCategories.map((category) => ({
-      ...category,
-      IconComponent: category.iconName ? categoryIconMap[category.iconName] : null,
-    }))
-  ), [treatmentCategories, categoryIconMap]);
 
   // Callback to prevent unnecessary re-renders
   const handleMobileTreatmentsToggle = useCallback((open: boolean) => {
@@ -270,7 +268,12 @@ export default function Navbar({ className }: NavbarProps = {}) {
                     <div className="flex flex-col space-y-2 pl-4 pt-2">
                       <Link
                         href="/treatments"
-                        className={cn(STYLES.mobileCategoryLink, STYLES.focusRing)}
+                        className={cn(
+                          STYLES.mobileCategoryLink,
+                          STYLES.focusRing,
+                          isActivePage("/treatments") && "text-primary font-semibold"
+                        )}
+                        aria-current={isActivePage("/treatments") ? "page" : undefined}
                       >
                         All Treatments
                       </Link>
