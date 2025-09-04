@@ -22,14 +22,14 @@ interface ServicesSectionProps {
   initialVisibleCount?: number;
 }
 
-const ServicesSection: React.FC<ServicesSectionProps> = ({ 
-  showAllButton = true, 
+const ServicesSection: React.FC<ServicesSectionProps> = ({
+  showAllButton = true,
   initialVisibleCount = INITIAL_VISIBLE_COUNT
 }) => {
     const [showAll, setShowAll] = useState(!showAllButton);
     const totalCategories = treatmentCategories.length;
-    
-    
+
+
     // Helper function to determine item visibility
     const getItemVisibility = (index: number): string => {
       if (!showAllButton) return 'block';
@@ -48,7 +48,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
                     {SECTION_DESCRIPTION}
                 </p>
 
-                <div 
+                <div
                     className={cn(
                         'grid grid-cols-1 gap-8',
                         GRID_BREAKPOINTS.sm,
@@ -59,7 +59,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
                 >
                     {treatmentCategories.map((category, index) => {
                         const shouldPriorityLoad = index < initialVisibleCount;
-                        
+
                         return (
                             <Link
                                 key={category.id}
@@ -72,8 +72,8 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
                                 aria-label={`View ${category.name} treatments`}
                             >
                                 <Card className="flex flex-col h-full overflow-hidden shadow-md hover:shadow-xl group p-0">
-                                    <div 
-                                        className="relative w-full h-52 overflow-hidden bg-secondary/10"
+                                    <div
+                                        className="relative w-full h-52 overflow-hidden bg-secondary/10 flex-shrink-0"
                                     >
                                         {category.image ? (
                                             <Image
@@ -84,9 +84,17 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
                                                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                                 priority={shouldPriorityLoad}
                                                 loading={shouldPriorityLoad ? 'eager' : 'lazy'}
+                                                style={{ 
+                                                  objectFit: 'cover',
+                                                  objectPosition: '50% 40%',
+                                                  width: '100%',
+                                                  height: '100%',
+                                                  transform: 'scale(1.001)',
+                                                  backfaceVisibility: 'hidden'
+                                                }}
                                             />
                                         ) : (
-                                            <div 
+                                            <div
                                                 className="w-full h-full bg-secondary/20 flex items-center justify-center"
                                                 role="img"
                                                 aria-label="Placeholder for upcoming image"
@@ -113,9 +121,9 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
 
                 {showAllButton && !showAll && totalCategories > initialVisibleCount && (
                     <div className="text-center mt-12 md:hidden">
-                        <Button 
+                        <Button
                             onClick={() => setShowAll(true)}
-                            variant="outline" 
+                            variant="outline"
                             size="lg"
                             aria-expanded="false"
                             aria-controls="services-grid"

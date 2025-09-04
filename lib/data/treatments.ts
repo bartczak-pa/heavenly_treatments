@@ -53,7 +53,7 @@ export interface Treatment {
       name: 'Hollistic Treatments',
       description: 'Relax and rejuvenate with my range of hollistic treatments.',
       shortDescription: 'Relax and rejuvenate with my range of hollistic treatments.',
-      image: '/images/categories/products_used_for_seasonal_treatments.jpg',
+      image: '/images/categories/products_used_for_seasonal_treatments.webp',
       iconName: 'Sun',
     },
     {
