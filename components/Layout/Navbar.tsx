@@ -126,19 +126,20 @@ export default function Navbar({ className }: NavbarProps = {}) {
             <NavigationMenuList>
               {NAVIGATION_ITEMS.map(({ href, label }) => (
                 <NavigationMenuItem key={href}>
-                  <Link href={href} legacyBehavior passHref>
-                    <NavigationMenuLink
-                      className={cn(
-                        navigationMenuTriggerStyle(),
-                        "bg-transparent",
-                        STYLES.focusRing,
-                        isActivePage(href) && "bg-accent text-accent-foreground"
-                      )}
-                      aria-current={isActivePage(href) ? "page" : undefined}
-                    >
+                  <NavigationMenuLink
+                    asChild
+                    className={cn(
+                      navigationMenuTriggerStyle(),
+                      "bg-transparent",
+                      STYLES.focusRing,
+                      isActivePage(href) && "bg-accent text-accent-foreground"
+                    )}
+                    aria-current={isActivePage(href) ? "page" : undefined}
+                  >
+                    <Link href={href}>
                       {label}
-                    </NavigationMenuLink>
-                  </Link>
+                    </Link>
+                  </NavigationMenuLink>
                 </NavigationMenuItem>
               ))}
               <NavigationMenuItem>
