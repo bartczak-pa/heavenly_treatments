@@ -10,7 +10,6 @@ import { cn } from '@/lib/utils';
 
 // Constants
 const INITIAL_VISIBLE_COUNT = 3;
-const IMAGE_HEIGHT = 208; // h-52 = 13rem = 208px
 const SECTION_HEADING = "Explore My Services";
 const SECTION_DESCRIPTION = "Indulge in treatments designed to soothe your body, rejuvenate your skin, and restore balance.";
 const GRID_BREAKPOINTS = {
@@ -74,16 +73,14 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
                             >
                                 <Card className="flex flex-col h-full overflow-hidden shadow-md hover:shadow-xl group p-0">
                                     <div 
-                                        className="relative w-full overflow-hidden"
-                                        style={{ height: IMAGE_HEIGHT }}
+                                        className="relative w-full h-52 overflow-hidden bg-secondary/10"
                                     >
                                         {category.image ? (
                                             <Image
                                                 src={category.image}
                                                 alt={`${category.name} treatment category`}
                                                 fill
-                                                style={{ objectFit: 'cover' }}
-                                                className="transition-transform duration-300 group-hover:scale-105"
+                                                className="object-cover transition-transform duration-300 group-hover:scale-105"
                                                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                                 priority={shouldPriorityLoad}
                                                 loading={shouldPriorityLoad ? 'eager' : 'lazy'}
