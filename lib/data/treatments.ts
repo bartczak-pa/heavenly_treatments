@@ -39,7 +39,7 @@ export interface Treatment {
   
   // Define slugs for type safety
   export type TreatmentCategorySlug =
-    | 'hollistic-treatments'
+    | 'holistic-treatments'
     | 'massages'
     | 'facials'
     | 'body-treatments'
@@ -49,10 +49,10 @@ export interface Treatment {
   export const treatmentCategories: TreatmentCategory[] = [
     {
       id: 'cat-1',
-      slug: 'hollistic-treatments',
-      name: 'Hollistic Treatments',
-      description: 'Relax and rejuvenate with my range of hollistic treatments.',
-      shortDescription: 'Relax and rejuvenate with my range of hollistic treatments.',
+      slug: 'holistic-treatments',
+      name: 'Holistic Treatments',
+      description: 'Relax and rejuvenate with my range of holistic treatments.',
+      shortDescription: 'Relax and rejuvenate with my range of holistic treatments.',
       image: '/images/categories/products_used_for_seasonal_treatments.jpg',
       iconName: 'Sun',
     },
@@ -99,7 +99,7 @@ export interface Treatment {
 
     // Hollistic Treatments
     {
-      id: 'hollistic-1',
+      id: 'holistic-1',
       title: 'Scrub & Soothe',
       slug: 'scrub-soothe',
       // SEO Description
@@ -118,14 +118,14 @@ export interface Treatment {
         'Scrub on hands',
         'Hand massage',
       ],
-      category: 'hollistic-treatments',
+      category: 'holistic-treatments',
     },
     {
-      id: 'hollistic-2',
+      id: 'holistic-2',
       title: 'Heal & Glow',
       slug: 'heal-glow',
       // SEO Description
-      description: 'Indulge in a hollistic treatment for your mind, body and soul using beautiful handmade products from Wild & Wood.',
+      description: 'Indulge in a holistic treatment for your mind, body and soul using beautiful handmade products from Wild & Wood.',
       image: '/images/treatments/heal_and_glow.jpeg',
       imageWidth: 800,
       imageHeight: 600,
@@ -140,7 +140,7 @@ export interface Treatment {
         'Scalp massage',
         'Botanical facial oil',
       ],
-      category: 'hollistic-treatments',
+      category: 'holistic-treatments',
     },
     
 
