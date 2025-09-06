@@ -10,14 +10,14 @@ Analysis of Heavenly Treatments Next.js project revealing key improvement opport
 
 - **File**: `/lib/data/treatments.ts`
 - **Issue**: "hollistic" → should be "holistic"
-- **Impact**: Affects URLs, SEO, and data consistency (requires 301 redirects + sitemap update)
-- **Action**: Add Next.js redirects from legacy "hollistic" paths to new "holistic" paths
-- **Lines**: 42, 52-55, 102, 121, 124, 128, 143
+- **Impact**: Affects URLs, SEO, and data consistency (301 redirects + sitemap update)
+- **Action**: ✅ Added Next.js redirects for both path and query parameter variants
+- **TODO**: Update sitemap and resubmit to Google Search Console
 
 ### 🔴 **Excessive Client-Side Rendering**
 
 - **Issue**: 20 components marked with `'use client'` unnecessarily
-- **Check**: `find . -name "*.ts" -o -name "*.tsx" | grep -v node_modules | xargs grep -l "'use client'" | wc -l`
+- **Check**: `rg -nP "^\s*'use client'\s*;?" --type=ts --type=tsx -g "!**/{node_modules,.next,dist,build}/**" | cut -d: -f1 | sort -u | wc -l`
 - **Impact**: 25-30% larger JavaScript bundle
 - **Files**: Static components like testimonials, myStudio, meetTherapist should be server components
 
@@ -34,6 +34,7 @@ Analysis of Heavenly Treatments Next.js project revealing key improvement opport
 - **Issue**: Massive unoptimized images (39MB PNG files)
 - **Impact**: 60-70% slower load times
 - **Files**: `/public/images/treatments/bacial.png` (39MB), reflexology treatment (27MB)
+- **Check**: `find public/images -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" | xargs ls -lh | sort -k5 -h | tail -5`
 - **Solution**: Convert to WebP, generate responsive sizes
 
 ### 🟡 **File Naming Inconsistency**
@@ -71,6 +72,7 @@ Analysis of Heavenly Treatments Next.js project revealing key improvement opport
 ### 🟢 **Missing Testing Infrastructure**
 
 - **Issue**: 0% test coverage, no testing framework
+- **Check**: `find . -name "*.test.*" -o -name "*.spec.*" | grep -v node_modules | wc -l`
 - **Impact**: Risky refactoring, potential regressions
 - **Solution**: Add Jest/Vitest + Testing Library
 
