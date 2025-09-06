@@ -11,6 +11,19 @@ const nextConfig = {
   },
   redirects: async () => [
     {
+      source: '/treatments/hollistic-treatments',
+      destination: '/treatments/holistic-treatments',
+      permanent: true,
+    },
+    {
+      source: '/treatments',
+      has: [
+        { type: 'query', key: 'category', value: 'hollistic-treatments' }
+      ],
+      destination: '/treatments?category=holistic-treatments',
+      permanent: true,
+    },
+    {
       source: '/facials',
       destination: '/treatments?category=facials',
       permanent: true,
