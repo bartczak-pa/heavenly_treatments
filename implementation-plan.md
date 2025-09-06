@@ -5,15 +5,18 @@
 This implementation plan addresses critical improvements identified in the code improvement report, prioritized by impact and effort. The plan is structured in four phases over 4-6 weeks, targeting a 40-60% overall performance improvement and significant code quality enhancements.
 
 ## Phase 1: Critical Issues (Days 1-2)
+
 **Target**: Address breaking issues and highest-impact improvements
 **Estimated Effort**: 12-16 hours
 
 ### 1.1 Fix "hollistic" → "holistic" Typo ✅ COMPLETED
+
 **Priority**: 🔴 Critical
 **Impact**: SEO, URLs, data consistency
 **Effort**: 1 hour
 
 **Implementation Steps:**
+
 1. Update `/lib/data/treatments.ts`:
    - Line 42: Type definition
    - Line 52: Category slug
@@ -22,6 +25,7 @@ This implementation plan addresses critical improvements identified in the code 
    - Lines 102, 121, 124, 128, 143: Treatment entries
 
 2. Test routing still works:
+
    ```bash
    npm run dev
    # Navigate to treatments pages
@@ -38,11 +42,13 @@ This implementation plan addresses critical improvements identified in the code 
 **Validation**: All treatment category URLs work, no broken links, redirects functioning
 
 ### 1.2 Convert Static Components to Server Components
+
 **Priority**: 🔴 Critical  
 **Impact**: 25-30% bundle reduction
 **Effort**: 4-6 hours
 
 **Target Components:**
+
 ```typescript
 // Remove 'use client' from these files:
 components/Sections/testimonials.tsx
@@ -54,40 +60,48 @@ components/Sections/Experience.tsx
 ```
 
 **Implementation Steps:**
+
 1. For each component:
    - Remove `'use client'` directive
    - Ensure no browser-only APIs (localStorage, window, etc.)
    - Move any interactive logic to separate client components
 
 2. Extract interactive parts:
+
    ```typescript
    // Example: testimonials.tsx
    // Keep testimonial data on server
    // Move any animations to client sub-component
    ```
 
-**Validation**: 
+**Validation**:
+
 - Build succeeds: `npm run build`
 - Bundle analysis shows reduced client JS
 - Pages render correctly
 
 ### 1.3 Emergency Image Optimization
+
 **Priority**: 🔴 Critical
 **Impact**: 60-70% faster load times  
 **Effort**: 6-8 hours
 
 **Target Files:**
+
 - `/public/images/treatments/bacial.png` (39MB → ~2MB)
 - `/public/images/categories/person_having_reflexology_treatment.png` (27MB)
 - Hero images over 10MB
 
 **Implementation Steps:**
+
 1. Install image optimization tools:
+
    ```bash
    npm install sharp imagemin imagemin-webp
    ```
 
 2. Create optimization script:
+
    ```javascript
    // scripts/optimize-images.js
    const sharp = require('sharp');
@@ -97,26 +111,31 @@ components/Sections/Experience.tsx
    ```
 
 3. Update image references:
+
    ```typescript
    // Replace .png/.jpg with .webp
    // Add srcSet for responsive images
    ```
 
-**Validation**: 
+**Validation**:
+
 - Lighthouse performance score improvement
 - Image sizes under 500KB
 - Visual quality maintained
 
 ## Phase 2: High Priority Issues (Week 2)
+
 **Target**: Code consistency and architecture improvements
 **Estimated Effort**: 24-32 hours
 
 ### 2.1 Standardize File Naming
+
 **Priority**: 🟡 High
 **Impact**: Developer experience, consistency
 **Effort**: 4-6 hours
 
 **Files to Rename:**
+
 ```bash
 # Current → Target
 treatmentsGrid.tsx → TreatmentsGrid.tsx
@@ -127,7 +146,9 @@ meetTherapist.tsx → MeetTherapist.tsx
 ```
 
 **Implementation Steps:**
+
 1. Create rename script:
+
    ```bash
    # scripts/rename-components.sh
    git mv treatmentsGrid.tsx TreatmentsGrid.tsx
@@ -135,17 +156,20 @@ meetTherapist.tsx → MeetTherapist.tsx
    ```
 
 2. Use find/replace for imports:
+
    ```bash
    grep -r "treatmentsGrid" --include="*.tsx" --include="*.ts" .
    # Update each reference
    ```
 
-**Validation**: 
+**Validation**:
+
 - All imports resolve correctly
 - Build and typecheck pass
 - No broken references
 
 ### 2.2 Standardize Import Patterns
+
 **Priority**: 🟡 High
 **Impact**: Code consistency, build reliability
 **Effort**: 3-4 hours
@@ -153,12 +177,15 @@ meetTherapist.tsx → MeetTherapist.tsx
 **Target**: Convert all relative imports to absolute imports
 
 **Implementation Steps:**
+
 1. Audit current import patterns:
+
    ```bash
    grep -r "import.*\.\." --include="*.tsx" --include="*.ts" .
    ```
 
 2. Convert to absolute imports:
+
    ```typescript
    // Before
    import MainHeader from '../components/Sections/mainHeader'
@@ -172,12 +199,15 @@ meetTherapist.tsx → MeetTherapist.tsx
 **Validation**: Build succeeds, no import errors
 
 ### 2.3 Add Error Boundaries
+
 **Priority**: 🔴 Critical
 **Impact**: Application stability
 **Effort**: 4-6 hours
 
 **Implementation Steps:**
+
 1. Create global error boundary:
+
    ```typescript
    // components/ErrorBoundary.tsx
    'use client'
@@ -224,6 +254,7 @@ meetTherapist.tsx → MeetTherapist.tsx
    ```
 
 2. Add to layout:
+
    ```typescript
    // app/layout.tsx
    export default function RootLayout({
@@ -246,12 +277,15 @@ meetTherapist.tsx → MeetTherapist.tsx
 **Validation**: Trigger error, verify boundary catches it
 
 ### 2.4 Clean Up TODO Comments
+
 **Priority**: 🟡 High
 **Impact**: Code professionalism
 **Effort**: 2-3 hours
 
 **Implementation Steps:**
+
 1. Find all TODOs:
+
    ```bash
    grep -r "TODO" --include="*.tsx" --include="*.ts" .
    ```
@@ -264,16 +298,20 @@ meetTherapist.tsx → MeetTherapist.tsx
 **Validation**: No TODO comments remain in codebase
 
 ## Phase 3: Performance & Quality (Weeks 3-4)
+
 **Target**: Performance optimization and testing setup
 **Estimated Effort**: 32-40 hours
 
 ### 3.1 React Performance Optimizations
+
 **Priority**: 🟢 Medium
 **Impact**: 15-20% render performance
 **Effort**: 8-10 hours
 
 **Implementation Steps:**
+
 1. Add React.memo to treatment cards:
+
    ```typescript
    // components/Treatments/TreatmentCard.tsx
    import { memo } from 'react'
@@ -287,6 +325,7 @@ meetTherapist.tsx → MeetTherapist.tsx
    ```
 
 2. Optimize treatment grid:
+
    ```typescript
    // components/Treatments/TreatmentsGrid.tsx
    import { useMemo, memo } from 'react'
@@ -307,28 +346,34 @@ meetTherapist.tsx → MeetTherapist.tsx
    ```
 
 3. Add useCallback for event handlers:
+
    ```typescript
    const handleFilterChange = useCallback((newFilters) => {
      setFilters(newFilters)
    }, [])
    ```
 
-**Validation**: 
+**Validation**:
+
 - React DevTools Profiler shows reduced renders
 - Performance improvements in filtering
 
 ### 3.2 Testing Infrastructure Setup
+
 **Priority**: 🟢 Medium
 **Impact**: Code quality assurance
 **Effort**: 12-16 hours
 
 **Implementation Steps:**
+
 1. Install testing dependencies:
+
    ```bash
    npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom
    ```
 
 2. Create test configuration:
+
    ```typescript
    // vitest.config.ts
    import { defineConfig } from 'vitest/config'
@@ -344,6 +389,7 @@ meetTherapist.tsx → MeetTherapist.tsx
    ```
 
 3. Add test scripts to package.json:
+
    ```json
    {
      "scripts": {
@@ -355,6 +401,7 @@ meetTherapist.tsx → MeetTherapist.tsx
    ```
 
 4. Create initial tests:
+
    ```typescript
    // __tests__/components/TreatmentCard.test.tsx
    import { render, screen } from '@testing-library/react'
@@ -374,18 +421,22 @@ meetTherapist.tsx → MeetTherapist.tsx
    })
    ```
 
-**Validation**: 
+**Validation**:
+
 - Tests run successfully
 - Coverage report generated
 - CI/CD integration works
 
 ### 3.3 Configuration Management
+
 **Priority**: 🟢 Medium  
 **Impact**: Maintainability
 **Effort**: 4-6 hours
 
 **Implementation Steps:**
+
 1. Create configuration file:
+
    ```typescript
    // lib/config.ts
    export const config = {
@@ -401,6 +452,7 @@ meetTherapist.tsx → MeetTherapist.tsx
    ```
 
 2. Replace magic numbers:
+
    ```typescript
    // Before
    const INITIAL_VISIBLE_COUNT: number = 3
@@ -413,23 +465,30 @@ meetTherapist.tsx → MeetTherapist.tsx
 **Validation**: No hardcoded values in components
 
 ## Phase 4: Advanced Optimizations (Weeks 5-6)
+
 **Target**: Production readiness and monitoring
 **Estimated Effort**: 16-20 hours
 
 ### 4.1 Advanced Image Optimization
+
 **Implementation Steps:**
+
 1. Implement blur placeholders
 2. Add image loading priorities
 3. Optimize image delivery with CDN
 
 ### 4.2 Bundle Analysis & Optimization
+
 **Implementation Steps:**
+
 1. Set up bundle analyzer
 2. Implement code splitting
 3. Optimize third-party dependencies
 
 ### 4.3 Performance Monitoring
+
 **Implementation Steps:**
+
 1. Add Core Web Vitals tracking
 2. Set up performance budgets
 3. Implement error monitoring
@@ -437,12 +496,14 @@ meetTherapist.tsx → MeetTherapist.tsx
 ## Success Metrics
 
 ### Performance Targets
+
 - **Lighthouse Performance**: 70+ → 90+
 - **First Contentful Paint**: <1.5s
 - **Largest Contentful Paint**: <2.5s
 - **Bundle Size**: 30% reduction
 
 ### Quality Targets
+
 - **Test Coverage**: 0% → 60%+
 - **ESLint Warnings**: 0
 - **TypeScript Errors**: 0
@@ -451,11 +512,13 @@ meetTherapist.tsx → MeetTherapist.tsx
 ## Risk Mitigation
 
 ### High Risk Areas
+
 1. **Image optimization**: Test on multiple devices
 2. **Component conversion**: Verify no client-side dependencies
 3. **File renaming**: Ensure all imports updated
 
 ### Rollback Plan
+
 1. Keep git branches for each phase
 2. Test in staging environment first
 3. Deploy incrementally with feature flags
@@ -473,12 +536,14 @@ meetTherapist.tsx → MeetTherapist.tsx
 ## Team Coordination
 
 ### Development Workflow
+
 1. Create feature branches for each improvement
 2. Require code review for critical changes
 3. Run automated tests before merge
 4. Deploy to staging before production
 
 ### Documentation Updates
+
 1. Update README with new scripts
 2. Document testing patterns
 3. Create component usage guidelines

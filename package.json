@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:md": "markdownlint-cli2 \"*.md\"",
+    "lint:md:fix": "markdownlint-cli2 --fix \"*.md\"",
     "prepare": "husky",
     "typecheck": "tsc --noEmit"
   },
@@ -55,6 +57,7 @@
     "globals": "^16.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.0",
+    "markdownlint-cli2": "^0.18.1",
     "prettier": "^3.5.3",
     "tailwindcss": "^4",
     "typescript": "^5",
@@ -64,6 +67,7 @@
     "*.js": "eslint --fix",
     "*.ts": "eslint --fix",
     "*.tsx": "eslint --fix",
-    "*.css": "prettier --write"
+    "*.css": "prettier --write",
+    "*.md": "markdownlint-cli2 --fix"
   }
 }
