@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-This implementation plan addresses critical improvements identified in the code improvement report, prioritized by impact and effort. The plan is structured in three phases over 4-6 weeks, targeting a 40-60% overall performance improvement and significant code quality enhancements.
+This implementation plan addresses critical improvements identified in the code improvement report, prioritized by impact and effort. The plan is structured in four phases over 4-6 weeks, targeting a 40-60% overall performance improvement and significant code quality enhancements.
 
 ## Phase 1: Critical Issues (Days 1-2)
 **Target**: Address breaking issues and highest-impact improvements
@@ -30,7 +30,12 @@ This implementation plan addresses critical improvements identified in the code 
 
 3. Update any hardcoded references in other files
 
-**Validation**: All treatment category URLs work, no broken links
+4. Add 301 redirects and SEO updates:
+   - Configure Next.js redirects from old "hollistic" slugs/paths to new "holistic" equivalents
+   - Update sitemap and canonical URLs  
+   - Submit updated sitemap in Google Search Console
+
+**Validation**: All treatment category URLs work, no broken links, redirects functioning
 
 ### 1.2 Convert Static Components to Server Components
 **Priority**: 🔴 Critical  

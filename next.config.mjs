@@ -11,6 +11,11 @@ const nextConfig = {
   },
   redirects: async () => [
     {
+      source: '/treatments/hollistic-treatments',
+      destination: '/treatments/holistic-treatments',
+      permanent: true,
+    },
+    {
       source: '/facials',
       destination: '/treatments?category=facials',
       permanent: true,
