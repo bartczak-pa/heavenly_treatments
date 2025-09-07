@@ -12,8 +12,9 @@
     "prepare": "husky",
     "typecheck": "tsc --noEmit",
     "optimize-images": "node scripts/optimize-images.js",
-    "test": "vitest",
-    "test:coverage": "vitest --coverage",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui"
   },
   "dependencies": {

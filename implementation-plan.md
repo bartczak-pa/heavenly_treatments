@@ -452,12 +452,19 @@ meetTherapist.tsx → MeetTherapist.tsx
    // vitest.config.ts
    import { defineConfig } from 'vitest/config'
    import react from '@vitejs/plugin-react'
+   import path from 'path'
    
    export default defineConfig({
      plugins: [react()],
      test: {
        environment: 'jsdom',
        setupFiles: ['./test/setup.ts'],
+       globals: true,
+     },
+     resolve: {
+       alias: {
+         '@': path.resolve(__dirname, './'),
+       },
      },
    })
    ```
@@ -512,7 +519,7 @@ meetTherapist.tsx → MeetTherapist.tsx
 - ✅ All 6 tests pass successfully
 - ✅ Testing infrastructure is ready for development team use
 - ✅ Path aliases configured to work with @/ imports
-- ✅ Mocks for Next.js components (Image, Link) working correctly
+- ✅ Centralized Next.js component mocks in test/setup.ts (Image, Link) - automatically loaded for all tests
 
 **Files Created**:
 

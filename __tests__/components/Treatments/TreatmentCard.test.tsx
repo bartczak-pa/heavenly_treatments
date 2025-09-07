@@ -1,21 +1,7 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import TreatmentCard from '@/components/Treatments/TreatmentCard'
 import { Treatment } from '@/lib/data/treatments'
-
-// Mock Next.js Image component
-vi.mock('next/image', () => ({
-  default: ({ src, alt, ...props }: any) => (
-    <img src={src} alt={alt} {...props} />
-  ),
-}))
-
-// Mock Next.js Link component
-vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => (
-    <a href={href} {...props}>{children}</a>
-  ),
-}))
 
 describe('TreatmentCard', () => {
   const mockTreatment: Treatment = {
@@ -65,10 +51,13 @@ describe('TreatmentCard', () => {
     
     const detailLinks = screen.getAllByRole('link', { name: /relaxing massage/i })
     expect(detailLinks.length).toBeGreaterThan(0)
-    expect(detailLinks[0]).toHaveAttribute('href', '/treatments/massages/relaxing-massage')
+    expect(detailLinks[0]).toHaveAttribute(
+      'href',
+      `/treatments/${mockTreatment.category}/${mockTreatment.slug}`,
+    )
     
     const bookNowLink = screen.getByRole('link', { name: /book now/i })
-    expect(bookNowLink).toHaveAttribute('href', '/contact?treatment=Relaxing%20Massage')
+    expect(bookNowLink).toHaveAttribute('href', `/contact?treatment=${encodeURIComponent(mockTreatment.title)}`)
   })
 
   it('displays duration and price with icons', () => {
