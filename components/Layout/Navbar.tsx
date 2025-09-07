@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/collapsible";
 import { Menu, ChevronRight, ChevronDown } from 'lucide-react';
 import { treatmentCategories, categoryIconMap } from '@/lib/data/treatments';
-import TreatmentCategoryLinks from './TreatmentCategoryLinks';
+import TreatmentCategoryLinks from '@/components/Layout/TreatmentCategoryLinks';
 import { cn } from '@/lib/utils';
 
 // --- Link Style Constants ---
