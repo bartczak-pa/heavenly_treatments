@@ -1,6 +1,7 @@
 const sharp = require('sharp');
 const fs = require('fs').promises;
 const path = require('path');
+const crypto = require('crypto');
 
 // Configuration for image optimization
 const CONFIG = {
@@ -12,6 +13,8 @@ const CONFIG = {
   sizes: [320, 640, 1024, 1280], // Responsive breakpoints
   outputDir: 'public/images/optimized',
   targetMaxSize: 500 * 1024, // 500KB target
+  blurSize: 16, // Size for blur placeholder generation
+  blurDataDir: 'lib/data',
 };
 
 // Critical images that need immediate optimization (>10MB)
@@ -49,6 +52,26 @@ async function getImageInfo(filePath) {
   }
 }
 
+async function generateBlurPlaceholder(inputPath) {
+  try {
+    const image = sharp(inputPath);
+    const { data, info } = await image
+      .resize(CONFIG.blurSize, CONFIG.blurSize, { fit: 'inside' })
+      .webp({ quality: 20 })
+      .toBuffer({ resolveWithObject: true });
+    
+    const base64 = data.toString('base64');
+    return {
+      src: `data:image/webp;base64,${base64}`,
+      width: info.width,
+      height: info.height
+    };
+  } catch (error) {
+    console.error(`Error generating blur placeholder for ${inputPath}:`, error.message);
+    return null;
+  }
+}
+
 async function optimizeImage(inputPath, outputPath) {
   try {
     const image = sharp(inputPath);
@@ -66,6 +89,7 @@ async function optimizeImage(inputPath, outputPath) {
       .toFile(webpPath);
     
     // Generate responsive sizes for WebP
+    const responsiveSizes = [];
     for (const size of CONFIG.sizes) {
       if (size < metadata.width) {
         const responsivePath = webpPath.replace('.webp', `_${size}w.webp`);
@@ -76,8 +100,12 @@ async function optimizeImage(inputPath, outputPath) {
           })
           .webp({ quality })
           .toFile(responsivePath);
+        responsiveSizes.push(size);
       }
     }
+    
+    // Generate blur placeholder
+    const blurData = await generateBlurPlaceholder(inputPath);
     
     const outputStats = await fs.stat(webpPath);
     return {
@@ -85,7 +113,14 @@ async function optimizeImage(inputPath, outputPath) {
       output: webpPath,
       inputSize: inputSize,
       outputSize: outputStats.size,
-      reduction: ((inputSize - outputStats.size) / inputSize * 100).toFixed(1)
+      reduction: ((inputSize - outputStats.size) / inputSize * 100).toFixed(1),
+      responsiveSizes,
+      blurData,
+      metadata: {
+        width: metadata.width,
+        height: metadata.height,
+        format: metadata.format
+      }
     };
     
   } catch (error) {
@@ -94,13 +129,60 @@ async function optimizeImage(inputPath, outputPath) {
   }
 }
 
+async function saveImageMetadata(imageData) {
+  try {
+    await fs.mkdir(CONFIG.blurDataDir, { recursive: true });
+    const filePath = path.join(CONFIG.blurDataDir, 'image-metadata.ts');
+    
+    const content = `// Auto-generated image metadata for optimization
+// This file contains blur placeholders and responsive image data
+
+export interface ImageMetadata {
+  src: string;
+  blurDataURL?: string;
+  width: number;
+  height: number;
+  sizes: number[];
+  priority?: boolean;
+}
+
+export const imageMetadata: Record<string, ImageMetadata> = {
+${imageData.map(data => {
+  const fileName = path.basename(data.input, path.extname(data.input));
+  const optimizedPath = data.output.replace('public', '');
+  return `  '${fileName}': {
+    src: '${optimizedPath}',
+    blurDataURL: '${data.blurData?.src || ''}',
+    width: ${data.metadata.width},
+    height: ${data.metadata.height},
+    sizes: [${data.responsiveSizes.join(', ')}],
+    priority: ${['young-woman-having-face-massage-relaxing-spa-salon'].includes(fileName)}
+  }`;
+}).join(',\n')}
+};
+
+// Helper function to get image metadata by filename
+export function getImageMetadata(filename: string): ImageMetadata | undefined {
+  const key = filename.replace(/\.[^.]+$/, ''); // Remove extension
+  return imageMetadata[key];
+}
+`;
+    
+    await fs.writeFile(filePath, content);
+    console.log(`✅ Image metadata saved to ${filePath}`);
+  } catch (error) {
+    console.error('Error saving image metadata:', error);
+  }
+}
+
 async function optimizeCriticalImages() {
-  console.log('🚀 Starting emergency image optimization...\n');
+  console.log('🚀 Starting advanced image optimization...\n');
   
   await createOutputDir();
   
   let totalSavings = 0;
   let totalOriginalSize = 0;
+  const optimizedImages = [];
   
   for (const imagePath of CRITICAL_IMAGES) {
     console.log(`📸 Processing: ${imagePath}`);
@@ -116,24 +198,33 @@ async function optimizeCriticalImages() {
     const result = await optimizeImage(imagePath, outputPath);
     if (result) {
       console.log(`   Optimized: ${(result.outputSize / 1024 / 1024).toFixed(1)}MB`);
-      console.log(`   💾 Saved: ${result.reduction}% (${((result.inputSize - result.outputSize) / 1024 / 1024).toFixed(1)}MB)\n`);
+      console.log(`   💾 Saved: ${result.reduction}% (${((result.inputSize - result.outputSize) / 1024 / 1024).toFixed(1)}MB)`);
+      console.log(`   🎨 Blur placeholder: ${result.blurData ? 'Generated' : 'Failed'}`);
+      console.log(`   📱 Responsive sizes: ${result.responsiveSizes.length} variants\n`);
       
       totalSavings += (result.inputSize - result.outputSize);
       totalOriginalSize += result.inputSize;
+      optimizedImages.push(result);
     }
+  }
+  
+  // Save metadata file for TypeScript usage
+  if (optimizedImages.length > 0) {
+    await saveImageMetadata(optimizedImages);
   }
   
   console.log('📊 Summary:');
   console.log(`   Total original size: ${(totalOriginalSize / 1024 / 1024).toFixed(1)}MB`);
   console.log(`   Total savings: ${(totalSavings / 1024 / 1024).toFixed(1)}MB`);
   console.log(`   Overall reduction: ${(totalSavings / totalOriginalSize * 100).toFixed(1)}%`);
+  console.log(`   Blur placeholders: ${optimizedImages.filter(img => img.blurData).length}/${optimizedImages.length}`);
   
   // Generate usage recommendations
   console.log('\n🔧 Next steps:');
-  console.log('1. Replace image references in your components with optimized versions');
-  console.log('2. Use responsive srcSet for different screen sizes');
-  console.log('3. Add loading="lazy" for images below the fold');
-  console.log('4. Consider using next/image for automatic optimization');
+  console.log('1. Use the generated imageMetadata for blur placeholders');
+  console.log('2. Implement priority loading for above-the-fold images');
+  console.log('3. Use responsive srcSet with the generated sizes');
+  console.log('4. Consider lazy loading for images below the fold');
 }
 
 // Run the optimization

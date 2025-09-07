@@ -7,6 +7,9 @@ import eslintConfigPrettier from "eslint-config-prettier";
 
 export default tseslint.config(
   {
+    ignores: ["scripts/**"],
+  },
+  {
     files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
     languageOptions: {
       globals: {

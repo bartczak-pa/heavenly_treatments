@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import OptimizedImage from '@/components/OptimizedImage';
 import React from 'react';
 
 const MeetTherapist = () => {
@@ -8,12 +8,13 @@ const MeetTherapist = () => {
             <h2 className="text-3xl font-bold mb-8">Meet your therapist</h2>
             <div className="flex flex-col md:flex-row gap-8 items-center">
               <div className="md:w-1/3">
-                <Image
+                <OptimizedImage
                   src="/images/about/owner-of-heavenly-treatments.jpg"
                   alt="Spa Therapist"
                   width={300}
                   height={400}
                   className="rounded-lg shadow-lg"
+                  loading="lazy"
                 />
               </div>
               <div className="md:w-2/3">
