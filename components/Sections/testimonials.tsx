@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import testimonialsData from '@/lib/data/testimonials';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
