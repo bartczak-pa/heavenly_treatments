@@ -8,6 +8,7 @@ import * as Toast from '@radix-ui/react-toast';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
 import Script from 'next/script';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -77,10 +78,19 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${openSans.variable} antialiased`}>
       <body className="font-sans min-h-screen bg-background text-foreground">
         <SpeedInsights />
-        <Toast.Provider swipeDirection="right">
-          {children}
-          <Toast.Viewport className="fixed bottom-0 right-0 p-4" />
-        </Toast.Provider>
+        <ErrorBoundary
+          fallback={
+            <div role="alert" aria-live="assertive" className="p-4 border border-red-300 rounded">
+              <h2 className="font-semibold">Something went wrong</h2>
+              <p>Please try again.</p>
+            </div>
+          }
+        >
+          <Toast.Provider swipeDirection="right">
+            {children}
+            <Toast.Viewport className="fixed bottom-0 right-0 p-4" />
+          </Toast.Provider>
+        </ErrorBoundary>
         <Analytics />
         
         {/* --- Google Analytics Scripts --- */}
