@@ -1,16 +1,17 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Treatment, TreatmentCategorySlug } from '@/lib/data/treatments';
 import TreatmentsGrid from '@/components/Treatments/TreatmentsGrid';
 import { Button } from '@/components/ui/button';
+import { config } from '@/lib/config';
 
 interface FilteredTreatmentsDisplayProps {
   filteredTreatments: Treatment[];
   currentSelection: TreatmentCategorySlug | 'all';
 }
 
-const INITIAL_VISIBLE_COUNT: number = 3; 
+const { INITIAL_VISIBLE_TREATMENTS } = config.ui; 
 
 
   /**
@@ -34,16 +35,22 @@ export default function FilteredTreatmentsDisplay({
 }: FilteredTreatmentsDisplayProps) {
 
 
-  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
+  const [visibleCount, setVisibleCount] = useState<number>(INITIAL_VISIBLE_TREATMENTS);
 
   
   useEffect(() => {
-    setVisibleCount(INITIAL_VISIBLE_COUNT);
+    setVisibleCount(INITIAL_VISIBLE_TREATMENTS);
   }, [currentSelection]);
 
   const totalTreatments: number = filteredTreatments.length;
-  const treatmentsToShow: Treatment[] = filteredTreatments.slice(0, visibleCount);
-  const canShowMore: boolean = visibleCount < totalTreatments;
+  
+  const treatmentsToShow: Treatment[] = useMemo(() => {
+    return filteredTreatments.slice(0, visibleCount);
+  }, [filteredTreatments, visibleCount]);
+  
+  const canShowMore: boolean = useMemo(() => {
+    return visibleCount < totalTreatments;
+  }, [visibleCount, totalTreatments]);
 
   
   /**
@@ -58,7 +65,7 @@ export default function FilteredTreatmentsDisplay({
    * @returns {void}
    */
 
-  const handleShowMore = () => {
+  const handleShowMore = useCallback(() => {
     const screenWidth: number = window.innerWidth;
     let increment: number = 3; // Default increment (small screens)
 
@@ -69,7 +76,7 @@ export default function FilteredTreatmentsDisplay({
     }
 
     setVisibleCount((prevCount) => Math.min(prevCount + increment, totalTreatments));
-  };
+  }, [totalTreatments]);
 
 
   return (

@@ -1,11 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { memo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Treatment, } from '@/lib/data/treatments';
+import { Treatment } from '@/lib/data/treatments';
 import { Clock, PoundSterling } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -38,7 +38,7 @@ interface TreatmentCardProps {
  * @param {Treatment} treatment - The treatment data to display
  * @returns {JSX.Element} A treatment card component
  */
-const TreatmentCard: React.FC<TreatmentCardProps> = ({ treatment }) => {
+const TreatmentCard = memo<TreatmentCardProps>(({ treatment }) => {
   const contactHref: string = `/contact?treatment=${encodeURIComponent(treatment.title)}`;
   const detailHref: string = `/treatments/${treatment.category}/${treatment.slug}`;
 
@@ -88,12 +88,14 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({ treatment }) => {
             {treatment.price.replace('£', '')}
           </span>
         </div>
-        <Link href={contactHref}>
-          <Button variant="secondary" size="sm">Book Now</Button>
-        </Link>
+        <Button asChild variant="secondary" size="sm">
+          <Link href={contactHref}>Book Now</Link>
+        </Button>
       </CardFooter>
     </Card>
   );
-};
+});
+
+TreatmentCard.displayName = 'TreatmentCard';
 
 export default TreatmentCard; 
