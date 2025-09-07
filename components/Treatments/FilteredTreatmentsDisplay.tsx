@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Treatment, TreatmentCategorySlug } from '@/lib/data/treatments';
-import TreatmentsGrid from './treatmentsGrid';
+import TreatmentsGrid from '@/components/Treatments/TreatmentsGrid';
 import { Button } from '@/components/ui/button';
 
 interface FilteredTreatmentsDisplayProps {

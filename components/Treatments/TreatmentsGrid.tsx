@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Treatment, } from '@/lib/data/treatments';
-import TreatmentCard from './TreatmentCard';
+import TreatmentCard from '@/components/Treatments/TreatmentCard';
 
 interface TreatmentsGridProps {
     treatments: Treatment[];

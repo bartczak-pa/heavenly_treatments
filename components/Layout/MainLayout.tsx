@@ -1,9 +1,9 @@
 import React, { ReactNode } from 'react';
-import Navbar from './Navbar';
-import Footer from './Footer';
+import Navbar from '@/components/Layout/Navbar';
+import Footer from '@/components/Layout/Footer';
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import CookieConsentWrapper from './CookieConsentWrapper';
-import GoogleAnalytics from '../Analytics/GoogleAnalytics';
+import CookieConsentWrapper from '@/components/Layout/CookieConsentWrapper';
+import GoogleAnalytics from '@/components/Analytics/GoogleAnalytics';
 
 interface MainLayoutProps {
   children: ReactNode;
