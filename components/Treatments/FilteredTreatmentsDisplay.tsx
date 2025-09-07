@@ -4,13 +4,14 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Treatment, TreatmentCategorySlug } from '@/lib/data/treatments';
 import TreatmentsGrid from '@/components/Treatments/TreatmentsGrid';
 import { Button } from '@/components/ui/button';
+import { config } from '@/lib/config';
 
 interface FilteredTreatmentsDisplayProps {
   filteredTreatments: Treatment[];
   currentSelection: TreatmentCategorySlug | 'all';
 }
 
-const INITIAL_VISIBLE_COUNT: number = 3; 
+const { INITIAL_VISIBLE_TREATMENTS } = config.ui; 
 
 
   /**
@@ -34,11 +35,11 @@ export default function FilteredTreatmentsDisplay({
 }: FilteredTreatmentsDisplayProps) {
 
 
-  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
+  const [visibleCount, setVisibleCount] = useState<number>(INITIAL_VISIBLE_TREATMENTS);
 
   
   useEffect(() => {
-    setVisibleCount(INITIAL_VISIBLE_COUNT);
+    setVisibleCount(INITIAL_VISIBLE_TREATMENTS);
   }, [currentSelection]);
 
   const totalTreatments: number = filteredTreatments.length;

@@ -16,6 +16,7 @@ export default tseslint.config(
       parser: tseslint.parser,
       parserOptions: {
         ecmaFeatures: { jsx: true },
+        project: true, // enable type-aware linting
       },
     },
     plugins: {
@@ -24,7 +25,7 @@ export default tseslint.config(
     },
     rules: {
       ...js.configs.recommended.rules,
-      ...tseslint.configs.recommended.rules,
+      ...tseslint.configs.recommendedTypeChecked.rules,
       ...pluginReact.configs.recommended.rules,
       ...pluginNext.configs["core-web-vitals"].rules,
       "react/react-in-jsx-scope": "off",

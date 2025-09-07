@@ -346,7 +346,7 @@ meetTherapist.tsx → MeetTherapist.tsx
    })
    
    TreatmentCard.displayName = 'TreatmentCard'
-   export { TreatmentCard }
+   export default TreatmentCard
    ```
 
 2. Optimize treatment grid:

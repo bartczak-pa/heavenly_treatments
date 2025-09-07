@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Treatment, } from '@/lib/data/treatments';
+import { Treatment } from '@/lib/data/treatments';
 import { Clock, PoundSterling } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -88,9 +88,9 @@ const TreatmentCard = memo<TreatmentCardProps>(({ treatment }) => {
             {treatment.price.replace('£', '')}
           </span>
         </div>
-        <Link href={contactHref}>
-          <Button variant="secondary" size="sm">Book Now</Button>
-        </Link>
+        <Button asChild variant="secondary" size="sm">
+          <Link href={contactHref}>Book Now</Link>
+        </Button>
       </CardFooter>
     </Card>
   );
