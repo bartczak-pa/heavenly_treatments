@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Treatment, TreatmentCategorySlug } from '@/lib/data/treatments';
 import TreatmentsGrid from '@/components/Treatments/TreatmentsGrid';
 import { Button } from '@/components/ui/button';
@@ -42,8 +42,14 @@ export default function FilteredTreatmentsDisplay({
   }, [currentSelection]);
 
   const totalTreatments: number = filteredTreatments.length;
-  const treatmentsToShow: Treatment[] = filteredTreatments.slice(0, visibleCount);
-  const canShowMore: boolean = visibleCount < totalTreatments;
+  
+  const treatmentsToShow: Treatment[] = useMemo(() => {
+    return filteredTreatments.slice(0, visibleCount);
+  }, [filteredTreatments, visibleCount]);
+  
+  const canShowMore: boolean = useMemo(() => {
+    return visibleCount < totalTreatments;
+  }, [visibleCount, totalTreatments]);
 
   
   /**
@@ -58,7 +64,7 @@ export default function FilteredTreatmentsDisplay({
    * @returns {void}
    */
 
-  const handleShowMore = () => {
+  const handleShowMore = useCallback(() => {
     const screenWidth: number = window.innerWidth;
     let increment: number = 3; // Default increment (small screens)
 
@@ -69,7 +75,7 @@ export default function FilteredTreatmentsDisplay({
     }
 
     setVisibleCount((prevCount) => Math.min(prevCount + increment, totalTreatments));
-  };
+  }, [totalTreatments]);
 
 
   return (

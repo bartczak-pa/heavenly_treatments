@@ -28,6 +28,7 @@ export default tseslint.config(
       ...pluginReact.configs.recommended.rules,
       ...pluginNext.configs["core-web-vitals"].rules,
       "react/react-in-jsx-scope": "off",
+      "react/prop-types": "off", // Using TypeScript for prop validation
     },
     settings: {
       react: {
