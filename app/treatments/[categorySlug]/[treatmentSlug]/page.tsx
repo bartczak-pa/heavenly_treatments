@@ -10,12 +10,8 @@ import { Metadata } from 'next';
 import Script from 'next/script';
 import { contactInfo } from '@/lib/data/contactInfo';
 import { generateServiceJsonLd, ContactInfo, generateBreadcrumbJsonLd } from '@/lib/jsonLsUtils';
+import { config } from '@/lib/config';
 
-// eslint-disable-next-line no-unused-vars
-type ResolvedParams = {
-  categorySlug: string;
-  treatmentSlug: string;
-};
 
 interface Props {
   params: Promise<{ 
@@ -162,7 +158,7 @@ export async function generateMetadata({ params: paramsPromise }: Props): Promis
     };
   }
 
-  const description = treatment.description.substring(0, 160);
+  const description = treatment.description.substring(0, config.seo.MAX_DESCRIPTION_LENGTH);
 
   return {
     title: `${treatment.title} | My Cottage Spa Treatments`,

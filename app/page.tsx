@@ -12,6 +12,7 @@ import {
   generateHealthAndBeautyBusinessJsonLd, 
   ContactInfo as ContactInfoType 
 } from '@/lib/jsonLsUtils';
+import { config } from '@/lib/config';
 import ExperienceSection from '@/components/Sections/Experience';
 import LocationAndBookingSection from '@/components/Sections/LocationAndBooking';
 import IntroductionSection from '@/components/Sections/Introduction';
@@ -34,8 +35,8 @@ export async function generateMetadata(): Promise<Metadata> {
       images: [
         {
           url: imageUrl,
-          width: 1200,
-          height: 630,
+          width: config.seo.DEFAULT_IMAGE.WIDTH,
+          height: config.seo.DEFAULT_IMAGE.HEIGHT,
           alt: `${siteName} Logo`,
         },
       ],
