@@ -7,6 +7,7 @@ import { treatmentCategories } from '@/lib/data/treatments';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { config } from '@/lib/config';
 
 interface ServicesSectionProps {
   showAllButton?: boolean;
@@ -15,7 +16,7 @@ interface ServicesSectionProps {
 const ServicesSection: React.FC<ServicesSectionProps> = ({ showAllButton = true }) => {
     const [showAll, setShowAll] = useState(!showAllButton);
     const totalCategories = treatmentCategories.length;
-    const initialVisibleCount = 3;
+    const initialVisibleCount = config.ui.INITIAL_VISIBLE_TREATMENTS;
 
     return (
         <section className="py-16 md:py-24 bg-primary/10">

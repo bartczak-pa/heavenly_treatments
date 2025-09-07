@@ -11,7 +11,7 @@ interface FilteredTreatmentsDisplayProps {
   currentSelection: TreatmentCategorySlug | 'all';
 }
 
-const { INITIAL_VISIBLE_TREATMENTS } = config.ui; 
+const { INITIAL_VISIBLE_TREATMENTS, RESPONSIVE_INCREMENTS, BREAKPOINTS } = config.ui; 
 
 
   /**
@@ -56,10 +56,8 @@ export default function FilteredTreatmentsDisplay({
   /**
    * Handles the "Show More" button click event.
    * 
-   * Dynamically adjusts the number of visible treatments based on screen width:
-   * - Small screens (< 1024px): Shows 3 more treatments
-   * - Large screens (1024px - 1279px): Shows 4 more treatments
-   * - Extra large screens (≥ 1280px): Shows 6 more treatments
+   * Dynamically adjusts the number of visible treatments based on screen width
+   * using configuration values from @/lib/config.
    * 
    * @function
    * @returns {void}
@@ -67,12 +65,12 @@ export default function FilteredTreatmentsDisplay({
 
   const handleShowMore = useCallback(() => {
     const screenWidth: number = window.innerWidth;
-    let increment: number = 3; // Default increment (small screens)
+    let increment: number = RESPONSIVE_INCREMENTS.SMALL; // Default increment (small screens)
 
-    if (screenWidth >= 1280) { // Approx XL breakpoint
-      increment = 6;
-    } else if (screenWidth >= 1024) { // Approx LG breakpoint
-      increment = 4;
+    if (screenWidth >= BREAKPOINTS.EXTRA_LARGE) {
+      increment = RESPONSIVE_INCREMENTS.EXTRA_LARGE;
+    } else if (screenWidth >= BREAKPOINTS.LARGE) {
+      increment = RESPONSIVE_INCREMENTS.LARGE;
     }
 
     setVisibleCount((prevCount) => Math.min(prevCount + increment, totalTreatments));
