@@ -289,11 +289,22 @@ meetTherapist.tsx → MeetTherapist.tsx
 
 **Files Created**:
 
-- `components/ErrorBoundary.tsx`
+- `components/ErrorBoundary.tsx` - Client-side error boundary with proper TypeScript typing
+- `app/global-error.tsx` - Server-side/global error boundary for SSR and root-level errors
 
 **Files Updated**:
 
-- `app/layout.tsx` - Added ErrorBoundary wrapper around Toast.Provider
+- `app/layout.tsx` - Added ErrorBoundary wrapper around Toast.Provider with custom fallback UI
+
+**CodeRabbit Improvements Applied**:
+
+- ✅ Added `React.ErrorInfo` typing instead of `any`
+- ✅ Added optional `onError` callback prop for external error reporting (Sentry, analytics)
+- ✅ Enhanced accessibility with `role="alert"` and `aria-live="assertive"` attributes
+- ✅ Added reload button for user recovery in fallback UI
+- ✅ Gated console logging to development environment only
+- ✅ Created `global-error.tsx` for server-side and root-level error handling
+- ✅ Provided explicit fallback UI in layout instead of relying on default
 
 ### 2.4 Clean Up TODO Comments
 

@@ -78,7 +78,14 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${openSans.variable} antialiased`}>
       <body className="font-sans min-h-screen bg-background text-foreground">
         <SpeedInsights />
-        <ErrorBoundary>
+        <ErrorBoundary
+          fallback={
+            <div role="alert" aria-live="assertive" className="p-4 border border-red-300 rounded">
+              <h2 className="font-semibold">Something went wrong</h2>
+              <p>Please try again.</p>
+            </div>
+          }
+        >
           <Toast.Provider swipeDirection="right">
             {children}
             <Toast.Viewport className="fixed bottom-0 right-0 p-4" />
