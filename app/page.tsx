@@ -1,10 +1,10 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { MainLayout } from '@/components/Layout/MainLayout';
-import Testimonials from '@/components/Sections/testimonials';
+import Testimonials from '@/components/Sections/Testimonials';
 
-import MainHeader from '../components/Sections/mainHeader';
-import ServicesSection from '../components/Sections/services';
+import MainHeader from '../components/Sections/MainHeader';
+import ServicesSection from '../components/Sections/Services';
 import Script from 'next/script';
 import { contactInfo } from '@/lib/data/contactInfo';
 import { 
