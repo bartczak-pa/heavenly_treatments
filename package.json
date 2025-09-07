@@ -11,7 +11,10 @@
     "lint:md:fix": "markdownlint-cli2 --fix \"*.md\"",
     "prepare": "husky",
     "typecheck": "tsc --noEmit",
-    "optimize-images": "node scripts/optimize-images.js"
+    "optimize-images": "node scripts/optimize-images.js",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "test:ui": "vitest --ui"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
@@ -47,9 +50,13 @@
     "@eslint/eslintrc": "^3",
     "@eslint/js": "^9.24.0",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^5.0.2",
     "eslint": "^9.24.0",
     "eslint-config-next": "15.2.4",
     "eslint-config-prettier": "^10.1.2",
@@ -59,13 +66,15 @@
     "husky": "^9.1.7",
     "imagemin": "^9.0.1",
     "imagemin-webp": "^8.0.0",
+    "jsdom": "^26.1.0",
     "lint-staged": "^15.5.0",
     "markdownlint-cli2": "^0.18.1",
     "prettier": "^3.5.3",
     "sharp": "^0.34.3",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "typescript-eslint": "^8.29.0"
+    "typescript-eslint": "^8.29.0",
+    "vitest": "^3.2.4"
   },
   "lint-staged": {
     "*.js": "eslint --fix",
