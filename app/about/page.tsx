@@ -1,10 +1,10 @@
 import React, { JSX } from 'react';
 import type { Metadata } from 'next';
 import { MainLayout } from '@/components/Layout/MainLayout';
-import MeetTherapist from '@/components/Sections/meetTherapist';
-import MyStudio from '@/components/Sections/myStudio';
-import ContactInfo from '@/components/Sections/contactInfo';
-import CTASection from '../../components/Sections/cta';
+import MeetTherapist from '@/components/Sections/MeetTherapist';
+import MyStudio from '@/components/Sections/MyStudio';
+import ContactInfo from '@/components/Sections/ContactInfo';
+import CTASection from '../../components/Sections/Cta';
 import { contactInfo } from '@/lib/data/contactInfo';
 import Script from 'next/script';
 import { generateHealthAndBeautyBusinessJsonLd, ContactInfo as ContactInfoType } from '@/lib/jsonLsUtils';
