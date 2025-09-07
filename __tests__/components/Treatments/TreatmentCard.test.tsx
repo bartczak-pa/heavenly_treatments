@@ -49,7 +49,7 @@ describe('TreatmentCard', () => {
   it('renders correct links', () => {
     render(<TreatmentCard treatment={mockTreatment} />)
     
-    const detailLinks = screen.getAllByRole('link', { name: /relaxing massage/i })
+    const detailLinks = screen.getAllByRole('link', { name: new RegExp(mockTreatment.title, 'i') })
     expect(detailLinks.length).toBeGreaterThan(0)
     expect(detailLinks[0]).toHaveAttribute(
       'href',

@@ -512,7 +512,7 @@ meetTherapist.tsx → MeetTherapist.tsx
 
 - ✅ Installed all required testing dependencies as dev dependencies
 - ✅ Created `vitest.config.ts` with proper React plugin and jsdom environment setup
-- ✅ Created `test/setup.ts` with @testing-library/jest-dom imports
+- ✅ Created `test/setup.ts` with @testing-library/jest-dom/vitest imports for proper Vitest integration
 - ✅ Added test scripts to package.json: `test`, `test:coverage`, `test:ui`
 - ✅ Created comprehensive TreatmentCard test in `__tests__/components/Treatments/TreatmentCard.test.tsx`
 - ✅ Tests cover component rendering, props handling, image fallback, links, and accessibility
