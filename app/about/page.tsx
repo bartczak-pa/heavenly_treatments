@@ -4,7 +4,7 @@ import { MainLayout } from '@/components/Layout/MainLayout';
 import MeetTherapist from '@/components/Sections/MeetTherapist';
 import MyStudio from '@/components/Sections/MyStudio';
 import ContactInfo from '@/components/Sections/ContactInfo';
-import CTASection from '../../components/Sections/Cta';
+import CTASection from '@/components/Sections/Cta';
 import { contactInfo } from '@/lib/data/contactInfo';
 import Script from 'next/script';
 import { generateHealthAndBeautyBusinessJsonLd, ContactInfo as ContactInfoType } from '@/lib/jsonLsUtils';
