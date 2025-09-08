@@ -105,8 +105,8 @@ const OptimizedImage = memo<OptimizedImageProps>(({
     <Image
       src={imageSrc}
       alt={alt}
-      width={('width' in props ? (props as any).width : undefined) ?? metadata?.width}
-      height={('height' in props ? (props as any).height : undefined) ?? metadata?.height}
+      width={(props as any).fill ? undefined : (('width' in props ? (props as any).width : undefined) ?? metadata?.width)}
+      height={(props as any).fill ? undefined : (('height' in props ? (props as any).height : undefined) ?? metadata?.height)}
       priority={shouldPriority}
       loading={shouldPriority ? 'eager' : (loading ?? 'lazy')}
       placeholder={metadata?.blurDataURL ? 'blur' : 'empty'}

@@ -619,8 +619,8 @@ meetTherapist.tsx → MeetTherapist.tsx
 
 **Results:**
 
-- Total original size: 101.37MB → Optimized size: 2.05MB (including all responsive variants)
-- Overall reduction: 98.0% (99.32MB saved)
+- Total original size: 88.8MB → Optimized size: 2.4MB (including all WebP/AVIF responsive variants)
+- Overall reduction: 97.2% (86.4MB saved)
 - 4/4 blur placeholders generated successfully
 - All site content images use WebP (and AVIF where enabled) with responsive variants
 - Favicons and social/OG images remain PNG/JPEG for crawler and platform compatibility
@@ -657,15 +657,22 @@ meetTherapist.tsx → MeetTherapist.tsx
 - ✅ All images load with blur placeholders
 - ✅ Responsive variants generated for all screen sizes
 - ✅ Priority loading applied to above-the-fold images
-- ✅ 86.3MB reduction in total image size
+- ✅ 86.4MB reduction in total image size
+- ✅ Core Web Vitals: record before/after LCP & CLS (staging, no-cache)
+  - Lighthouse (mobile, 4G throttling): save HTML/JSON reports in /docs/perf
+  - WebPageTest: 3 runs, median; attach filmstrips
+- ✅ Accessibility: 100% alt text coverage; decorative images use `alt=""`
 
 **Advanced Features Implemented:**
 
 - Automatic blur placeholder generation using base64-encoded WebP
-- Intelligent priority loading based on image metadata
+- Intelligent priority loading based on image metadata  
 - Responsive image variants with optimized srcSet
 - Fallback support for non-optimized images
 - Type-safe image metadata with TypeScript interfaces
+- Fixed intrinsic dimensions (width/height or CSS aspect-ratio) for all images to eliminate CLS
+- `fetchPriority="high"` only on the single LCP image per route; others `loading="lazy"` and `decoding="async"`
+- Cap blurDataURL size (≤800B) or use ThumbHash/BlurHash to minimize HTML payload
 
 ### 4.2 Bundle Analysis & Optimization
 

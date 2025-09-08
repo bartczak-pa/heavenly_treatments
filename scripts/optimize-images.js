@@ -125,15 +125,23 @@ async function optimizeImage(inputPath, outputPath) {
       quality = Math.max(50, quality - 10);
     }
     
-    await image.clone()
-      .webp({ quality })
-      .toFile(webpPath);
+    // Generate WebP with quality adjustment if needed
+    await image.clone().webp({ quality }).toFile(webpPath);
+    
+    // Check if output exceeds target size and re-encode if needed
+    let outputStats = await fs.stat(webpPath);
+    if (CONFIG.targetMaxSize && outputStats.size > CONFIG.targetMaxSize) {
+      const reducedQuality = Math.max(50, Math.floor(quality * 0.85));
+      await image.clone().webp({ quality: reducedQuality }).toFile(webpPath);
+      outputStats = await fs.stat(webpPath);
+      quality = reducedQuality;
+    }
     
     // Generate responsive sizes for WebP in parallel
     const responsivePromises = CONFIG.sizes
       .filter(size => size < metadata.width)
       .map(async (size) => {
-        const responsivePath = webpPath.replace('.webp', `_${size}w.webp`);
+        const responsivePath = webpPath.replace(/\.webp$/, `_${size}w.webp`);
         await image.clone()
           .resize(size, null, { 
             withoutEnlargement: true,
@@ -152,7 +160,7 @@ async function optimizeImage(inputPath, outputPath) {
     // Generate blur placeholder
     const blurData = await generateBlurPlaceholder(inputPath);
     
-    const outputStats = await fs.stat(webpPath);
+    // outputStats already declared above after targetMaxSize check
     const totalOutputSize = outputStats.size + responsiveOutputSizes.reduce((a, b) => a + b, 0);
     return {
       input: inputPath,
