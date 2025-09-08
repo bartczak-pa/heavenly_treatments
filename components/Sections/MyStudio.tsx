@@ -21,7 +21,8 @@ const MyStudio = () => {
               <div className="w-full md:w-1/2">
                 <div className="relative w-full h-[500px] rounded-lg overflow-hidden shadow-lg mx-auto md:mx-0">
                   <OptimizedImage
-                    src="/images/about/heavenly-treatments-room.jpg"
+                    src="heavenly-treatments-room"
+                    fallback="/images/about/heavenly-treatments-room.jpg"
                     alt="Spa Studio"
                     fill
                     style={{ objectFit: 'cover' }}

@@ -9,8 +9,9 @@ export default tseslint.config(
   {
     ignores: ["lib/data/image-metadata.ts"],
   },
+  // TypeScript (type-aware)
   {
-    files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
+    files: ["**/*.{ts,tsx}"],
     languageOptions: {
       globals: {
         ...globals.browser,
@@ -27,7 +28,6 @@ export default tseslint.config(
       "@next/next": pluginNext,
     },
     rules: {
-      ...js.configs.recommended.rules,
       ...tseslint.configs.recommendedTypeChecked.rules,
       ...pluginReact.configs.recommended.rules,
       ...pluginNext.configs["core-web-vitals"].rules,
@@ -40,6 +40,30 @@ export default tseslint.config(
       },
     },
   },
+  // JavaScript
+  {
+    files: ["**/*.{js,mjs,cjs,jsx}"],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+    plugins: {
+      react: pluginReact,
+      "@next/next": pluginNext,
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+      ...pluginReact.configs.recommended.rules,
+      ...pluginNext.configs["core-web-vitals"].rules,
+      "react/react-in-jsx-scope": "off",
+      "react/prop-types": "off",
+    },
+    settings: {
+      react: { version: "detect" },
+    },
+  },
   {
     files: ["scripts/**/*.js"],
     languageOptions: {
@@ -49,8 +73,6 @@ export default tseslint.config(
     rules: {
       ...js.configs.recommended.rules,
     },
-    // Disable TypeScript-specific rules for JS files
-    ...tseslint.configs.disableTypeChecked,
   },
   eslintConfigPrettier,
 );

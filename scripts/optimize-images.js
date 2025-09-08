@@ -7,7 +7,8 @@ const CONFIG = {
   quality: {
     webp: 80,
     jpeg: 85,
-    png: 90
+    png: 90,
+    avif: 75
   },
   sizes: [320, 640, 1024, 1280, 1536, 1920], // Responsive breakpoints (configurable)
   outputDir: 'public/images/optimized',
@@ -15,15 +16,19 @@ const CONFIG = {
   blurSize: 16, // Size for blur placeholder generation
   blurMaxBytes: 800, // Cap base64 length to avoid HTML bloat
   blurDataDir: 'lib/data',
-  formats: ['webp'], // Optionally add 'avif'
+  formats: ['webp', 'avif'], // Modern formats with fallbacks
 };
 
-// Critical images that need immediate optimization (>10MB)
-const CRITICAL_IMAGES = [
+// Images that need optimization
+const IMAGES_TO_OPTIMIZE = [
+  // Critical images (>10MB)
   'public/images/treatments/bacial.png',
   'public/images/categories/person_having_reflexology_treatment.png',
   'public/images/mainPage/young-woman-having-face-massage-relaxing-spa-salon.jpg',
-  'public/images/categories/woman-salon-making-beauty-treatment-with-gua-sha-stone.jpg'
+  'public/images/categories/woman-salon-making-beauty-treatment-with-gua-sha-stone.jpg',
+  // Additional images for metadata generation
+  'public/images/about/heavenly-treatments-room.jpg',
+  'public/images/about/owner-of-heavenly-treatments.jpg'
 ];
 
 async function createOutputDir() {
@@ -238,7 +243,7 @@ async function optimizeCriticalImages() {
   let totalOriginalSize = 0;
   const optimizedImages = [];
   
-  for (const imagePath of CRITICAL_IMAGES) {
+  for (const imagePath of IMAGES_TO_OPTIMIZE) {
     console.log(`📸 Processing: ${imagePath}`);
     
     const info = await getImageInfo(imagePath);

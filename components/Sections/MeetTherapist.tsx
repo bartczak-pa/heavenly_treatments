@@ -9,7 +9,8 @@ const MeetTherapist = () => {
             <div className="flex flex-col md:flex-row gap-8 items-center">
               <div className="md:w-1/3">
                 <OptimizedImage
-                  src="/images/about/owner-of-heavenly-treatments.jpg"
+                  src="owner-of-heavenly-treatments"
+                  fallback="/images/about/owner-of-heavenly-treatments.jpg"
                   alt="Spa Therapist"
                   width={300}
                   height={400}

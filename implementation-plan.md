@@ -608,10 +608,14 @@ meetTherapist.tsx → MeetTherapist.tsx
 **Implementation Steps:**
 
 1. ✅ Enhanced optimization script with blur placeholder generation
+   - Cap blurDataURL byte length (≤ 800 bytes) or use ThumbHash/BlurHash placeholders when smaller
 2. ✅ Created OptimizedImage component with automatic WebP conversion
 3. ✅ Implemented priority loading for above-the-fold images
-4. ✅ Generated responsive image variants (320w, 640w, 1024w, 1280w)
+4. ✅ Generated responsive image variants (320w, 640w, 1024w, 1280w, 1536w, 1920w)
 5. ✅ Updated all image components to use new optimization system
+6. ✅ Generated AVIF variants where beneficial (kept WebP/JPEG fallbacks)
+7. ✅ Added sizes prop guidance per layout (e.g., `(max-width: 768px) 100vw, 768px`)
+8. ✅ Content-hashed filenames for variants; set Cache-Control: public, max-age=31536000, immutable
 
 **Results:**
 

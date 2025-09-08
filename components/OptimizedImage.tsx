@@ -26,7 +26,7 @@ interface OptimizedImageProps extends Omit<ImageProps, 'src' | 'blurDataURL' | '
   /** 
    * Optional callback for error reporting (Sentry, analytics, etc.)
    */
-  // eslint-disable-next-line no-unused-vars  
+   
   onOptimizedError?: (error: Error) => void;
 }
 
@@ -71,8 +71,16 @@ const OptimizedImage = memo<OptimizedImageProps>(({
   onOptimizedError,
   ...props
 }) => {
+  // Check if src is a filename (not a path or URL)
+  const isFilename = !/^(?:\/|https?:|data:|\/\/)/.test(src);
+  
   // Get metadata for optimized images (robust normalizer handles paths/urls)
   const metadata = getImageMetadata(src);
+  
+  // Dev warning for missing metadata/fallback
+  if (process.env.NODE_ENV !== 'production' && isFilename && !metadata && !fallback) {
+    console.warn(`[OptimizedImage] No metadata for "${src}". Add it to image-metadata.ts or provide a 'fallback'.`);
+  }
   
   // Determine the actual image source
   const imageSrc = metadata?.src || fallback || src;
@@ -86,12 +94,12 @@ const OptimizedImage = memo<OptimizedImageProps>(({
     : undefined
   );
   
-  // Create srcSet for responsive images if metadata available
-  const srcSet = metadata?.sizes?.length 
-    ? metadata.sizes.map(size => 
-        `${metadata.src.replace('.webp', `_${size}w.webp`)} ${size}w`
-      ).join(', ')
-    : undefined;
+  // Custom loader for responsive variants
+  const customLoader = metadata?.sizes?.length ? ({ width }: { width: number }) => {
+    const sortedSizes = [...metadata.sizes].sort((a, b) => a - b);
+    const candidate = sortedSizes.find(s => s >= width) ?? sortedSizes[sortedSizes.length - 1];
+    return metadata.src.replace(/\.webp$/, `_${candidate}w.webp`);
+  } : undefined;
 
   return (
     <Image
@@ -100,25 +108,16 @@ const OptimizedImage = memo<OptimizedImageProps>(({
       width={('width' in props ? (props as any).width : undefined) ?? metadata?.width}
       height={('height' in props ? (props as any).height : undefined) ?? metadata?.height}
       priority={shouldPriority}
-      loading={loading || (shouldPriority ? 'eager' : 'lazy')}
+      loading={shouldPriority ? 'eager' : (loading ?? 'lazy')}
       placeholder={metadata?.blurDataURL ? 'blur' : 'empty'}
       blurDataURL={metadata?.blurDataURL}
       sizes={responsiveSizes}
       className={className}
       {...props}
-      // Override srcSet if we have responsive variants
-      {...(srcSet && { 
-        // Note: Next.js handles srcSet automatically, but we ensure our optimized versions are used
-        onLoad: (e) => {
-          // Set srcset after image loads to ensure our optimized versions are used
-          if (srcSet && e.currentTarget instanceof HTMLImageElement) {
-            e.currentTarget.srcset = srcSet;
-          }
-          props.onLoad?.(e);
-        }
-      })}
+      // Use custom loader for responsive variants
+      {...(customLoader && { loader: customLoader })}
       // Enhanced error handling
-      // eslint-disable-next-line no-unused-vars
+       
       onError={(e) => {
         // Call external error reporting if provided
         if (onOptimizedError) {
