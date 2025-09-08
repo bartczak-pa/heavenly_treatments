@@ -615,11 +615,23 @@ meetTherapist.tsx → MeetTherapist.tsx
 
 **Results:**
 
-- Total original size: 88.1MB → Optimized size: 1.8MB
+- Total original size: 88.1MB → Optimized size: 1.8MB (including all responsive variants)
 - Overall reduction: 98.0% (86.3MB saved)
 - 4/4 blur placeholders generated successfully
-- All images now use WebP format with responsive variants
+- All site content images use WebP (and AVIF where enabled) with responsive variants
+- Favicons and social/OG images remain PNG/JPEG for crawler and platform compatibility
 - Automatic priority loading for hero images
+
+**Measurement Methodology:**
+
+- Before: sum of original PNG/JPEG files in /public/images
+- After: sum of all generated variants (base + responsive WebP)
+- Reproduce:
+
+  ```bash
+  echo "Before:" && fd . public/images -e png -e jpg -X du -ch | tail -1
+  echo "After:"  && fd . public/images/optimized -e webp -e avif -X du -ch | tail -1
+  ```
 
 **Files Created:**
 

@@ -7,7 +7,7 @@ import eslintConfigPrettier from "eslint-config-prettier";
 
 export default tseslint.config(
   {
-    ignores: ["scripts/**"],
+    ignores: ["lib/data/image-metadata.ts"],
   },
   {
     files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
@@ -39,6 +39,18 @@ export default tseslint.config(
         version: "detect",
       },
     },
+  },
+  {
+    files: ["scripts/**/*.js"],
+    languageOptions: {
+      globals: { ...globals.node },
+      sourceType: "commonjs",
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+    },
+    // Disable TypeScript-specific rules for JS files
+    ...tseslint.configs.disableTypeChecked,
   },
   eslintConfigPrettier,
 );

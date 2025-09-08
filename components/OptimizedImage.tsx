@@ -4,7 +4,7 @@ import Image, { ImageProps } from 'next/image';
 import { memo } from 'react';
 import { getImageMetadata } from '@/lib/data/image-metadata';
 
-interface OptimizedImageProps extends Omit<ImageProps, 'src' | 'blurDataURL' | 'placeholder'> {
+interface OptimizedImageProps extends Omit<ImageProps, 'src' | 'blurDataURL' | 'placeholder' | 'onError'> {
   /** 
    * Image source - can be a filename (e.g., 'bacial') or full path 
    * If filename provided, will automatically use optimized version
@@ -23,6 +23,11 @@ interface OptimizedImageProps extends Omit<ImageProps, 'src' | 'blurDataURL' | '
    * Fallback image path if optimized version not available 
    */
   fallback?: string;
+  /** 
+   * Optional callback for error reporting (Sentry, analytics, etc.)
+   */
+  // eslint-disable-next-line no-unused-vars  
+  onOptimizedError?: (error: Error) => void;
 }
 
 /**
@@ -63,13 +68,17 @@ const OptimizedImage = memo<OptimizedImageProps>(({
   fallback,
   sizes,
   className,
+  onOptimizedError,
   ...props
 }) => {
   // Check if src is a filename or full path
-  const isFilename = !src.startsWith('/') && !src.startsWith('http');
+  const isFilename = !/^(?:\/|https?:|data:|\/\/)/.test(src);
+  
+  // For full paths, try to extract filename for metadata lookup
+  const filename = isFilename ? src : src.split('/').pop()?.split('.')[0] || '';
   
   // Get metadata for optimized images
-  const metadata = isFilename ? getImageMetadata(src) : null;
+  const metadata = getImageMetadata(filename);
   
   // Determine the actual image source
   const imageSrc = metadata?.src || fallback || src;
@@ -78,13 +87,13 @@ const OptimizedImage = memo<OptimizedImageProps>(({
   const shouldPriority = priority ?? metadata?.priority ?? false;
   
   // Generate responsive sizes if not provided
-  const responsiveSizes = sizes || (metadata?.sizes.length 
+  const responsiveSizes = sizes || (metadata?.sizes?.length 
     ? `(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw`
     : undefined
   );
   
   // Create srcSet for responsive images if metadata available
-  const srcSet = metadata?.sizes.length 
+  const srcSet = metadata?.sizes?.length 
     ? metadata.sizes.map(size => 
         `${metadata.src.replace('.webp', `_${size}w.webp`)} ${size}w`
       ).join(', ')
@@ -112,6 +121,16 @@ const OptimizedImage = memo<OptimizedImageProps>(({
           props.onLoad?.(e);
         }
       })}
+      // Enhanced error handling
+      // eslint-disable-next-line no-unused-vars
+      onError={(e) => {
+        // Call external error reporting if provided
+        if (onOptimizedError) {
+          const error = new Error(`Failed to load image: ${imageSrc}`);
+          onOptimizedError(error);
+        }
+        // Note: props.onError is not available due to Omit in interface
+      }}
     />
   );
 });

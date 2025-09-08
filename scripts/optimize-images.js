@@ -1,7 +1,6 @@
 const sharp = require('sharp');
 const fs = require('fs').promises;
 const path = require('path');
-const crypto = require('crypto');
 
 // Configuration for image optimization
 const CONFIG = {
@@ -84,23 +83,26 @@ async function optimizeImage(inputPath, outputPath) {
     const inputSize = (await fs.stat(inputPath)).size;
     const quality = inputSize > 10 * 1024 * 1024 ? 70 : CONFIG.quality.webp;
     
-    await image
+    await image.clone()
       .webp({ quality })
       .toFile(webpPath);
     
     // Generate responsive sizes for WebP
     const responsiveSizes = [];
+    const responsiveOutputSizes = [];
     for (const size of CONFIG.sizes) {
       if (size < metadata.width) {
         const responsivePath = webpPath.replace('.webp', `_${size}w.webp`);
-        await image
+        await image.clone()
           .resize(size, null, { 
             withoutEnlargement: true,
             fit: 'inside'
           })
           .webp({ quality })
           .toFile(responsivePath);
+        const rStat = await fs.stat(responsivePath);
         responsiveSizes.push(size);
+        responsiveOutputSizes.push(rStat.size);
       }
     }
     
@@ -108,13 +110,16 @@ async function optimizeImage(inputPath, outputPath) {
     const blurData = await generateBlurPlaceholder(inputPath);
     
     const outputStats = await fs.stat(webpPath);
+    const totalOutputSize = outputStats.size + responsiveOutputSizes.reduce((a, b) => a + b, 0);
     return {
       input: inputPath,
       output: webpPath,
       inputSize: inputSize,
       outputSize: outputStats.size,
-      reduction: ((inputSize - outputStats.size) / inputSize * 100).toFixed(1),
+      totalOutputSize,
+      reduction: ((inputSize - totalOutputSize) / inputSize * 100).toFixed(1),
       responsiveSizes,
+      responsiveOutputSizes,
       blurData,
       metadata: {
         width: metadata.width,
@@ -134,7 +139,10 @@ async function saveImageMetadata(imageData) {
     await fs.mkdir(CONFIG.blurDataDir, { recursive: true });
     const filePath = path.join(CONFIG.blurDataDir, 'image-metadata.ts');
     
-    const content = `// Auto-generated image metadata for optimization
+    const content = `/* eslint-disable */
+/* prettier-ignore */
+/** @generated — Auto-generated. DO NOT EDIT. */
+// Auto-generated image metadata for optimization
 // This file contains blur placeholders and responsive image data
 
 export interface ImageMetadata {
@@ -149,10 +157,11 @@ export interface ImageMetadata {
 export const imageMetadata: Record<string, ImageMetadata> = {
 ${imageData.map(data => {
   const fileName = path.basename(data.input, path.extname(data.input));
-  const optimizedPath = data.output.replace('public', '');
+  const webpPathPosix = data.output.split(path.sep).join(path.posix.sep);
+  const optimizedPath = '/' + path.posix.relative('public', webpPathPosix);
   return `  '${fileName}': {
-    src: '${optimizedPath}',
-    blurDataURL: '${data.blurData?.src || ''}',
+    src: ${JSON.stringify(optimizedPath)},
+    blurDataURL: ${JSON.stringify(data.blurData?.src ?? '')},
     width: ${data.metadata.width},
     height: ${data.metadata.height},
     sizes: [${data.responsiveSizes.join(', ')}],
@@ -163,8 +172,15 @@ ${imageData.map(data => {
 
 // Helper function to get image metadata by filename
 export function getImageMetadata(filename: string): ImageMetadata | undefined {
-  const key = filename.replace(/\.[^.]+$/, ''); // Remove extension
+  if (!filename) return undefined;
+  const key = filename.replace(/\\.[^.]+$/, ''); // Remove extension
   return imageMetadata[key];
+}
+
+// Helper to extract filename from full path for metadata lookup
+export function extractFilenameFromPath(imagePath: string): string {
+  if (!imagePath) return '';
+  return imagePath.split('/').pop()?.split('.')[0] || '';
 }
 `;
     
@@ -180,7 +196,7 @@ async function optimizeCriticalImages() {
   
   await createOutputDir();
   
-  let totalSavings = 0;
+  let totalOptimizedSize = 0;
   let totalOriginalSize = 0;
   const optimizedImages = [];
   
@@ -197,12 +213,14 @@ async function optimizeCriticalImages() {
     
     const result = await optimizeImage(imagePath, outputPath);
     if (result) {
-      console.log(`   Optimized: ${(result.outputSize / 1024 / 1024).toFixed(1)}MB`);
-      console.log(`   💾 Saved: ${result.reduction}% (${((result.inputSize - result.outputSize) / 1024 / 1024).toFixed(1)}MB)`);
+      const displaySize = result.totalOutputSize || result.outputSize;
+      console.log(`   Optimized: ${(result.outputSize / 1024 / 1024).toFixed(1)}MB (base)`);
+      console.log(`   📱 Total with variants: ${(displaySize / 1024 / 1024).toFixed(1)}MB`);
+      console.log(`   💾 Saved: ${result.reduction}% (${((result.inputSize - displaySize) / 1024 / 1024).toFixed(1)}MB)`);
       console.log(`   🎨 Blur placeholder: ${result.blurData ? 'Generated' : 'Failed'}`);
       console.log(`   📱 Responsive sizes: ${result.responsiveSizes.length} variants\n`);
       
-      totalSavings += (result.inputSize - result.outputSize);
+      totalOptimizedSize += displaySize;
       totalOriginalSize += result.inputSize;
       optimizedImages.push(result);
     }
@@ -215,6 +233,8 @@ async function optimizeCriticalImages() {
   
   console.log('📊 Summary:');
   console.log(`   Total original size: ${(totalOriginalSize / 1024 / 1024).toFixed(1)}MB`);
+  console.log(`   Total optimized size (incl. variants): ${(totalOptimizedSize / 1024 / 1024).toFixed(1)}MB`);
+  const totalSavings = totalOriginalSize - totalOptimizedSize;
   console.log(`   Total savings: ${(totalSavings / 1024 / 1024).toFixed(1)}MB`);
   console.log(`   Overall reduction: ${(totalSavings / totalOriginalSize * 100).toFixed(1)}%`);
   console.log(`   Blur placeholders: ${optimizedImages.filter(img => img.blurData).length}/${optimizedImages.length}`);
