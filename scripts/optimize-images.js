@@ -9,11 +9,13 @@ const CONFIG = {
     jpeg: 85,
     png: 90
   },
-  sizes: [320, 640, 1024, 1280], // Responsive breakpoints
+  sizes: [320, 640, 1024, 1280, 1536, 1920], // Responsive breakpoints (configurable)
   outputDir: 'public/images/optimized',
   targetMaxSize: 500 * 1024, // 500KB target
   blurSize: 16, // Size for blur placeholder generation
+  blurMaxBytes: 800, // Cap base64 length to avoid HTML bloat
   blurDataDir: 'lib/data',
+  formats: ['webp'], // Optionally add 'avif'
 };
 
 // Critical images that need immediate optimization (>10MB)
@@ -54,12 +56,35 @@ async function getImageInfo(filePath) {
 async function generateBlurPlaceholder(inputPath) {
   try {
     const image = sharp(inputPath);
-    const { data, info } = await image
-      .resize(CONFIG.blurSize, CONFIG.blurSize, { fit: 'inside' })
-      .webp({ quality: 20 })
+    let quality = 20;
+    let size = CONFIG.blurSize;
+    
+    // Generate initial placeholder
+    let { data, info } = await image
+      .resize(size, size, { fit: 'inside' })
+      .webp({ quality })
       .toBuffer({ resolveWithObject: true });
     
-    const base64 = data.toString('base64');
+    let base64 = data.toString('base64');
+    
+    // Reduce quality/size if base64 exceeds limit
+    while (base64.length > CONFIG.blurMaxBytes && (quality > 5 || size > 8)) {
+      if (quality > 5) {
+        quality -= 5;
+      } else if (size > 8) {
+        size = Math.max(8, Math.floor(size * 0.8));
+      }
+      
+      const result = await image
+        .resize(size, size, { fit: 'inside' })
+        .webp({ quality })
+        .toBuffer({ resolveWithObject: true });
+      
+      data = result.data;
+      info = result.info;
+      base64 = data.toString('base64');
+    }
+    
     return {
       src: `data:image/webp;base64,${base64}`,
       width: info.width,
@@ -76,22 +101,33 @@ async function optimizeImage(inputPath, outputPath) {
     const image = sharp(inputPath);
     const metadata = await image.metadata();
     
-    // Create WebP version with aggressive compression for large files
+    // Create WebP version with adaptive compression
     const webpPath = outputPath.replace(/\.[^.]+$/, '.webp');
     
-    // For very large images (>10MB), use more aggressive compression
+    // Calculate adaptive quality based on input size and target
     const inputSize = (await fs.stat(inputPath)).size;
-    const quality = inputSize > 10 * 1024 * 1024 ? 70 : CONFIG.quality.webp;
+    let quality = CONFIG.quality.webp;
+    
+    // Adaptive quality for targetMaxSize compliance
+    if (inputSize > CONFIG.targetMaxSize * 2) {
+      quality = Math.max(60, quality - 20); // Very large files: reduce more
+    } else if (inputSize > CONFIG.targetMaxSize) {
+      quality = Math.max(70, quality - 10); // Large files: reduce moderately
+    }
+    
+    // Additional reduction for very large images (>10MB)
+    if (inputSize > 10 * 1024 * 1024) {
+      quality = Math.max(50, quality - 10);
+    }
     
     await image.clone()
       .webp({ quality })
       .toFile(webpPath);
     
-    // Generate responsive sizes for WebP
-    const responsiveSizes = [];
-    const responsiveOutputSizes = [];
-    for (const size of CONFIG.sizes) {
-      if (size < metadata.width) {
+    // Generate responsive sizes for WebP in parallel
+    const responsivePromises = CONFIG.sizes
+      .filter(size => size < metadata.width)
+      .map(async (size) => {
         const responsivePath = webpPath.replace('.webp', `_${size}w.webp`);
         await image.clone()
           .resize(size, null, { 
@@ -101,10 +137,12 @@ async function optimizeImage(inputPath, outputPath) {
           .webp({ quality })
           .toFile(responsivePath);
         const rStat = await fs.stat(responsivePath);
-        responsiveSizes.push(size);
-        responsiveOutputSizes.push(rStat.size);
-      }
-    }
+        return { size, outputSize: rStat.size };
+      });
+    
+    const responsiveResults = await Promise.all(responsivePromises);
+    const responsiveSizes = responsiveResults.map(r => r.size);
+    const responsiveOutputSizes = responsiveResults.map(r => r.outputSize);
     
     // Generate blur placeholder
     const blurData = await generateBlurPlaceholder(inputPath);

@@ -71,14 +71,8 @@ const OptimizedImage = memo<OptimizedImageProps>(({
   onOptimizedError,
   ...props
 }) => {
-  // Check if src is a filename or full path
-  const isFilename = !/^(?:\/|https?:|data:|\/\/)/.test(src);
-  
-  // For full paths, try to extract filename for metadata lookup
-  const filename = isFilename ? src : src.split('/').pop()?.split('.')[0] || '';
-  
-  // Get metadata for optimized images
-  const metadata = getImageMetadata(filename);
+  // Get metadata for optimized images (robust normalizer handles paths/urls)
+  const metadata = getImageMetadata(src);
   
   // Determine the actual image source
   const imageSrc = metadata?.src || fallback || src;
@@ -103,6 +97,8 @@ const OptimizedImage = memo<OptimizedImageProps>(({
     <Image
       src={imageSrc}
       alt={alt}
+      width={('width' in props ? (props as any).width : undefined) ?? metadata?.width}
+      height={('height' in props ? (props as any).height : undefined) ?? metadata?.height}
       priority={shouldPriority}
       loading={loading || (shouldPriority ? 'eager' : 'lazy')}
       placeholder={metadata?.blurDataURL ? 'blur' : 'empty'}

@@ -615,8 +615,8 @@ meetTherapist.tsx → MeetTherapist.tsx
 
 **Results:**
 
-- Total original size: 88.1MB → Optimized size: 1.8MB (including all responsive variants)
-- Overall reduction: 98.0% (86.3MB saved)
+- Total original size: 101.37MB → Optimized size: 2.05MB (including all responsive variants)
+- Overall reduction: 98.0% (99.32MB saved)
 - 4/4 blur placeholders generated successfully
 - All site content images use WebP (and AVIF where enabled) with responsive variants
 - Favicons and social/OG images remain PNG/JPEG for crawler and platform compatibility

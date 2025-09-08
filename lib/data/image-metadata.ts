@@ -48,8 +48,15 @@ export const imageMetadata: Record<string, ImageMetadata> = {
   }
 };
 
-// Helper function to get image metadata by filename
-export function getImageMetadata(filename: string): ImageMetadata | undefined {
-  const key = filename.replace(/\.[^.]+$/, ''); // Remove extension
+// Helper function to get image metadata by filename or path
+export function getImageMetadata(src: string): ImageMetadata | undefined {
+  if (!src) return undefined;
+  
+  // Extract filename from full path if needed
+  const filename = src.includes('/') ? src.split('/').pop() || '' : src;
+  
+  // Remove extension to get the key
+  const key = filename.replace(/\.[^.]+$/, '');
+  
   return imageMetadata[key];
 }
