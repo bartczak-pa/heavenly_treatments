@@ -221,17 +221,36 @@ ${imageData.map(data => {
 }).join(',\n')}
 };
 
-// Helper function to get image metadata by filename
-export function getImageMetadata(filename: string): ImageMetadata | undefined {
-  if (!filename) return undefined;
-  const key = filename.replace(/\\.[^.]+$/, ''); // Remove extension
+// Helper function to get image metadata by src/filename/path/URL
+export function getImageMetadata(src: string): ImageMetadata | undefined {
+  if (!src) return undefined;
+  
+  // Skip external URLs, data URLs, and protocol-relative URLs
+  if (/^(?:https?:|data:|\\/\\/)/i.test(src)) return undefined;
+  
+  // Remove query params and hash fragments
+  const clean = src.split(/[?#]/, 1)[0];
+  
+  // Extract basename handling both forward and back slashes
+  const base = clean.split('/').pop()?.split('\\\\').pop() ?? clean;
+  
+  // Remove extension to get the key
+  const key = base.includes('.') ? base.slice(0, base.lastIndexOf('.')) : base;
   return imageMetadata[key];
 }
 
 // Helper to extract filename from full path for metadata lookup
 export function extractFilenameFromPath(imagePath: string): string {
   if (!imagePath) return '';
-  return imagePath.split('/').pop()?.split('.')[0] || '';
+  
+  // Remove query params and hash fragments
+  const clean = imagePath.split(/[?#]/, 1)[0];
+  
+  // Extract basename handling both forward and back slashes
+  const base = clean.split('/').pop()?.split('\\\\').pop() ?? clean;
+  
+  // Remove extension to get the key
+  return base.includes('.') ? base.slice(0, base.lastIndexOf('.')) : base;
 }
 `;
     

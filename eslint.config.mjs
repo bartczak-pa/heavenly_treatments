@@ -21,6 +21,7 @@ export default tseslint.config(
       parserOptions: {
         ecmaFeatures: { jsx: true },
         project: true, // enable type-aware linting
+        tsconfigRootDir: import.meta.dirname,
       },
     },
     plugins: {

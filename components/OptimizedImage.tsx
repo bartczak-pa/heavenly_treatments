@@ -1,6 +1,6 @@
 'use client';
 
-import Image, { ImageProps } from 'next/image';
+import Image, { ImageProps, ImageLoader } from 'next/image';
 import { memo } from 'react';
 import { getImageMetadata } from '@/lib/data/image-metadata';
 
@@ -95,7 +95,7 @@ const OptimizedImage = memo<OptimizedImageProps>(({
   );
   
   // Custom loader for responsive variants
-  const customLoader = metadata?.sizes?.length ? ({ width }: { width: number }) => {
+  const customLoader: ImageLoader | undefined = metadata?.sizes?.length ? ({ width }) => {
     const sortedSizes = [...metadata.sizes].sort((a, b) => a - b);
     const candidate = sortedSizes.find(s => s >= width) ?? sortedSizes[sortedSizes.length - 1];
     return metadata.src.replace(/\.webp$/, `_${candidate}w.webp`);
