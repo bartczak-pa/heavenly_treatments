@@ -13,6 +13,7 @@ const MainHeader = () => {
                     src="young-woman-having-face-massage-relaxing-spa-salon" 
                     alt="Young woman having face massage relaxing in a spa salon"
                     fill
+                    sizes="100vw"
                     style={{ objectFit: 'cover' }}
                     priority
                     fallback="/images/mainPage/young-woman-having-face-massage-relaxing-spa-salon.jpg"

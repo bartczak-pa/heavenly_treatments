@@ -5,18 +5,14 @@ const path = require('path');
 // Configuration for image optimization
 const CONFIG = {
   quality: {
-    webp: 80,
-    jpeg: 85,
-    png: 90,
-    avif: 75
+    webp: 80
   },
   sizes: [320, 640, 1024, 1280, 1536, 1920], // Responsive breakpoints (configurable)
   outputDir: 'public/images/optimized',
   targetMaxSize: 500 * 1024, // 500KB target
   blurSize: 16, // Size for blur placeholder generation
   blurMaxBytes: 800, // Cap base64 length to avoid HTML bloat
-  blurDataDir: 'lib/data',
-  formats: ['webp', 'avif'], // Modern formats with fallbacks
+  blurDataDir: 'lib/data'
 };
 
 // Images that need optimization
