@@ -1,4 +1,5 @@
 import { Treatment } from '@/lib/data/treatments';
+import { config } from '@/lib/config';
 
 const BASE_URL: string = process.env.NEXT_PUBLIC_BASE_URL || '';
 
@@ -37,7 +38,7 @@ export function generateServiceJsonLd(treatment: Treatment, contactInfo: Contact
         '@context': 'https://schema.org',
         '@type': 'Service',
         name: treatment.title,
-        description: treatment.description.substring(0, 5000),
+        description: treatment.description.substring(0, config.seo.MAX_STRUCTURED_DATA_DESCRIPTION),
         image: treatment.image ? `${BASE_URL}${treatment.image}` : undefined,
         sameAs: [
             'https://www.facebook.com/heavenlytreatmentswithhayleybell',
@@ -52,15 +53,15 @@ export function generateServiceJsonLd(treatment: Treatment, contactInfo: Contact
             address: contactInfo.address,
             telephone: contactInfo.phone,
             email: contactInfo.email,
-            openingHours: contactInfo.openingHours,
+            openingHoursSpecification: contactInfo.openingHours,
             hasMap: contactInfo.mapSrc,
         },
+        timeRequired: treatment.duration,
         offers: {
             '@type': 'Offer',
             price: treatment.price.replace('£', ''),
             priceCurrency: 'GBP',
             url: `${BASE_URL}${contactHref}`,
-            serviceDuration: treatment.duration,
             category: treatment.category,
         },
     };
@@ -93,8 +94,8 @@ export function generateHealthAndBeautyBusinessJsonLd(contactInfo: ContactInfo) 
         hasMap: contactInfo.mapSrc,
         geo: {
             '@type': 'GeoCoordinates',
-            latitude: '55.584',
-            longitude: '-2.385',
+            latitude: config.location.COORDINATES.LATITUDE,
+            longitude: config.location.COORDINATES.LONGITUDE,
         },
     };
 }

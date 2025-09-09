@@ -1,16 +1,17 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Treatment, TreatmentCategorySlug } from '@/lib/data/treatments';
-import TreatmentsGrid from './treatmentsGrid';
+import TreatmentsGrid from '@/components/Treatments/TreatmentsGrid';
 import { Button } from '@/components/ui/button';
+import { config } from '@/lib/config';
 
 interface FilteredTreatmentsDisplayProps {
   filteredTreatments: Treatment[];
   currentSelection: TreatmentCategorySlug | 'all';
 }
 
-const INITIAL_VISIBLE_COUNT: number = 3; 
+const { INITIAL_VISIBLE_TREATMENTS, RESPONSIVE_INCREMENTS, BREAKPOINTS } = config.ui; 
 
 
   /**
@@ -34,42 +35,46 @@ export default function FilteredTreatmentsDisplay({
 }: FilteredTreatmentsDisplayProps) {
 
 
-  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_COUNT);
+  const [visibleCount, setVisibleCount] = useState<number>(INITIAL_VISIBLE_TREATMENTS);
 
   
   useEffect(() => {
-    setVisibleCount(INITIAL_VISIBLE_COUNT);
+    setVisibleCount(INITIAL_VISIBLE_TREATMENTS);
   }, [currentSelection]);
 
   const totalTreatments: number = filteredTreatments.length;
-  const treatmentsToShow: Treatment[] = filteredTreatments.slice(0, visibleCount);
-  const canShowMore: boolean = visibleCount < totalTreatments;
+  
+  const treatmentsToShow: Treatment[] = useMemo(() => {
+    return filteredTreatments.slice(0, visibleCount);
+  }, [filteredTreatments, visibleCount]);
+  
+  const canShowMore: boolean = useMemo(() => {
+    return visibleCount < totalTreatments;
+  }, [visibleCount, totalTreatments]);
 
   
   /**
    * Handles the "Show More" button click event.
    * 
-   * Dynamically adjusts the number of visible treatments based on screen width:
-   * - Small screens (< 1024px): Shows 3 more treatments
-   * - Large screens (1024px - 1279px): Shows 4 more treatments
-   * - Extra large screens (≥ 1280px): Shows 6 more treatments
+   * Dynamically adjusts the number of visible treatments based on screen width
+   * using configuration values from @/lib/config.
    * 
    * @function
    * @returns {void}
    */
 
-  const handleShowMore = () => {
+  const handleShowMore = useCallback(() => {
     const screenWidth: number = window.innerWidth;
-    let increment: number = 3; // Default increment (small screens)
+    let increment: number = RESPONSIVE_INCREMENTS.SMALL; // Default increment (small screens)
 
-    if (screenWidth >= 1280) { // Approx XL breakpoint
-      increment = 6;
-    } else if (screenWidth >= 1024) { // Approx LG breakpoint
-      increment = 4;
+    if (screenWidth >= BREAKPOINTS.EXTRA_LARGE) {
+      increment = RESPONSIVE_INCREMENTS.EXTRA_LARGE;
+    } else if (screenWidth >= BREAKPOINTS.LARGE) {
+      increment = RESPONSIVE_INCREMENTS.LARGE;
     }
 
     setVisibleCount((prevCount) => Math.min(prevCount + increment, totalTreatments));
-  };
+  }, [totalTreatments]);
 
 
   return (
@@ -88,6 +93,7 @@ export default function FilteredTreatmentsDisplay({
             variant="outline"
             size="lg"
             onClick={handleShowMore}
+            aria-label="Show more treatments"
           >
             Show More Treatments
           </Button>

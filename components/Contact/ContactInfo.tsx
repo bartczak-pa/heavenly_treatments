@@ -1,5 +1,3 @@
-'use client';
-
 import React, { JSX } from 'react';
 import { contactInfo } from '@/lib/data/contactInfo';
 

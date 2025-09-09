@@ -10,26 +10,22 @@ import { Metadata } from 'next';
 import Script from 'next/script';
 import { contactInfo } from '@/lib/data/contactInfo';
 import { generateServiceJsonLd, ContactInfo, generateBreadcrumbJsonLd } from '@/lib/jsonLsUtils';
+import { config } from '@/lib/config';
 
-// eslint-disable-next-line no-unused-vars
-type ResolvedParams = {
-  categorySlug: string;
-  treatmentSlug: string;
-};
 
 interface Props {
-  params: Promise<{ 
-    categorySlug: string; 
-    treatmentSlug: string; 
+  params: Promise<{
+    categorySlug: string;
+    treatmentSlug: string;
   }>;
 }
 
 
 
 
-export default async function TreatmentDetailPage({ params: paramsPromise }: Props) { 
-  const params = await paramsPromise;
-  const treatment = getTreatmentBySlug(params.treatmentSlug);
+export default async function TreatmentDetailPage({ params }: Props) {
+  const { treatmentSlug } = await params;
+  const treatment = getTreatmentBySlug(treatmentSlug);
 
   if (!treatment) {
     notFound();
@@ -43,7 +39,15 @@ export default async function TreatmentDetailPage({ params: paramsPromise }: Pro
   const contactHref = `/contact?treatment=${encodeURIComponent(treatment.title)}`;
 
   // --- Prepare Breadcrumb Data ---
-  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
+  let BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+  if (!BASE_URL) {
+    if (typeof window !== 'undefined') {
+      BASE_URL = window.location.origin;
+    } else {
+      // In production, this should be set. For development, use a fallback
+      BASE_URL = process.env.NODE_ENV === 'production' ? 'https://heavenly-treatments.com' : 'http://localhost:3000';
+    }
+  }
   const breadcrumbItems = [
     { name: 'Home', item: BASE_URL },
     { name: 'Treatments', item: `${BASE_URL}/treatments` },
@@ -119,11 +123,11 @@ export default async function TreatmentDetailPage({ params: paramsPromise }: Pro
               )}
 
               <div className="pt-4">
-                <Link href={contactHref}>
-                  <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90">
+                <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90" asChild>
+                  <Link href={contactHref}>
                     Book This Treatment
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
             </div>
           </div>
@@ -152,9 +156,9 @@ export default async function TreatmentDetailPage({ params: paramsPromise }: Pro
  * )
  */
 
-export async function generateMetadata({ params: paramsPromise }: Props): Promise<Metadata> {
-  const params = await paramsPromise; 
-  const treatment = getTreatmentBySlug(params.treatmentSlug);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { treatmentSlug } = await params;
+  const treatment = getTreatmentBySlug(treatmentSlug);
 
   if (!treatment) {
     return {
@@ -162,7 +166,7 @@ export async function generateMetadata({ params: paramsPromise }: Props): Promis
     };
   }
 
-  const description = treatment.description.substring(0, 160);
+  const description = treatment.description.substring(0, config.seo.MAX_DESCRIPTION_LENGTH);
 
   return {
     title: `${treatment.title} | My Cottage Spa Treatments`,

@@ -7,7 +7,8 @@ import { Playfair_Display, Open_Sans } from 'next/font/google';
 import * as Toast from '@radix-ui/react-toast';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
-import Script from 'next/script';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { DynamicGoogleAnalytics } from '@/components/Dynamic/DynamicComponents';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,7 +46,7 @@ export const metadata: Metadata = {
     default: 'Heavenly Treatments with Hayleybell - Wellness & Self-Care',
     template: '%s | Heavenly Treatments with Hayleybell', 
   },
-  description: "Discover relaxing massage therapies, rejuvenating facials, and holistic body treatments in Biggleswade. Book your journey to wellness with Heavenly Treatments.",
+  description: "Discover relaxing massage therapies, rejuvenating facials, and holistic body treatments in Kelso. Book your journey to wellness with Heavenly Treatments.",
   keywords: ['Massage', 'Facial', 'Reflexology', 'Body Treatments', 'Kelso', 'Wellness', 'Spa', 'Heavenly Treatments', 'Heavenly Treatments with Hayleybell', 'Heavenly Treatments with Hayleybell Kelso', 'Scottish Borders', 'Scottish Borders Massage', 'Scottish Borders Facials', 'Scottish Borders Body Treatments'],
   openGraph: {
     type: 'website',
@@ -53,7 +54,7 @@ export const metadata: Metadata = {
     url: process.env.NEXT_PUBLIC_BASE_URL || '',
     siteName: 'Heavenly Treatments with Hayleybell',
     title: 'Heavenly Treatments with Hayleybell - Wellness & Self-Care',
-    description: 'Relaxing massage, facial, reflexology, and body treatments in Biggleswade.',
+    description: 'Relaxing massage, facial, reflexology, and body treatments in Kelso.',
     images: [
       {
         url: '/images/logo.png',
@@ -77,52 +78,26 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${openSans.variable} antialiased`}>
       <body className="font-sans min-h-screen bg-background text-foreground">
         <SpeedInsights />
-        <Toast.Provider swipeDirection="right">
-          {children}
-          <Toast.Viewport className="fixed bottom-0 right-0 p-4" />
-        </Toast.Provider>
+        <ErrorBoundary
+          fallback={
+            <div role="alert" aria-live="assertive" className="p-4 border border-red-300 rounded">
+              <h2 className="font-semibold">Something went wrong</h2>
+              <p>Please try again.</p>
+            </div>
+          }
+        >
+          <Toast.Provider swipeDirection="right">
+            {children}
+            <Toast.Viewport className="fixed bottom-0 right-0 p-4" />
+          </Toast.Provider>
+        </ErrorBoundary>
         <Analytics />
         
-        {/* --- Google Analytics Scripts --- */}
-        {GA_MEASUREMENT_ID && (
-          <>
-            <Script 
-              strategy="afterInteractive" 
-              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-            />
-            <Script 
-              id="google-analytics"
-              strategy="afterInteractive" 
-              dangerouslySetInnerHTML={{
-                __html: `
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-                  gtag('config', '${GA_MEASUREMENT_ID}');
-                `,
-              }}
-            />
-          </>
-        )}
-        {/* ---------------------------- */}
-        
-        {/* Google Tag Manager (gtag.js) */}  
-        {googleAdsId && (
-          <>
-            <Script 
-              strategy="afterInteractive" 
-              src={`https://www.googletagmanager.com/gtag/js?id=${googleAdsId}`}
-            />
-            <Script id="google-ads-config" strategy="afterInteractive"> 
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${googleAdsId}');
-              `}
-            </Script>
-          </>
-        )}
+        {/* Dynamically loaded Google Analytics */}
+        <DynamicGoogleAnalytics 
+          measurementId={GA_MEASUREMENT_ID}
+          googleAdsId={googleAdsId}
+        />
         
       </body>
     </html>

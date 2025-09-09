@@ -1,6 +1,4 @@
-'use client';
-
-import Image from 'next/image';
+import OptimizedImage from '@/components/OptimizedImage';
 
 export default function ExperienceSection() {
     return (
@@ -31,12 +29,14 @@ export default function ExperienceSection() {
               </p>
             </div>
             <div className="relative aspect-square rounded-lg overflow-hidden shadow-lg">
-              <Image 
-                src="/images/about/heavenly-treatments-room.jpg" 
+              <OptimizedImage 
+                src="heavenly-treatments-room"
+                fallback="/images/about/heavenly-treatments-room.jpg" 
                 alt="Relaxing treatment room at Heavenly Treatments in Kelso"
                 fill
                 style={{objectFit: 'cover'}}
                 sizes="(max-width: 1024px) 100vw, 50vw"
+                loading="lazy"
               />
             </div>
           </div>

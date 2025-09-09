@@ -2,8 +2,10 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { getTreatments, getCategories, TreatmentCategorySlug, TreatmentCategory } from '@/lib/data/treatments';
 import { MainLayout } from '@/components/Layout/MainLayout';
-import CategoryFilters from '@/components/Treatments/categoryFilters';
-import FilteredTreatmentsDisplay from '@/components/Treatments/FilteredTreatmentsDisplay';
+import { 
+  DynamicCategoryFilters,
+  DynamicFilteredTreatmentsDisplay 
+} from '@/components/Dynamic/DynamicComponents';
 import { contactInfo } from '@/lib/data/contactInfo';
 import Script from 'next/script';
 import { 
@@ -11,6 +13,7 @@ import {
   ContactInfo, 
   generateBreadcrumbJsonLd 
 } from '@/lib/jsonLsUtils';
+import { config } from '@/lib/config';
 
 type Props = {
   params: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -61,8 +64,8 @@ export async function generateMetadata(
       images: [
         {
           url: ogImageUrl,
-          width: 1200,
-          height: 630,
+          width: config.seo.DEFAULT_IMAGE.WIDTH,
+          height: config.seo.DEFAULT_IMAGE.HEIGHT,
           alt: `${pageTitle} Image`,
         },
       ],
@@ -96,7 +99,14 @@ export default async function TreatmentsPage(props: Props) {
   
   const awaitedParams = await props.params;
   const awaitedSearchParams = await props.searchParams;
-  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
+  let BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+  if (!BASE_URL) {
+    if (typeof window !== 'undefined') {
+      BASE_URL = window.location.origin;
+    } else {
+      BASE_URL = process.env.NODE_ENV === 'production' ? 'https://heavenly-treatments.com' : 'http://localhost:3000';
+    }
+  }
   
   // --- Business JSON-LD ---
   const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfo);
@@ -124,7 +134,7 @@ export default async function TreatmentsPage(props: Props) {
   // -----------------------------
   
   
-  // eslint-disable-next-line no-unused-vars
+   
   const _params = awaitedParams; // Assign awaited params to unused variable
 
   const currentSelection: TreatmentCategorySlug | 'all' = 
@@ -159,7 +169,7 @@ export default async function TreatmentsPage(props: Props) {
           </h1>
 
           <div className="flex justify-center mb-2 lg:mb-12">
-            <CategoryFilters 
+            <DynamicCategoryFilters 
               selectedCategory={currentSelection}
             />
           </div>
@@ -172,7 +182,7 @@ export default async function TreatmentsPage(props: Props) {
             </div>
           )}
 
-          <FilteredTreatmentsDisplay 
+          <DynamicFilteredTreatmentsDisplay 
             filteredTreatments={filteredTreatments}
             currentSelection={currentSelection}
           />

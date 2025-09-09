@@ -1,44 +1,57 @@
+/**
+ * @fileoverview Treatment card component for displaying individual treatments
+ * 
+ * Optimized card component with hover effects, responsive design, and multiple
+ * navigation paths (details and booking). Includes performance optimizations
+ * with React.memo and optimized images.
+ * 
+ * @author Claude Code
+ * @version 1.0.0
+ */
+
 'use client';
 
-import React from 'react';
+import React, { memo } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import OptimizedImage from '@/components/OptimizedImage';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Treatment, } from '@/lib/data/treatments';
+import { Treatment } from '@/lib/data/treatments';
 import { Clock, PoundSterling } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+/**
+ * Props interface for the TreatmentCard component
+ */
 interface TreatmentCardProps {
+  /** Treatment data object containing all display information */
   treatment: Treatment;
 };
 
 /**
- * TreatmentCard Component
+ * Treatment card component with optimized performance and UX
  * 
- * A card component that displays treatment information including:
- * - Treatment image
- * - Title
- * - Description
- * - Duration
- * - Price
+ * Displays treatment information in a responsive card layout with:
+ * - Optimized images with lazy loading and responsive sizes
+ * - Hover effects and smooth transitions
+ * - Multiple navigation paths (details view and booking)
+ * - Accessible design with semantic HTML structure
+ * - Performance optimization with React.memo
  * 
- * Features:
- * - Responsive image handling with fallback
- * - Hover effects for better user interaction
- * - Links to both treatment details and contact page
- * - Accessible design with proper semantic HTML
+ * The card layout includes:
+ * - Hero image with hover scale effect
+ * - Treatment title, description, duration, and price
+ * - Book Now button with direct contact link
  * 
- * @component
+ * @param props - Component props
+ * @returns JSX element representing a treatment card
+ * 
  * @example
- * ```tsx
+ * ```typescript
  * <TreatmentCard treatment={treatmentData} />
  * ```
- * 
- * @param {Treatment} treatment - The treatment data to display
- * @returns {JSX.Element} A treatment card component
  */
-const TreatmentCard: React.FC<TreatmentCardProps> = ({ treatment }) => {
+const TreatmentCard = memo<TreatmentCardProps>(({ treatment }) => {
   const contactHref: string = `/contact?treatment=${encodeURIComponent(treatment.title)}`;
   const detailHref: string = `/treatments/${treatment.category}/${treatment.slug}`;
 
@@ -49,13 +62,14 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({ treatment }) => {
     )}>
       <Link href={detailHref} className="block relative w-full h-52 overflow-hidden">
         {treatment.image ? (
-          <Image
+          <OptimizedImage
             src={treatment.image}
             alt={treatment.title}
             fill
             style={{ objectFit: 'cover' }}
             className="transition-transform duration-300 group-hover:scale-105"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            loading="lazy"
           />
         ) : (
           <div className="w-full h-full bg-secondary/20 flex items-center justify-center">
@@ -84,16 +98,18 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({ treatment }) => {
             {treatment.duration}
           </span>
           <span className="flex items-center gap-0.5 font-medium text-primary/90">
-            <PoundSterling className="h-4 w-4" />
+            <PoundSterling className="h-4 w-4" aria-hidden="true" />
             {treatment.price.replace('£', '')}
           </span>
         </div>
-        <Link href={contactHref}>
-          <Button variant="secondary" size="sm">Book Now</Button>
-        </Link>
+        <Button asChild variant="secondary" size="sm">
+          <Link href={contactHref}>Book Now</Link>
+        </Button>
       </CardFooter>
     </Card>
   );
-};
+});
+
+TreatmentCard.displayName = 'TreatmentCard';
 
 export default TreatmentCard; 

@@ -1,10 +1,13 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { MainLayout } from '@/components/Layout/MainLayout';
-import Testimonials from '@/components/Sections/testimonials';
+import { 
+  DynamicTestimonials,
+  DynamicExperienceSection,
+  DynamicServicesSection
+} from '@/components/Dynamic/DynamicComponents';
 
-import MainHeader from '../components/Sections/mainHeader';
-import ServicesSection from '../components/Sections/services';
+import MainHeader from '@/components/Sections/MainHeader';
 import Script from 'next/script';
 import { contactInfo } from '@/lib/data/contactInfo';
 import { 
@@ -12,7 +15,7 @@ import {
   generateHealthAndBeautyBusinessJsonLd, 
   ContactInfo as ContactInfoType 
 } from '@/lib/jsonLsUtils';
-import ExperienceSection from '@/components/Sections/Experience';
+import { config } from '@/lib/config';
 import LocationAndBookingSection from '@/components/Sections/LocationAndBooking';
 import IntroductionSection from '@/components/Sections/Introduction';
 
@@ -34,8 +37,8 @@ export async function generateMetadata(): Promise<Metadata> {
       images: [
         {
           url: imageUrl,
-          width: 1200,
-          height: 630,
+          width: config.seo.DEFAULT_IMAGE.WIDTH,
+          height: config.seo.DEFAULT_IMAGE.HEIGHT,
           alt: `${siteName} Logo`,
         },
       ],
@@ -61,14 +64,14 @@ const HomePage: React.FC = () => {
       <MainHeader />
 
       <IntroductionSection />
-      <ServicesSection showAllButton={false} /> 
+      <DynamicServicesSection showAllButton={false} /> 
 
      
-      <ExperienceSection />
+      <DynamicExperienceSection />
       
       <LocationAndBookingSection />
 
-      <Testimonials />
+      <DynamicTestimonials />
     </MainLayout>
   );
 };

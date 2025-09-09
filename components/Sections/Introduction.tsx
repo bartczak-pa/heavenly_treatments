@@ -1,4 +1,3 @@
-'use client';
 export default function IntroductionSection() {
     return (
         <section id="introduction" className="py-16 md:py-24 bg-background">

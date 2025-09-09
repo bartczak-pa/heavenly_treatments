@@ -7,8 +7,18 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:md": "markdownlint-cli2 \"*.md\"",
+    "lint:md:fix": "markdownlint-cli2 --fix \"*.md\"",
     "prepare": "husky",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "optimize-images": "node scripts/optimize-images.js",
+    "analyze": "ANALYZE=true next build",
+    "analyze:server": "npm run analyze && npx webpack-bundle-analyzer .next/server/chunks/*.js -p 8888 -O",
+    "build:analyze": "npm run build && npm run analyze",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
@@ -36,6 +46,7 @@
     "react-hook-form": "^7.55.0",
     "react-turnstile": "^1.1.4",
     "resend": "^4.2.0",
+    "sharp": "^0.34.3",
     "tailwind-merge": "^3.2.0",
     "tw-animate-css": "^1.2.5",
     "zod": "^3.24.2"
@@ -43,10 +54,15 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@eslint/js": "^9.24.0",
+    "@next/bundle-analyzer": "15.2.4",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^5.0.2",
     "eslint": "^9.24.0",
     "eslint-config-next": "15.2.4",
     "eslint-config-prettier": "^10.1.2",
@@ -54,16 +70,24 @@
     "eslint-plugin-react": "^7.37.5",
     "globals": "^16.0.0",
     "husky": "^9.1.7",
+    "imagemin": "^9.0.1",
+    "imagemin-webp": "^8.0.0",
+    "jsdom": "^26.1.0",
     "lint-staged": "^15.5.0",
+    "markdownlint-cli2": "^0.18.1",
     "prettier": "^3.5.3",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "typescript-eslint": "^8.29.0"
+    "typescript-eslint": "^8.29.0",
+    "vite": "^5.4.19",
+    "vitest": "^3.2.4",
+    "webpack-bundle-analyzer": "^4.10.2"
   },
   "lint-staged": {
     "*.js": "eslint --fix",
     "*.ts": "eslint --fix",
     "*.tsx": "eslint --fix",
-    "*.css": "prettier --write"
+    "*.css": "prettier --write",
+    "*.md": "markdownlint-cli2 --fix"
   }
 }

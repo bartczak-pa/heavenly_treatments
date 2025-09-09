@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Category filter component for treatment pages
+ * 
+ * Provides both desktop (button-based) and mobile (dropdown-based) filtering
+ * interfaces for treatment categories. Handles URL navigation and scroll behavior.
+ * 
+ * @author Claude Code
+ * @version 1.0.0
+ */
+
 'use client';
 
 import React from 'react';
@@ -6,14 +16,44 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { getCategories, TreatmentCategorySlug } from '@/lib/data/treatments'; 
 
+/**
+ * Props interface for the CategoryFilters component
+ */
 interface CategoryFiltersProps {
+  /** Currently selected category slug or 'all' for all treatments */
   selectedCategory: TreatmentCategorySlug | 'all';
 }
 
+/**
+ * Category filters component with responsive design
+ * 
+ * Displays treatment category filters with different interfaces for desktop and mobile:
+ * - Desktop: Button-based horizontal filter bar
+ * - Mobile: Dropdown select component for space efficiency
+ * 
+ * Handles URL navigation without scroll reset for better UX.
+ * 
+ * @param props - Component props
+ * @returns JSX element representing the category filter interface
+ * 
+ * @example
+ * ```typescript
+ * <CategoryFilters selectedCategory="facial-treatments" />
+ * ```
+ */
 export default function CategoryFilters({ selectedCategory }: CategoryFiltersProps) {
   const categories = getCategories();
   const router = useRouter();
 
+  /**
+   * Handles category filter change events
+   * 
+   * Navigates to the appropriate URL based on the selected category.
+   * Uses router.push with scroll: false to maintain scroll position.
+   * 
+   * @param slug - The category slug to filter by, or 'all' for all treatments
+   * @returns void
+   */
   const handleFilterChange = (slug: string) => {
     if (slug === 'all') {
       router.push('/treatments', { scroll: false });
@@ -31,6 +71,7 @@ export default function CategoryFilters({ selectedCategory }: CategoryFiltersPro
           variant={selectedCategory === 'all' ? 'default' : 'ghost'}
           onClick={() => handleFilterChange('all')}
           size="sm"
+          aria-pressed={selectedCategory === 'all'}
         >
           All Treatments
         </Button>
@@ -40,6 +81,7 @@ export default function CategoryFilters({ selectedCategory }: CategoryFiltersPro
             variant={selectedCategory === category.slug ? 'default' : 'ghost'}
             onClick={() => handleFilterChange(category.slug)}
             size="sm"
+            aria-pressed={selectedCategory === category.slug}
           >
             {category.name}
           </Button>

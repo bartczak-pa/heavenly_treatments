@@ -39,7 +39,7 @@ export interface Treatment {
   
   // Define slugs for type safety
   export type TreatmentCategorySlug =
-    | 'hollistic-treatments'
+    | 'holistic-treatments'
     | 'massages'
     | 'facials'
     | 'body-treatments'
@@ -49,10 +49,10 @@ export interface Treatment {
   export const treatmentCategories: TreatmentCategory[] = [
     {
       id: 'cat-1',
-      slug: 'hollistic-treatments',
-      name: 'Hollistic Treatments',
-      description: 'Relax and rejuvenate with my range of hollistic treatments.',
-      shortDescription: 'Relax and rejuvenate with my range of hollistic treatments.',
+      slug: 'holistic-treatments',
+      name: 'Holistic Treatments',
+      description: 'Relax and rejuvenate with my range of holistic treatments.',
+      shortDescription: 'Relax and rejuvenate with my range of holistic treatments.',
       image: '/images/categories/products_used_for_seasonal_treatments.jpg',
       iconName: 'Sun',
     },
@@ -71,7 +71,7 @@ export interface Treatment {
       name: 'Facials',
       description: 'Nourish and pamper your body from head to toe.',
       shortDescription: 'Achieve glowing skin with my facial treatments',
-      image: '/images/categories/woman-salon-making-beauty-treatment-with-gua-sha-stone.jpg',
+      image: '/images/optimized/woman-salon-making-beauty-treatment-with-gua-sha-stone.webp',
       iconName: 'SmilePlus',
     },
     {
@@ -89,7 +89,7 @@ export interface Treatment {
       name: 'Reflexology',
       description: 'Relax and rejuvenate with my range of reflexology treatments.',
       shortDescription: 'Heal from within with reflexology treatments',
-      image: '/images/categories/person_having_reflexology_treatment.png',
+      image: '/images/optimized/person_having_reflexology_treatment.webp',
       iconName: 'Footprints',
     },
   ];
@@ -99,7 +99,7 @@ export interface Treatment {
 
     // Hollistic Treatments
     {
-      id: 'hollistic-1',
+      id: 'holistic-1',
       title: 'Scrub & Soothe',
       slug: 'scrub-soothe',
       // SEO Description
@@ -118,14 +118,14 @@ export interface Treatment {
         'Scrub on hands',
         'Hand massage',
       ],
-      category: 'hollistic-treatments',
+      category: 'holistic-treatments',
     },
     {
-      id: 'hollistic-2',
+      id: 'holistic-2',
       title: 'Heal & Glow',
       slug: 'heal-glow',
       // SEO Description
-      description: 'Indulge in a hollistic treatment for your mind, body and soul using beautiful handmade products from Wild & Wood.',
+      description: 'Indulge in a holistic treatment for your mind, body and soul using beautiful handmade products from Wild & Wood.',
       image: '/images/treatments/heal_and_glow.jpeg',
       imageWidth: 800,
       imageHeight: 600,
@@ -140,7 +140,7 @@ export interface Treatment {
         'Scalp massage',
         'Botanical facial oil',
       ],
-      category: 'hollistic-treatments',
+      category: 'holistic-treatments',
     },
     
 
@@ -399,7 +399,7 @@ export interface Treatment {
       title: 'Fruity Bacial & Express Calming Facial',
       slug: 'fruity-bacial-express-calming-facial',
       description: 'This 90min treatment includes a sugar exfoliation on the back, a Mango Firming Body Mask on the back and décolleté to absorb excess oil and improve skin texture followed by a relaxing massage and mini facial. Perfect to prepare your skin for summer!',
-      image: '/images/treatments/bacial.png',
+      image: '/images/optimized/bacial.webp',
       imageWidth: 800,
       imageHeight: 600,
       duration: '90 mins',
@@ -446,7 +446,7 @@ export interface Treatment {
       title: 'Reflexology',
       slug: 'reflexology',
       description: 'Restore balance and promote well-being through the ancient art of reflexology, targeting pressure points on the feet.',
-      image: '/images/categories/person_having_reflexology_treatment.png',
+      image: '/images/optimized/person_having_reflexology_treatment.webp',
       imageWidth: 800,
       imageHeight: 600,
       duration: '45 mins',
@@ -505,6 +505,15 @@ export interface Treatment {
    */
   export const getCategories = (): TreatmentCategory[] => {
     return treatmentCategories;
+  };
+
+  /**
+   * Constructs the URL path for a treatment detail page.
+   * @param treatment - Treatment with category and slug properties.
+   * @returns The treatment detail page path.
+   */
+  export const getTreatmentPath = (treatment: Pick<Treatment, 'category' | 'slug'>): string => {
+    return `/treatments/${treatment.category}/${treatment.slug}`;
   };
   
   /**
