@@ -1,17 +1,52 @@
+/**
+ * @fileoverview Lightweight UI components with minimal dependencies
+ * 
+ * Provides simplified alternatives to heavy UI library components
+ * to reduce bundle size while maintaining accessibility and functionality.
+ * 
+ * @author Claude Code
+ * @version 1.0.0
+ */
+
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/optimizeImports';
 
-// Lightweight Select component - reduces bundle size compared to full Radix Select
+/**
+ * Props interface for the LightweightSelect component
+ */
 interface LightweightSelectProps {
+  /** Currently selected value */
   value?: string;
+  /** Callback fired when selection changes */
   onValueChange?: (value: string) => void;
+  /** Placeholder text when no value is selected */
   placeholder?: string;
+  /** Child elements (typically LightweightSelectOption components) */
   children: React.ReactNode;
+  /** Additional CSS class names */
   className?: string;
 }
 
+/**
+ * Lightweight Select component - reduces bundle size compared to full Radix Select
+ * 
+ * A minimal dropdown select component with full keyboard accessibility
+ * and touch device support. Significantly smaller than full UI library
+ * implementations while maintaining essential functionality.
+ * 
+ * @param props - Component props
+ * @returns JSX element representing a select dropdown
+ * 
+ * @example
+ * ```typescript
+ * <LightweightSelect value={selectedValue} onValueChange={setValue}>
+ *   <LightweightSelectOption value="option1">Option 1</LightweightSelectOption>
+ *   <LightweightSelectOption value="option2">Option 2</LightweightSelectOption>
+ * </LightweightSelect>
+ * ```
+ */
 export const LightweightSelect: React.FC<LightweightSelectProps> = ({
   value,
   onValueChange,
@@ -23,14 +58,24 @@ export const LightweightSelect: React.FC<LightweightSelectProps> = ({
   const selectRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: PointerEvent) => {
       if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('pointerdown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('pointerdown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   return (
@@ -38,12 +83,19 @@ export const LightweightSelect: React.FC<LightweightSelectProps> = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setIsOpen(true);
+          }
+        }}
         className={cn(
           "w-full flex items-center justify-between px-3 py-2 border rounded-md bg-background",
           "text-left focus:outline-none focus:ring-2 focus:ring-primary"
         )}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
+        aria-label={`Select ${placeholder || 'option'}`}
       >
         <span className={value ? 'text-foreground' : 'text-muted-foreground'}>
           {value || placeholder}
@@ -53,6 +105,7 @@ export const LightweightSelect: React.FC<LightweightSelectProps> = ({
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          aria-hidden="true"
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
@@ -97,11 +150,20 @@ export const LightweightSelectOption: React.FC<LightweightSelectOptionProps> = (
     <div
       data-value={value}
       role="option"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          e.stopPropagation();
+          (e.currentTarget as HTMLElement).click();
+        }
+      }}
       className={cn(
         "px-3 py-2 cursor-pointer hover:bg-accent hover:text-accent-foreground",
-        "focus:bg-accent focus:text-accent-foreground",
+        "focus:bg-accent focus:text-accent-foreground focus:outline-none",
         className
       )}
+      aria-selected="false"
     >
       {children}
     </div>
@@ -120,6 +182,7 @@ export const LightweightButton: React.FC<LightweightButtonProps> = ({
   size = 'default',
   className,
   children,
+  type = 'button',
   ...props
 }) => {
   const variantClasses = {
@@ -140,6 +203,7 @@ export const LightweightButton: React.FC<LightweightButtonProps> = ({
 
   return (
     <button
+      type={type}
       className={cn(
         'inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background',
         'transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
@@ -202,11 +266,12 @@ export const LightweightToast: React.FC<LightweightToastProps> = ({
           {description && <div className="text-sm mt-1">{description}</div>}
         </div>
         <button
+          type="button"
           onClick={() => onOpenChange(false)}
           className="ml-2 hover:opacity-70"
           aria-label="Close notification"
         >
-          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>

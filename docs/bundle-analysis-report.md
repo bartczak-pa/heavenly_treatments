@@ -175,3 +175,83 @@ Key metrics improvement:
 - ✅ Established foundation for ongoing bundle optimization
 
 The implementation provides a solid foundation for continued performance optimization and monitoring.
+
+## Usage
+
+### Running Bundle Analysis
+
+Generate comprehensive bundle analysis reports:
+
+```bash
+# Generate client, server, and edge bundle reports
+npm run analyze
+
+# Analyze server-side bundles specifically (requires prior analyze run)
+npm run analyze:server
+
+# Combined build and analysis in one command
+npm run build:analyze
+```
+
+### Interpreting Results
+
+The bundle analyzer generates three reports in `.next/analyze/`:
+
+1. **`client.html`** - Client-side JavaScript bundle analysis
+   - Shows components loaded in browser
+   - Identifies largest dependencies
+   - Reveals code splitting effectiveness
+
+2. **`nodejs.html`** - Server-side bundle analysis  
+   - Server rendering dependencies
+   - API route bundles
+   - Server-side optimization opportunities
+
+3. **`edge.html`** - Edge runtime bundle analysis
+   - Edge function dependencies
+   - Middleware bundles
+
+### Setting Performance Budgets
+
+Recommended bundle size thresholds:
+
+```bash
+# Add to CI/CD pipeline
+BUNDLE_SIZE_THRESHOLD=150kb  # First Load JS threshold
+PAGE_BUNDLE_THRESHOLD=10kb   # Page-specific bundle threshold
+SHARED_CHUNK_THRESHOLD=120kb # Shared chunk threshold
+
+# Example CI check
+if [ $(stat -c%s .next/static/chunks/pages/_app*.js) -gt 150000 ]; then
+  echo "Bundle size exceeds threshold"
+  exit 1
+fi
+```
+
+### Continuous Monitoring
+
+Add bundle size monitoring to your CI/CD:
+
+```yaml
+# .github/workflows/bundle-analysis.yml
+- name: Analyze Bundle Size
+  run: |
+    npm run analyze
+    # Upload reports to artifact storage
+    # Compare with baseline measurements
+```
+
+### Bundle Optimization Commands
+
+Quick optimization checks:
+
+```bash
+# Check current bundle sizes
+npm run build && du -sh .next/static/chunks/*
+
+# Find largest dependencies
+npm run analyze && echo "Check client.html for largest packages"
+
+# Validate code splitting
+npm run build && find .next/static/chunks -name "*.js" | wc -l
+```
