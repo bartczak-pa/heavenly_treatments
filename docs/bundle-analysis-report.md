@@ -73,6 +73,16 @@ experimental: {
 - `npm run analyze:server` - Server-side bundle analysis
 - `npm run build:analyze` - Combined build and analysis
 
+Run examples:
+
+```bash
+# Client/SSR bundles with Next analyzer
+ANALYZE=true npm run build
+# Or use the convenience scripts
+npm run analyze
+npm run analyze:server
+```
+
 ## Performance Impact
 
 ### Code Splitting Benefits

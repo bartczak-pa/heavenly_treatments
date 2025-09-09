@@ -10,7 +10,7 @@
 
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useId } from 'react';
 import { cn } from '@/lib/optimizeImports';
 
 /**
@@ -56,6 +56,9 @@ export const LightweightSelect: React.FC<LightweightSelectProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
+  const listboxRef = useRef<HTMLDivElement>(null);
+  const triggerId = useId();
+  const listboxId = useId();
 
   useEffect(() => {
     const handleClickOutside = (event: PointerEvent) => {
@@ -81,6 +84,7 @@ export const LightweightSelect: React.FC<LightweightSelectProps> = ({
   return (
     <div ref={selectRef} className={cn("relative", className)}>
       <button
+        id={triggerId}
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         onKeyDown={(e) => {
@@ -95,6 +99,7 @@ export const LightweightSelect: React.FC<LightweightSelectProps> = ({
         )}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
+        aria-controls={isOpen ? listboxId : undefined}
         aria-label={`Select ${placeholder || 'option'}`}
       >
         <span className={value ? 'text-foreground' : 'text-muted-foreground'}>
@@ -116,17 +121,43 @@ export const LightweightSelect: React.FC<LightweightSelectProps> = ({
           "absolute z-50 mt-1 w-full bg-background border rounded-md shadow-lg max-h-60 overflow-auto"
         )}>
           <div
+            id={listboxId}
             role="listbox"
+            tabIndex={0}
+            ref={listboxRef}
+            aria-labelledby={triggerId}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                e.preventDefault();
+                setIsOpen(false);
+                return;
+              }
+              if (e.key === 'Enter' || e.key === ' ') {
+                const target = (e.target as HTMLElement)?.closest('[data-value]') as HTMLElement | null;
+                const v = target?.getAttribute('data-value');
+                if (v && onValueChange) {
+                  e.preventDefault();
+                  onValueChange(v);
+                  setIsOpen(false);
+                }
+              }
+            }}
             onClick={(e) => {
-              const target = e.target as HTMLElement;
-              const value = target.getAttribute('data-value');
-              if (value && onValueChange) {
-                onValueChange(value);
+              const target = (e.target as HTMLElement)?.closest('[data-value]') as HTMLElement | null;
+              const v = target?.getAttribute('data-value');
+              if (v && onValueChange) {
+                onValueChange(v);
                 setIsOpen(false);
               }
             }}
           >
-            {children}
+            {React.Children.map(children, (child) =>
+              React.isValidElement(child)
+                ? React.cloneElement(child as React.ReactElement<any>, {
+                    selected: (child.props as any)?.value === value,
+                  })
+                : child
+            )}
           </div>
         </div>
       )}
@@ -271,7 +302,7 @@ export const LightweightToast: React.FC<LightweightToastProps> = ({
           className="ml-2 hover:opacity-70"
           aria-label="Close notification"
         >
-          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>

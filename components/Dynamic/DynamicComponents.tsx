@@ -1,37 +1,38 @@
 /**
  * @fileoverview Dynamic component imports for bundle optimization and code splitting
- * 
+ *
  * This module provides dynamically imported components to reduce initial bundle size
  * and improve Time to Interactive. Components are loaded on-demand with appropriate
  * loading fallbacks and SSR configuration based on their requirements.
- * 
- * @author Claude Code
+ *
+ * @author Pawel Bartczak
  * @version 1.0.0
  */
 
 'use client';
 
 import dynamic from 'next/dynamic';
-import { ComponentType } from 'react';
+import { ComponentType, type JSX } from 'react';
 
 /**
  * Loading fallback component for better UX during code splitting
- * 
+ *
  * Displays an accessible loading indicator with proper ARIA attributes
  * while dynamic components are being loaded.
- * 
+ *
  * @param className - Optional CSS class names for styling
  * @returns JSX element representing the loading state
  */
 const ComponentLoader = ({ className }: { className?: string }) => (
-  <div 
+  <div
     className={`animate-pulse bg-muted rounded-md ${className || 'h-32'}`}
     role="status"
     aria-live="polite"
-    aria-label="Loading component"
+    aria-busy="true"
+    aria-label="Loading content"
   >
     <div className="flex items-center justify-center h-full">
-      <div className="text-muted-foreground text-sm">Loading...</div>
+      <div className="text-muted-foreground text-sm">Loading…</div>
     </div>
   </div>
 );
@@ -121,10 +122,10 @@ export const DynamicGoogleAnalytics = dynamic(
 
 /**
  * Higher-order component factory for creating consistent dynamic imports
- * 
+ *
  * Provides a standardized way to create dynamically imported components
  * with consistent loading behavior and SSR configuration.
- * 
+ *
  * @template T - The component type being dynamically imported
  * @param importFn - Function that returns a promise resolving to the component
  * @param options - Configuration options for the dynamic import
@@ -132,7 +133,7 @@ export const DynamicGoogleAnalytics = dynamic(
  * @param options.ssr - Whether to enable server-side rendering (default: true)
  * @param options.className - CSS class name for default loading component
  * @returns Dynamically imported component with configured loading behavior
- * 
+ *
  * @example
  * ```typescript
  * const DynamicMyComponent = createDynamicComponent(
@@ -144,13 +145,13 @@ export const DynamicGoogleAnalytics = dynamic(
 export function createDynamicComponent<T extends ComponentType<any>>(
   importFn: () => Promise<{ default: T }>,
   options: {
-    loading?: () => React.JSX.Element;
+    loading?: () => JSX.Element;
     ssr?: boolean;
     className?: string;
   } = {}
 ) {
   const { loading, ssr = true, className } = options;
-  
+
   return dynamic(importFn, {
     loading: loading || (() => <ComponentLoader className={className} />),
     ssr,

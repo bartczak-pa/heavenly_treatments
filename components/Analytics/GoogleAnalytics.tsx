@@ -50,19 +50,17 @@ const GoogleAnalytics: React.FC<GoogleAnalyticsProps> = ({
   const consentGiven = hasConsent(); 
 
   useEffect(() => {
-    if (!consentGiven || !measurementId) { 
+    if (!consentGiven || (!measurementId && !googleAdsId)) {
       return;
     }
     
     if (typeof window.gtag === 'function') {
-      window.gtag('config', measurementId, {
-        page_path: pathname,
-      });
+      if (measurementId) {
+        window.gtag('config', measurementId, { page_path: pathname });
+      }
       
       if (googleAdsId) {
-        window.gtag('config', googleAdsId, {
-          page_path: pathname,
-        });
+        window.gtag('config', googleAdsId, { page_path: pathname });
       }
     }
   }, [pathname, consentGiven, measurementId, googleAdsId]); 
@@ -103,9 +101,7 @@ const GoogleAnalytics: React.FC<GoogleAnalyticsProps> = ({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            ${validMeasurementId ? `gtag('config', '${validMeasurementId}', {
-              page_path: window.location.pathname,
-            });` : ''}
+            ${validMeasurementId ? `gtag('config', '${validMeasurementId}', { send_page_view: false });` : ''}
             ${validGoogleAdsId ? `gtag('config', '${validGoogleAdsId}');` : ''}
           `,
         }}
