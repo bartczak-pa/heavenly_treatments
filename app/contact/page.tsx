@@ -45,15 +45,14 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 interface ContactPageProps {
-    params: Promise<Record<string, never>>; 
-    searchParams?: Promise<{ [key: string]: string | string[] | undefined }>; 
+    params: Promise<Record<string, never>>;
+    searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export default async function ContactPage({ params, searchParams }: ContactPageProps) {
 
-    // Await props even if params is unused
-     
-    const _params = await params; 
+    // Params currently unused but required by Next.js
+    await params;
     const awaitedSearchParams = await searchParams;
     
     const initialTreatment = typeof awaitedSearchParams?.treatment === 'string' 

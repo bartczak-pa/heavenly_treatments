@@ -21,11 +21,11 @@ const CTASection = ({ title, description, buttonText, buttonLink }: CTAProps) =>
                 <p className="font-sans text-lg text-background/90 mb-8 max-w-2xl mx-auto">
                     {description}
                 </p>
-                <Link href={buttonLink}>
-                    <Button size="lg" variant="secondary">
+                <Button size="lg" variant="secondary" asChild>
+                    <Link href={buttonLink}>
                         {buttonText}
-                    </Button>
-                </Link>
+                    </Link>
+                </Button>
             </div>
         </section>
     )

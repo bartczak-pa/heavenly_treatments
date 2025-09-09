@@ -98,7 +98,7 @@ const TreatmentCard = memo<TreatmentCardProps>(({ treatment }) => {
             {treatment.duration}
           </span>
           <span className="flex items-center gap-0.5 font-medium text-primary/90">
-            <PoundSterling className="h-4 w-4" />
+            <PoundSterling className="h-4 w-4" aria-hidden="true" />
             {treatment.price.replace('£', '')}
           </span>
         </div>

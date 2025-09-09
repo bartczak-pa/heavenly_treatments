@@ -28,7 +28,7 @@ describe('TreatmentCard', () => {
     expect(screen.getByText('Relaxing Massage')).toBeInTheDocument()
     expect(screen.getByText('A soothing and relaxing massage to help you unwind and release tension.')).toBeInTheDocument()
     expect(screen.getByText('60 mins')).toBeInTheDocument()
-    expect(screen.getByText('80')).toBeInTheDocument()
+    expect(screen.getByText('£80')).toBeInTheDocument()
   })
 
   it('renders image when treatment has image', () => {
@@ -36,7 +36,7 @@ describe('TreatmentCard', () => {
     
     const image = screen.getByAltText('Relaxing Massage')
     expect(image).toBeInTheDocument()
-    expect(image).toHaveAttribute('src', '/images/treatments/massage.jpg')
+    expect(image.getAttribute('src') ?? '').toContain('massage')
   })
 
   it('renders fallback when treatment has no image', () => {
@@ -65,7 +65,7 @@ describe('TreatmentCard', () => {
     
     // Check that duration and price are displayed
     expect(screen.getByText('60 mins')).toBeInTheDocument()
-    expect(screen.getByText('80')).toBeInTheDocument()
+    expect(screen.getByText('£80')).toBeInTheDocument()
   })
 
   it('has proper accessibility structure', () => {

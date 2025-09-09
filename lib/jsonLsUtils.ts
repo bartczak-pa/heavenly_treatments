@@ -53,15 +53,15 @@ export function generateServiceJsonLd(treatment: Treatment, contactInfo: Contact
             address: contactInfo.address,
             telephone: contactInfo.phone,
             email: contactInfo.email,
-            openingHours: contactInfo.openingHours,
+            openingHoursSpecification: contactInfo.openingHours,
             hasMap: contactInfo.mapSrc,
         },
+        timeRequired: treatment.duration,
         offers: {
             '@type': 'Offer',
             price: treatment.price.replace('£', ''),
             priceCurrency: 'GBP',
             url: `${BASE_URL}${contactHref}`,
-            serviceDuration: treatment.duration,
             category: treatment.category,
         },
     };

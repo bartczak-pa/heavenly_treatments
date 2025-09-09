@@ -71,6 +71,7 @@ export default function CategoryFilters({ selectedCategory }: CategoryFiltersPro
           variant={selectedCategory === 'all' ? 'default' : 'ghost'}
           onClick={() => handleFilterChange('all')}
           size="sm"
+          aria-pressed={selectedCategory === 'all'}
         >
           All Treatments
         </Button>
@@ -80,6 +81,7 @@ export default function CategoryFilters({ selectedCategory }: CategoryFiltersPro
             variant={selectedCategory === category.slug ? 'default' : 'ghost'}
             onClick={() => handleFilterChange(category.slug)}
             size="sm"
+            aria-pressed={selectedCategory === category.slug}
           >
             {category.name}
           </Button>

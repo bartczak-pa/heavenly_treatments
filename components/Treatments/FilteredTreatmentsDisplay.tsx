@@ -93,6 +93,7 @@ export default function FilteredTreatmentsDisplay({
             variant="outline"
             size="lg"
             onClick={handleShowMore}
+            aria-label="Show more treatments"
           >
             Show More Treatments
           </Button>

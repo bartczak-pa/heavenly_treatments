@@ -506,6 +506,15 @@ export interface Treatment {
   export const getCategories = (): TreatmentCategory[] => {
     return treatmentCategories;
   };
+
+  /**
+   * Constructs the URL path for a treatment detail page.
+   * @param treatment - Treatment with category and slug properties.
+   * @returns The treatment detail page path.
+   */
+  export const getTreatmentPath = (treatment: Pick<Treatment, 'category' | 'slug'>): string => {
+    return `/treatments/${treatment.category}/${treatment.slug}`;
+  };
   
   /**
    * Gets treatments belonging to a specific category.
