@@ -117,8 +117,7 @@ const OptimizedImage = memo<OptimizedImageProps>(({
       // Use custom loader for responsive variants
       {...(customLoader && { loader: customLoader })}
       // Enhanced error handling
-       
-      onError={(e) => {
+      onError={(_e) => {
         // Call external error reporting if provided
         if (onOptimizedError) {
           const error = new Error(`Failed to load image: ${imageSrc}`);
