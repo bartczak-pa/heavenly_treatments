@@ -10,8 +10,8 @@ const CONFIG = {
   sizes: [320, 640, 1024, 1280, 1536, 1920], // Responsive breakpoints (configurable)
   outputDir: 'public/images/optimized',
   targetMaxSize: 500 * 1024, // 500KB target
-  blurSize: 16, // Size for blur placeholder generation
-  blurMaxBytes: 800, // Cap base64 length to avoid HTML bloat
+  blurSize: 8, // Size for blur placeholder generation (reduced for performance)
+  blurMaxBytes: 400, // Cap base64 length to avoid HTML bloat (reduced for performance)
   blurDataDir: 'lib/data'
 };
 
@@ -57,7 +57,7 @@ async function getImageInfo(filePath) {
 async function generateBlurPlaceholder(inputPath) {
   try {
     const image = sharp(inputPath);
-    let quality = 20;
+    let quality = 10; // Reduced quality for smaller blur placeholders
     let size = CONFIG.blurSize;
     
     // Generate initial placeholder
