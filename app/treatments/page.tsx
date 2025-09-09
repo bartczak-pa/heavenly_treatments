@@ -2,8 +2,10 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { getTreatments, getCategories, TreatmentCategorySlug, TreatmentCategory } from '@/lib/data/treatments';
 import { MainLayout } from '@/components/Layout/MainLayout';
-import CategoryFilters from '@/components/Treatments/CategoryFilters';
-import FilteredTreatmentsDisplay from '@/components/Treatments/FilteredTreatmentsDisplay';
+import { 
+  DynamicCategoryFilters,
+  DynamicFilteredTreatmentsDisplay 
+} from '@/components/Dynamic/DynamicComponents';
 import { contactInfo } from '@/lib/data/contactInfo';
 import Script from 'next/script';
 import { 
@@ -124,7 +126,7 @@ export default async function TreatmentsPage(props: Props) {
   // -----------------------------
   
   
-  // eslint-disable-next-line no-unused-vars
+   
   const _params = awaitedParams; // Assign awaited params to unused variable
 
   const currentSelection: TreatmentCategorySlug | 'all' = 
@@ -159,7 +161,7 @@ export default async function TreatmentsPage(props: Props) {
           </h1>
 
           <div className="flex justify-center mb-2 lg:mb-12">
-            <CategoryFilters 
+            <DynamicCategoryFilters 
               selectedCategory={currentSelection}
             />
           </div>
@@ -172,7 +174,7 @@ export default async function TreatmentsPage(props: Props) {
             </div>
           )}
 
-          <FilteredTreatmentsDisplay 
+          <DynamicFilteredTreatmentsDisplay 
             filteredTreatments={filteredTreatments}
             currentSelection={currentSelection}
           />

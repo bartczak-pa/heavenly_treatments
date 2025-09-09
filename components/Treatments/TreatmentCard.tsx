@@ -1,3 +1,14 @@
+/**
+ * @fileoverview Treatment card component for displaying individual treatments
+ * 
+ * Optimized card component with hover effects, responsive design, and multiple
+ * navigation paths (details and booking). Includes performance optimizations
+ * with React.memo and optimized images.
+ * 
+ * @author Claude Code
+ * @version 1.0.0
+ */
+
 'use client';
 
 import React, { memo } from 'react';
@@ -9,34 +20,36 @@ import { Treatment } from '@/lib/data/treatments';
 import { Clock, PoundSterling } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+/**
+ * Props interface for the TreatmentCard component
+ */
 interface TreatmentCardProps {
+  /** Treatment data object containing all display information */
   treatment: Treatment;
 };
 
 /**
- * TreatmentCard Component
+ * Treatment card component with optimized performance and UX
  * 
- * A card component that displays treatment information including:
- * - Treatment image
- * - Title
- * - Description
- * - Duration
- * - Price
+ * Displays treatment information in a responsive card layout with:
+ * - Optimized images with lazy loading and responsive sizes
+ * - Hover effects and smooth transitions
+ * - Multiple navigation paths (details view and booking)
+ * - Accessible design with semantic HTML structure
+ * - Performance optimization with React.memo
  * 
- * Features:
- * - Responsive image handling with fallback
- * - Hover effects for better user interaction
- * - Links to both treatment details and contact page
- * - Accessible design with proper semantic HTML
+ * The card layout includes:
+ * - Hero image with hover scale effect
+ * - Treatment title, description, duration, and price
+ * - Book Now button with direct contact link
  * 
- * @component
+ * @param props - Component props
+ * @returns JSX element representing a treatment card
+ * 
  * @example
- * ```tsx
+ * ```typescript
  * <TreatmentCard treatment={treatmentData} />
  * ```
- * 
- * @param {Treatment} treatment - The treatment data to display
- * @returns {JSX.Element} A treatment card component
  */
 const TreatmentCard = memo<TreatmentCardProps>(({ treatment }) => {
   const contactHref: string = `/contact?treatment=${encodeURIComponent(treatment.title)}`;

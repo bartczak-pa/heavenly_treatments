@@ -1,10 +1,24 @@
+import withBundleAnalyzer from '@next/bundle-analyzer';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  experimental: {
+    optimizePackageImports: [
+      'lucide-react',
+      '@radix-ui/react-icons',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-navigation-menu',
+      '@radix-ui/react-select',
+      '@radix-ui/react-toast',
+      'class-variance-authority',
+      'clsx'
+    ]
+  },
   images: {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [320, 640, 1024, 1280, 1536, 1920],
-    imageSizes: [320, 640, 1024, 1280, 1536, 1920],
+    imageSizes: [320, 640, 1024],
   },
   async rewrites() {
     return [
@@ -61,5 +75,11 @@ const nextConfig = {
   ],
 };
 
+// Configure bundle analyzer
+const bundleAnalyzer = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+  openAnalyzer: false,
+});
+
 // Use ES Module export syntax
-export default nextConfig; 
+export default bundleAnalyzer(nextConfig); 
