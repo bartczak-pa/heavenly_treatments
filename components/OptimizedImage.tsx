@@ -1,7 +1,7 @@
 'use client';
 
 import Image, { ImageProps, ImageLoader } from 'next/image';
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { getImageMetadata } from '@/lib/data/image-metadata';
 
 interface OptimizedImageProps extends Omit<ImageProps, 'src' | 'blurDataURL' | 'placeholder' | 'onError'> {
@@ -11,22 +11,12 @@ interface OptimizedImageProps extends Omit<ImageProps, 'src' | 'blurDataURL' | '
    */
   src: string;
   /** 
-   * Whether this image should load with priority (above the fold) 
-   * Overrides metadata priority setting
-   */
-  priority?: boolean;
-  /** 
-   * Loading strategy - 'lazy' for below fold, 'eager' for above fold 
-   */
-  loading?: 'lazy' | 'eager';
-  /** 
    * Fallback image path if optimized version not available 
    */
   fallback?: string;
   /** 
    * Optional callback for error reporting (Sentry, analytics, etc.)
    */
-   
   onOptimizedError?: (error: Error) => void;
 }
 
@@ -62,57 +52,54 @@ interface OptimizedImageProps extends Omit<ImageProps, 'src' | 'blurDataURL' | '
  */
 const OptimizedImage = memo<OptimizedImageProps>(({
   src,
-  alt,
-  priority,
-  loading,
   fallback,
-  sizes,
-  className,
   onOptimizedError,
   ...props
 }) => {
-  // Check if src is a filename (not a path or URL)
-  const isFilename = !/^(?:\/|https?:|data:|\/\/)/.test(src);
+  // Check if src is a filename (not a path or URL) - case insensitive
+  const isFilename = !/^(?:\/|https?:|data:|\/\/)/i.test(src);
   
   // Get metadata for optimized images (robust normalizer handles paths/urls)
   const metadata = getImageMetadata(src);
   
-  // Dev warning for missing metadata/fallback
-  if (process.env.NODE_ENV !== 'production' && isFilename && !metadata && !fallback) {
-    console.warn(`[OptimizedImage] No metadata for "${src}". Add it to image-metadata.ts or provide a 'fallback'.`);
+  // Fail-closed behavior for missing metadata/fallback
+  if (isFilename && !metadata && !fallback) {
+    throw new Error(`OptimizedImage: no metadata for '${src}'; add entry to image-metadata.ts or provide a 'fallback'`);
   }
   
   // Determine the actual image source
   const imageSrc = metadata?.src || fallback || src;
   
   // Determine loading priority
-  const shouldPriority = priority ?? metadata?.priority ?? false;
+  const shouldPriority = props.priority ?? metadata?.priority ?? false;
+  
+  // Memoize sorted sizes to prevent re-sorting on every render
+  const sortedSizes = useMemo(() => {
+    return metadata?.sizes ? [...metadata.sizes].sort((a, b) => a - b) : null;
+  }, [metadata?.sizes]);
   
   // Generate responsive sizes if not provided
-  const responsiveSizes = sizes || (metadata?.sizes?.length 
+  const responsiveSizes = props.sizes || (sortedSizes?.length 
     ? `(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw`
     : undefined
   );
   
   // Custom loader for responsive variants
-  const customLoader: ImageLoader | undefined = metadata?.sizes?.length ? ({ width }) => {
-    const sortedSizes = [...metadata.sizes].sort((a, b) => a - b);
+  const customLoader: ImageLoader | undefined = sortedSizes ? ({ width }) => {
     const candidate = sortedSizes.find(s => s >= width) ?? sortedSizes[sortedSizes.length - 1];
-    return metadata.src.replace(/\.webp$/, `_${candidate}w.webp`);
+    return metadata!.src.replace(/\.webp$/, `_${candidate}w.webp`);
   } : undefined;
 
   return (
     <Image
       src={imageSrc}
-      alt={alt}
-      width={(props as any).fill ? undefined : (('width' in props ? (props as any).width : undefined) ?? metadata?.width)}
-      height={(props as any).fill ? undefined : (('height' in props ? (props as any).height : undefined) ?? metadata?.height)}
+      width={props.fill ? undefined : (props.width ?? metadata?.width)}
+      height={props.fill ? undefined : (props.height ?? metadata?.height)}
       priority={shouldPriority}
-      loading={shouldPriority ? 'eager' : (loading ?? 'lazy')}
+      loading={shouldPriority ? 'eager' : (props.loading ?? 'lazy')}
       placeholder={metadata?.blurDataURL ? 'blur' : 'empty'}
       blurDataURL={metadata?.blurDataURL}
       sizes={responsiveSizes}
-      className={className}
       {...props}
       // Use custom loader for responsive variants
       {...(customLoader && { loader: customLoader })}
