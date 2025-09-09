@@ -2,19 +2,21 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import Image from 'next/image';
+import OptimizedImage from '@/components/OptimizedImage';
 import Link from 'next/link';
 
 const MainHeader = () => {
     return (
         <section className="relative h-[60vh] md:h-[70vh] w-full flex items-center justify-center text-center text-white overflow-hidden">
             <div className="absolute inset-0 z-0"> 
-                <Image
-                    src="/images/optimized/young-woman-having-face-massage-relaxing-spa-salon.webp" 
+                <OptimizedImage
+                    src="young-woman-having-face-massage-relaxing-spa-salon" 
                     alt="Young woman having face massage relaxing in a spa salon"
                     fill
+                    sizes="100vw"
                     style={{ objectFit: 'cover' }}
                     priority
+                    fallback="/images/mainPage/young-woman-having-face-massage-relaxing-spa-salon.jpg"
                 />
                 <div className="absolute inset-0 bg-black/50 z-1"></div> 
             </div>

@@ -2,7 +2,7 @@
 
 import React, { memo } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import OptimizedImage from '@/components/OptimizedImage';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Treatment } from '@/lib/data/treatments';
@@ -49,13 +49,14 @@ const TreatmentCard = memo<TreatmentCardProps>(({ treatment }) => {
     )}>
       <Link href={detailHref} className="block relative w-full h-52 overflow-hidden">
         {treatment.image ? (
-          <Image
+          <OptimizedImage
             src={treatment.image}
             alt={treatment.title}
             fill
             style={{ objectFit: 'cover' }}
             className="transition-transform duration-300 group-hover:scale-105"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            loading="lazy"
           />
         ) : (
           <div className="w-full h-full bg-secondary/20 flex items-center justify-center">

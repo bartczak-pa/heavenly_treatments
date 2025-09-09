@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import OptimizedImage from '@/components/OptimizedImage';
 import React from 'react';
 
 const MyStudio = () => {
@@ -20,13 +20,15 @@ const MyStudio = () => {
               </div>
               <div className="w-full md:w-1/2">
                 <div className="relative w-full h-[500px] rounded-lg overflow-hidden shadow-lg mx-auto md:mx-0">
-                  <Image
-                    src="/images/about/heavenly-treatments-room.jpg"
+                  <OptimizedImage
+                    src="heavenly-treatments-room"
+                    fallback="/images/about/heavenly-treatments-room.jpg"
                     alt="Spa Studio"
                     fill
                     style={{ objectFit: 'cover' }}
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     className="rounded-lg"
+                    loading="lazy"
                   />
                 </div>
               </div>
