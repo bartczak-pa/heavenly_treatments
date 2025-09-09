@@ -7,32 +7,44 @@ import { hasConsent } from '@/lib/cookieUtils';
 
 
 declare global {
-  // eslint-disable-next-line no-unused-vars
+   
   interface Window {
-    // eslint-disable-next-line no-unused-vars
+     
     gtag?: (..._args: any[]) => void; 
   }
 }
 
-const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
+interface GoogleAnalyticsProps {
+  measurementId?: string;
+  googleAdsId?: string;
+}
 
-const GoogleAnalytics: React.FC = () => {
+const GoogleAnalytics: React.FC<GoogleAnalyticsProps> = ({ 
+  measurementId, 
+  googleAdsId 
+}) => {
   const pathname = usePathname();
   const consentGiven = hasConsent(); 
 
   useEffect(() => {
-    if (!consentGiven || !GA_MEASUREMENT_ID) { 
+    if (!consentGiven || !measurementId) { 
       return;
     }
     
     if (typeof window.gtag === 'function') {
-      window.gtag('config', GA_MEASUREMENT_ID, {
+      window.gtag('config', measurementId, {
         page_path: pathname,
       });
+      
+      if (googleAdsId) {
+        window.gtag('config', googleAdsId, {
+          page_path: pathname,
+        });
+      }
     }
-  }, [pathname, consentGiven]); 
+  }, [pathname, consentGiven, measurementId, googleAdsId]); 
 
-  if (!consentGiven || !GA_MEASUREMENT_ID) {
+  if (!consentGiven || !measurementId) {
     if (process.env.NODE_ENV !== 'production') {
       console.log('Google Analytics script not loaded due to lack of consent or missing ID.');
     }
@@ -45,24 +57,49 @@ const GoogleAnalytics: React.FC = () => {
 
   return (
     <>
-      <Script 
-        strategy="afterInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-      />
-      <Script 
-        id="google-analytics"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}', {
-              page_path: window.location.pathname,
-            });
-          `,
-        }}
-      />
+      {measurementId && (
+        <>
+          <Script 
+            strategy="afterInteractive"
+            src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
+          />
+          <Script 
+            id="google-analytics"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${measurementId}', {
+                  page_path: window.location.pathname,
+                });
+              `,
+            }}
+          />
+        </>
+      )}
+      
+      {googleAdsId && (
+        <>
+          <Script 
+            strategy="afterInteractive"
+            src={`https://www.googletagmanager.com/gtag/js?id=${googleAdsId}`}
+          />
+          <Script 
+            id="google-ads-config" 
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${googleAdsId}');
+              `,
+            }}
+          />
+        </>
+      )}
     </>
   );
 };

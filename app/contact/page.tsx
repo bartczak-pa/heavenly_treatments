@@ -4,8 +4,10 @@ import Script from 'next/script';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import HeroSection from '@/components/Shared/HeroSection';
 import ContactInfo from '@/components/Contact/ContactInfo';
-import MapEmbed from '@/components/Contact/MapEmbed';
-import ContactForm from '@/components/Contact/ContactForm';
+import { 
+  DynamicContactForm,
+  DynamicMapEmbed
+} from '@/components/Dynamic/DynamicComponents';
 import { contactInfo } from '@/lib/data/contactInfo';
 import { generateHealthAndBeautyBusinessJsonLd, ContactInfo as ContactInfoType } from '@/lib/jsonLsUtils';
 
@@ -50,7 +52,7 @@ interface ContactPageProps {
 export default async function ContactPage({ params, searchParams }: ContactPageProps) {
 
     // Await props even if params is unused
-    // eslint-disable-next-line no-unused-vars
+     
     const _params = await params; 
     const awaitedSearchParams = await searchParams;
     
@@ -82,7 +84,7 @@ export default async function ContactPage({ params, searchParams }: ContactPageP
                             <h2 className="font-serif text-3xl font-semibold mb-6 text-primary">
                                 Booking Inquiry & Contact Form
                             </h2>
-                            <ContactForm initialTreatment={initialTreatment} />
+                            <DynamicContactForm initialTreatment={initialTreatment} />
                         </div>
 
                         <div className="lg:order-2 space-y-8">
@@ -90,7 +92,7 @@ export default async function ContactPage({ params, searchParams }: ContactPageP
                                 <h2 className="font-serif text-3xl font-semibold mb-6 text-primary">
                                     How to find me
                                 </h2>
-                                <MapEmbed />
+                                <DynamicMapEmbed />
                             </div>
                             <ContactInfo />
                         </div>

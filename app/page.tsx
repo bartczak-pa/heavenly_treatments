@@ -1,10 +1,13 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { MainLayout } from '@/components/Layout/MainLayout';
-import Testimonials from '@/components/Sections/Testimonials';
+import { 
+  DynamicTestimonials,
+  DynamicExperienceSection,
+  DynamicServicesSection
+} from '@/components/Dynamic/DynamicComponents';
 
 import MainHeader from '@/components/Sections/MainHeader';
-import ServicesSection from '@/components/Sections/Services';
 import Script from 'next/script';
 import { contactInfo } from '@/lib/data/contactInfo';
 import { 
@@ -13,7 +16,6 @@ import {
   ContactInfo as ContactInfoType 
 } from '@/lib/jsonLsUtils';
 import { config } from '@/lib/config';
-import ExperienceSection from '@/components/Sections/Experience';
 import LocationAndBookingSection from '@/components/Sections/LocationAndBooking';
 import IntroductionSection from '@/components/Sections/Introduction';
 
@@ -62,14 +64,14 @@ const HomePage: React.FC = () => {
       <MainHeader />
 
       <IntroductionSection />
-      <ServicesSection showAllButton={false} /> 
+      <DynamicServicesSection showAllButton={false} /> 
 
      
-      <ExperienceSection />
+      <DynamicExperienceSection />
       
       <LocationAndBookingSection />
 
-      <Testimonials />
+      <DynamicTestimonials />
     </MainLayout>
   );
 };
