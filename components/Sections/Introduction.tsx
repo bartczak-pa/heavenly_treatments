@@ -18,17 +18,18 @@ const CONTENT = {
 };
 
 export default function IntroductionSection({ id = "introduction", className }: IntroductionSectionProps) {
+  const headingId = `${id}-heading`;
   
   return (
     <section
       id={id}
-      aria-labelledby="introduction-heading"
+      aria-labelledby={headingId}
       className={["py-16 md:py-24 bg-background", className].filter(Boolean).join(" ")}
     >
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center space-y-4">
           <header>
-            <h2 id="introduction-heading" className="font-serif text-3xl md:text-4xl font-semibold text-primary">
+            <h2 id={headingId} className="font-serif text-3xl md:text-4xl font-semibold text-primary">
               {CONTENT.heading}
             </h2>
           </header>
