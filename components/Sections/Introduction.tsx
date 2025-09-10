@@ -1,6 +1,7 @@
-import React from 'react';
-
-type IntroductionSectionProps = Record<never, never>;
+type IntroductionSectionProps = {
+  id?: string;
+  className?: string;
+};
 
 const PARAGRAPH_CLASS = "font-sans text-lg text-muted-foreground leading-relaxed";
 
@@ -16,10 +17,14 @@ const CONTENT = {
   paragraphs: readonly { id: string; text: string }[];
 };
 
-export default function IntroductionSection(_: IntroductionSectionProps) {
+export default function IntroductionSection({ id = "introduction", className }: IntroductionSectionProps) {
   
   return (
-    <section id="introduction" aria-labelledby="introduction-heading" className="py-16 md:py-24 bg-background">
+    <section
+      id={id}
+      aria-labelledby="introduction-heading"
+      className={["py-16 md:py-24 bg-background", className].filter(Boolean).join(" ")}
+    >
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center space-y-4">
           <header>
