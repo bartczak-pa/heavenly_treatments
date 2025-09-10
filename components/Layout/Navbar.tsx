@@ -159,7 +159,6 @@ const MobileNavigationMenu = memo<MobileNavigationMenuProps>(({
             variant="ghost"
             size="sm"
             className="w-9 p-0 ml-2"
-            aria-expanded={isTreatmentsOpen}
             aria-label="Toggle treatment categories"
           >
             {isTreatmentsOpen ? (
