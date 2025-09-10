@@ -1,12 +1,22 @@
 import OptimizedImage from '@/components/OptimizedImage';
 import React from 'react';
 
+const THERAPIST_CONTENT = {
+  title: "Meet your therapist",
+  paragraphs: [
+    "I began my journey into spa therapy training at the prestigious Mary Reid Spa Academy in Edinburgh in 2007. I gained further experience working in 5 star spas such as the Sheraton Hotel One Spa and Schloss as well as busy salons.",
+    "I am now using all this experience to bring you the best possible treatments using brands and products I am passionate about."
+  ]
+};
+
 const MeetTherapist = () => {
     return (
-        <section className="py-16 bg-white">
+        <section className="py-16 bg-white" aria-labelledby="therapist-heading">
           <div className="container mx-auto px-4 max-w-4xl">
-            <h2 className="text-3xl font-bold mb-8">Meet your therapist</h2>
-            <div className="flex flex-col md:flex-row gap-8 items-center">
+            <h2 id="therapist-heading" className="text-3xl font-bold mb-8">
+              {THERAPIST_CONTENT.title}
+            </h2>
+            <article className="flex flex-col md:flex-row gap-8 items-center">
               <div className="md:w-1/3">
                 <OptimizedImage
                   src="owner-of-heavenly-treatments"
@@ -18,15 +28,14 @@ const MeetTherapist = () => {
                   loading="lazy"
                 />
               </div>
-              <div className="md:w-2/3">
-                <p className="text-gray-700 mb-4">
-                I began my journey into spa therapy training at the prestigious Mary Reid Spa Academy in Edinburgh in 2007.  I gained further experience working in 5 star spas such as the Sheraton Hotel One Spa and Schloss as well as busy salons.
-                </p>
-                <p className="text-gray-700">
-                I am now using all this experience to bring you the best possible treatments using brands and products I am passionate about.
-                </p>
+              <div className="md:w-2/3 space-y-4">
+                {THERAPIST_CONTENT.paragraphs.map((paragraph, index) => (
+                  <p key={index} className={`text-gray-700 leading-relaxed ${index === 0 ? 'mb-4' : ''}`}>
+                    {paragraph}
+                  </p>
+                ))}
               </div>
-            </div>
+            </article>
           </div>
         </section>
     )
