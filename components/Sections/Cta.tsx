@@ -5,15 +5,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 /**
- * Call-to-action section component with customizable styling and accessibility features
- * 
- * @param title - The main heading text for the CTA
- * @param description - Supporting description text
- * @param buttonText - Text displayed on the action button
- * @param buttonLink - URL or path for the button link
- * @param variant - Background style variant
- * @param buttonVariant - Button style variant
- * @param className - Additional CSS classes
+ * Call-to-action section component with customizable styling and accessibility features.
  */
 interface CTAProps {
     /** Main heading text for the CTA */
@@ -33,9 +25,15 @@ interface CTAProps {
 }
 
 const VARIANT_STYLES = {
-    primary: 'bg-primary text-white',
+    primary: 'bg-primary text-primary-foreground',
     secondary: 'bg-secondary text-secondary-foreground',
     muted: 'bg-muted text-muted-foreground'
+} as const;
+
+const VARIANT_DESCRIPTION_COLORS = {
+    primary: 'text-primary-foreground/90',
+    secondary: 'text-secondary-foreground/80',
+    muted: 'text-muted-foreground/80'
 } as const;
 
 const CTASection = ({ 
@@ -47,8 +45,11 @@ const CTASection = ({
     buttonVariant = 'secondary',
     className
 }: CTAProps) => {
+    const uid = React.useId();
+    const headingId = `${uid}-heading`;
+    const descId = `${uid}-desc`;
     const variantStyles = VARIANT_STYLES[variant];
-    const descriptionColor = variant === 'primary' ? 'text-background/90' : 'text-muted-foreground/80';
+    const descriptionColor = VARIANT_DESCRIPTION_COLORS[variant];
 
     return (
         <section 
@@ -57,27 +58,29 @@ const CTASection = ({
                 variantStyles,
                 className
             )}
-            role="banner"
-            aria-labelledby="cta-heading"
+            aria-labelledby={headingId}
         >
             <div className="container mx-auto px-4 text-center">
                 <h2 
-                    id="cta-heading"
+                    id={headingId}
                     className="font-serif text-3xl md:text-4xl font-semibold mb-4"
                 >
                     {title}
                 </h2>
-                <p className={cn(
-                    'font-sans text-lg mb-8 max-w-2xl mx-auto',
-                    descriptionColor
-                )}>
+                <p 
+                    id={descId}
+                    className={cn(
+                        'font-sans text-lg mb-8 max-w-2xl mx-auto',
+                        descriptionColor
+                    )}
+                >
                     {description}
                 </p>
                 <Button 
                     size="lg" 
                     variant={buttonVariant}
                     asChild
-                    aria-label={`${buttonText} - ${description}`}
+                    aria-describedby={descId}
                 >
                     <Link href={buttonLink}>
                         {buttonText}
