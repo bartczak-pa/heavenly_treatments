@@ -17,7 +17,6 @@
 
 import dynamic from 'next/dynamic';
 import type { ComponentType, JSX } from 'react';
-import { Suspense } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { cn } from '@/lib/utils';
 
@@ -96,9 +95,9 @@ const DynamicErrorFallback = ({ retry }: { retry?: () => void }) => (
         type="button"
         className="mt-2 text-xs underline text-destructive hover:text-destructive/80"
         onClick={retry}
-        aria-label="Reload the page"
+        aria-label="Reload"
       >
-        Reload page
+        Reload
       </button>
     )}
   </div>
@@ -109,22 +108,14 @@ const DynamicErrorFallback = ({ retry }: { retry?: () => void }) => (
  */
 function withDynamicBoundary<P extends Record<string, any>>(
   DynamicComponent: ComponentType<P>,
-  fallback?: LoadingConfig | null
+  _fallback?: LoadingConfig | null
 ) {
   function BoundedDynamicComponent(props: P) {
     return (
       <ErrorBoundary
         fallback={<DynamicErrorFallback retry={() => window.location.reload()} />}
       >
-        <Suspense
-          fallback={
-            fallback === null
-              ? null
-              : <ComponentLoader {...(fallback ?? {})} />
-          }
-        >
-          <DynamicComponent {...props} />
-        </Suspense>
+        <DynamicComponent {...props} />
       </ErrorBoundary>
     );
   }
@@ -248,8 +239,6 @@ interface DynamicComponentOptions {
   ariaLabel?: string;
   /** Whether to show loading text */
   showText?: boolean;
-  /** Webpack chunk name for better debugging */
-  chunkName?: string;
   /** Whether to wrap with error boundary (default: true) */
   withErrorBoundary?: boolean;
 }

@@ -15,6 +15,7 @@ const HERO_CONFIG = {
   image: {
     src: 'young-woman-having-face-massage-relaxing-spa-salon',
     alt: 'Young woman having face massage relaxing in a spa salon',
+    decorative: true,
     fallback: '/images/mainPage/young-woman-having-face-massage-relaxing-spa-salon.jpg'
   },
   content: {
@@ -82,7 +83,7 @@ const MainHeader: React.FC<MainHeaderProps> = ({ id, className }) => {
             <div className={styles.imageContainer}> 
                 <OptimizedImage
                     src={HERO_CONFIG.image.src}
-                    alt=""
+                    alt={HERO_CONFIG.image.decorative ? "" : HERO_CONFIG.image.alt}
                     fill
                     sizes="100vw"
                     style={{ objectFit: 'cover' }}

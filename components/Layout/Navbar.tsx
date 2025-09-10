@@ -166,7 +166,6 @@ const MobileNavigationMenu = memo<MobileNavigationMenuProps>(({
             ) : (
               <ChevronRight className="h-4 w-4" aria-hidden="true" />
             )}
-            <span className="sr-only">Toggle Treatments</span>
           </Button>
         </CollapsibleTrigger>
       </div>
@@ -284,7 +283,6 @@ export default function Navbar() {
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" aria-label="Toggle main menu">
                 <Menu className="h-5 w-5" aria-hidden="true" />
-                <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[400px] z-50 bg-secondary ">
