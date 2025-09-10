@@ -1,7 +1,9 @@
 'use client';
 
+import { useId } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 type LocationAndBookingSectionProps = {
   id?: string;
@@ -12,9 +14,9 @@ const PARAGRAPH_CLASS = "font-sans text-lg text-muted-foreground leading-relaxed
 
 const CONTENT = {
   heading: "Book your Appointment Now",
-  location: "Heavenly Treatments is conveniently located about 5 minutes drive from the centre of Kelso with parking availability right outside the door.",
-  availability: "Appointments are available Monday to Sunday from 10am to 5pm, although some evenings are also available.",
-  process: "Use the simple online form below to get in touch and I will get back to you as soon as possible with my availability.",
+  location: "Heavenly Treatments is conveniently located about a 5-minute drive from the centre of Kelso, with parking available right outside the door.",
+  availability: "Appointments are available Monday to Sunday from 10am to 5pm; some evenings are also available.",
+  process: "Use the simple online form below to get in touch, and I will get back to you as soon as possible with my availability.",
   callToAction: "Your journey to relaxation starts here!",
   buttonText: "Contact Me & Book",
   buttonHref: "/contact"
@@ -29,16 +31,18 @@ const CONTENT = {
 };
 
 export default function LocationAndBookingSection({ 
-  id = "location-booking", 
+  id, 
   className 
 }: LocationAndBookingSectionProps) {
-  const headingId = `${id}-heading`;
+  const reactId = useId();
+  const sectionId = id ?? `location-booking-${reactId}`;
+  const headingId = `${sectionId}-heading-${reactId}`;
   
   return (
     <section 
-      id={id}
+      id={sectionId}
       aria-labelledby={headingId}
-      className={["py-16 md:py-24 bg-primary/5", className].filter(Boolean).join(" ")}
+      className={cn("py-16 md:py-24 bg-primary/5", className)}
     >
       <div className="container mx-auto px-4">
         <article className="max-w-3xl mx-auto space-y-8">
