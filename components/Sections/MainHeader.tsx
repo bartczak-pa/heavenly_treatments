@@ -31,7 +31,7 @@ const styles = {
   
   imageContainer: 'absolute inset-0 z-0',
   
-  overlay: 'absolute inset-0 bg-black/50 z-1',
+  overlay: 'absolute inset-0 bg-black/50 z-10',
   
   contentWrapper: `relative z-20 container mx-auto px-4 
                    flex flex-col items-center`,
@@ -44,10 +44,12 @@ const styles = {
   
   ctaButton: `bg-gradient-to-r from-primary to-primary/80 
               hover:from-primary/80 hover:to-primary 
-              text-primary-foreground shadow-lg`
+              text-primary-foreground shadow-lg
+              focus-visible:outline-none focus-visible:ring-2 
+              focus-visible:ring-offset-2 focus-visible:ring-primary`
 } as const;
 
-interface MainHeaderProps {
+type MainHeaderProps = {
   // Future extensibility - props can be added here
 }
 
@@ -67,7 +69,6 @@ const MainHeader: React.FC<MainHeaderProps> = () => {
     return (
         <header 
           className={styles.hero}
-          role="banner"
           aria-label="Main hero section"
         >
             {/* Background image with overlay */}
