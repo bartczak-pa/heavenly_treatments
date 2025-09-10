@@ -21,7 +21,7 @@ const MeetTherapist = () => {
                 <OptimizedImage
                   src="owner-of-heavenly-treatments"
                   fallback="/images/about/owner-of-heavenly-treatments.jpg"
-                  alt="Spa Therapist"
+                  alt="Owner of Heavenly Treatments spa"
                   width={300}
                   height={400}
                   className="rounded-lg shadow-lg"
