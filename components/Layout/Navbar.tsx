@@ -56,7 +56,6 @@ interface ProcessedTreatmentCategory extends TreatmentCategory {
 interface MobileNavigationMenuProps {
   isTreatmentsOpen: boolean;
   setIsTreatmentsOpen: (open: boolean) => void;
-  processedCategories: ProcessedTreatmentCategory[];
 }
 
 interface TreatmentDropdownContentProps {
@@ -142,8 +141,7 @@ MobileNavigationLinks.displayName = 'MobileNavigationLinks';
 
 const MobileNavigationMenu = memo<MobileNavigationMenuProps>(({
   isTreatmentsOpen,
-  setIsTreatmentsOpen,
-  processedCategories
+  setIsTreatmentsOpen
 }) => (
   <div className="flex flex-col space-y-3 mt-4 pl-4 pr-4">
     <MobileNavigationLinks />
@@ -232,7 +230,7 @@ export default function Navbar() {
     treatmentCategories.map((category) => ({
       ...category,
       IconComponent: category.iconName ? categoryIconMap[category.iconName] : null,
-    })), []);
+    })), [treatmentCategories, categoryIconMap]);
 
   return (
     <header className="w-full border-b bg-secondary/15 backdrop-blur supports-[backdrop-filter]:bg-secondary/15 z-40">
@@ -295,7 +293,6 @@ export default function Navbar() {
               <MobileNavigationMenu
                 isTreatmentsOpen={isMobileTreatmentsOpen}
                 setIsTreatmentsOpen={setIsMobileTreatmentsOpen}
-                processedCategories={processedCategories}
               />
             </SheetContent>
           </Sheet>
