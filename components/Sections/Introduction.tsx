@@ -1,16 +1,19 @@
-interface IntroductionSectionProps {}
+import React from 'react';
+
+type IntroductionSectionProps = Record<never, never>;
+
+const PARAGRAPH_CLASS = "font-sans text-lg text-muted-foreground leading-relaxed";
 
 const CONTENT = {
   heading: "Welcome to Heavenly Treatments",
   paragraphs: [
-    "I'm Hayley, a qualified Spa Therapist with years of experience working in 5 star establishments.",
-    "I'm now bringing this experience to my treatment room at home for you to enjoy.",
-    "I have always had a passion for wellness and skin care and have carefully curated a treatment menu of all my favourite treatments."
+    { id: "experience", text: "I'm Hayley, a qualified Spa Therapist with years of experience working in 5-star establishments." },
+    { id: "treatment-room", text: "I'm now bringing this experience to my treatment room at home for you to enjoy." },
+    { id: "passion", text: "I have always had a passion for wellness and skincare and have carefully curated a treatment menu of all my favourite treatments." }
   ]
 } as const;
 
-export default function IntroductionSection({}: IntroductionSectionProps) {
-  const paragraphClass = "font-sans text-lg text-muted-foreground leading-relaxed";
+export default function IntroductionSection(_: IntroductionSectionProps) {
   
   return (
     <section id="introduction" className="py-16 md:py-24 bg-background">
@@ -22,9 +25,9 @@ export default function IntroductionSection({}: IntroductionSectionProps) {
             </h2>
           </header>
           <div className="space-y-4">
-            {CONTENT.paragraphs.map((paragraph, index) => (
-              <p key={index} className={paragraphClass}>
-                {paragraph}
+            {CONTENT.paragraphs.map((paragraph) => (
+              <p key={paragraph.id} className={PARAGRAPH_CLASS}>
+                {paragraph.text}
               </p>
             ))}
           </div>
