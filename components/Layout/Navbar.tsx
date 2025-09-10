@@ -237,17 +237,19 @@ export default function Navbar() {
       <div className="hidden lg:flex items-center justify-between h-16 w-full px-4 sm:px-6 lg:px-8">
         {/* Left Navigation - Fixed width container */}
         <div className="flex items-center w-80">
-          <NavigationMenu className="relative z-50">
-            <NavigationMenuList className="flex items-center space-x-2">
-              <DesktopNavigationLinks />
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="bg-transparent">Treatments</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <TreatmentDropdownContent processedCategories={processedCategories} />
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
+          <nav aria-label="Primary">
+            <NavigationMenu className="relative z-50">
+              <NavigationMenuList className="flex items-center space-x-2">
+                <DesktopNavigationLinks />
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className="bg-transparent">Treatments</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <TreatmentDropdownContent processedCategories={processedCategories} />
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+          </nav>
         </div>
 
         {/* Centered Logo - Flex grow with center alignment */}
