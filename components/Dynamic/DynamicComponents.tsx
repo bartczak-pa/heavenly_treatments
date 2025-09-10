@@ -51,20 +51,19 @@ const ComponentLoader = ({
   showText = true
 }: LoadingConfig) => {
   const priorityStyles = {
-    low: 'animate-pulse duration-1000',
-    normal: 'animate-pulse',
-    high: 'animate-pulse duration-500'
+    low: 'animate-[pulse_3s_ease-in-out_infinite]',
+    normal: 'animate-[pulse_2s_ease-in-out_infinite]',
+    high: 'animate-[pulse_1s_ease-in-out_infinite]'
   };
 
   return (
-    <div
+    <output
       className={cn(
         'bg-muted rounded-md',
         priorityStyles[priority],
         'motion-reduce:animate-none',
         className || 'h-32'
       )}
-      role="status"
       aria-live={priority === 'high' ? 'assertive' : 'polite'}
       aria-busy="true"
       aria-label={ariaLabel}
@@ -74,7 +73,7 @@ const ComponentLoader = ({
           <div className="text-muted-foreground text-sm">Loading…</div>
         </div>
       )}
-    </div>
+    </output>
   );
 };
 
@@ -82,7 +81,12 @@ const ComponentLoader = ({
  * Error fallback for failed dynamic imports
  */
 const DynamicErrorFallback = ({ retry }: { retry?: () => void }) => (
-  <div className="p-4 border border-destructive/20 rounded-md bg-destructive/5">
+  <div
+    className="p-4 border border-destructive/20 rounded-md bg-destructive/5"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+  >
     <h3 className="text-sm font-medium text-destructive">Failed to load component</h3>
     <p className="text-xs text-muted-foreground mt-1">Please try refreshing the page.</p>
     {retry && (
@@ -90,8 +94,9 @@ const DynamicErrorFallback = ({ retry }: { retry?: () => void }) => (
         type="button"
         className="mt-2 text-xs underline text-destructive hover:text-destructive/80"
         onClick={retry}
+        aria-label="Reload the page"
       >
-        Retry
+        Reload page
       </button>
     )}
   </div>
@@ -122,6 +127,7 @@ function withDynamicBoundary<P extends Record<string, any>>(
 }
 
 // Dynamic imports for heavy/non-critical components with webpack chunk names
+// Note: SSR flags are removed since this is a client component ('use client')
 
 // Contact Form - Heavy component with many dependencies (react-hook-form, zod, turnstile)
 const DynamicContactFormCore = dynamic(
@@ -134,7 +140,6 @@ const DynamicContactFormCore = dynamic(
         ariaLabel="Loading contact form"
       />
     ),
-    ssr: false, // Contact form doesn't need SSR for SEO
   }
 );
 
@@ -154,7 +159,6 @@ const DynamicMapEmbedCore = dynamic(
         ariaLabel="Loading map"
       />
     ),
-    ssr: false, // Maps don't need SSR
   }
 );
 
@@ -168,7 +172,6 @@ const DynamicCookieConsentWrapperCore = dynamic(
   () => import(/* webpackChunkName: "cookie-consent" */ '@/components/Layout/CookieConsentWrapper'),
   {
     loading: () => null, // No loader needed for cookie consent
-    ssr: false, // Cookie consent is client-side only
   }
 );
 
@@ -185,7 +188,6 @@ const DynamicTestimonialsCore = dynamic(
         ariaLabel="Loading testimonials"
       />
     ),
-    ssr: true, // Keep SSR for SEO benefits
   }
 );
 
@@ -205,7 +207,6 @@ const DynamicExperienceSectionCore = dynamic(
         ariaLabel="Loading experience section"
       />
     ),
-    ssr: true, // Keep SSR for SEO
   }
 );
 
@@ -225,7 +226,6 @@ const DynamicServicesSectionCore = dynamic(
         ariaLabel="Loading services section"
       />
     ),
-    ssr: true, // Keep SSR for SEO
   }
 );
 
@@ -246,7 +246,6 @@ const DynamicFilteredTreatmentsDisplayCore = dynamic(
         ariaLabel="Loading treatments"
       />
     ),
-    ssr: true, // Important for SEO
   }
 );
 
@@ -268,7 +267,6 @@ const DynamicCategoryFiltersCore = dynamic(
         showText={false}
       />
     ),
-    ssr: true, // Important for SEO and navigation
   }
 );
 
@@ -284,7 +282,6 @@ const DynamicGoogleAnalyticsCore = dynamic(
   () => import(/* webpackChunkName: "google-analytics" */ '@/components/Analytics/GoogleAnalytics'),
   {
     loading: () => null,
-    ssr: false, // Analytics scripts are client-side only
   }
 );
 
@@ -296,8 +293,6 @@ export const DynamicGoogleAnalytics = withDynamicBoundary(DynamicGoogleAnalytics
 interface DynamicComponentOptions {
   /** Custom loading component function */
   loading?: () => JSX.Element;
-  /** Whether to enable server-side rendering (default: true) */
-  ssr?: boolean;
   /** CSS class name for default loading component */
   className?: string;
   /** Loading priority level */
@@ -333,7 +328,6 @@ interface DynamicComponentOptions {
  * const DynamicMyComponent = createDynamicComponent(
  *   () => import('./MyComponent'),
  *   {
- *     ssr: false,
  *     className: 'h-64',
  *     priority: 'high',
  *     chunkName: 'my-component',
@@ -348,7 +342,6 @@ export function createDynamicComponent<T extends ComponentType<any>>(
 ) {
   const {
     loading,
-    ssr = true,
     className,
     priority = 'normal',
     ariaLabel,
@@ -367,7 +360,6 @@ export function createDynamicComponent<T extends ComponentType<any>>(
           showText={showText}
         />
       )),
-    ssr,
   });
 
   if (!withErrorBoundary) {
