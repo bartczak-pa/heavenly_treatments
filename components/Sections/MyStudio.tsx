@@ -19,14 +19,13 @@ const MyStudio: React.FC<MyStudioProps> = ({ className = "" }) => {
     <section 
       className={`py-16 bg-gray-50 ${className}`}
       aria-labelledby="studio-heading"
-      role="region"
     >
       <div className="container mx-auto px-4 max-w-4xl">
         <h2 id="studio-heading" className="text-3xl font-bold mb-8">
           {STUDIO_CONTENT.title}
         </h2>
         <div className="flex flex-col lg:flex-row gap-6 md:gap-8 lg:gap-12 items-center">
-          <div className="lg:w-2/3" role="main">
+          <div className="lg:w-2/3">
             <div className="space-y-4 text-gray-700">
               {STUDIO_CONTENT.paragraphs.map((paragraph, index) => (
                 <p key={index} className="leading-relaxed">
@@ -35,7 +34,7 @@ const MyStudio: React.FC<MyStudioProps> = ({ className = "" }) => {
               ))}
             </div>
           </div>
-          <div className="w-full lg:w-1/2" role="img" aria-labelledby="studio-image">
+          <div className="w-full lg:w-1/2">
             <div className="relative w-full h-[400px] sm:h-[450px] md:h-[500px] lg:h-[550px] rounded-lg overflow-hidden shadow-lg mx-auto lg:mx-0">
               <OptimizedImage
                 src="heavenly-treatments-room"
