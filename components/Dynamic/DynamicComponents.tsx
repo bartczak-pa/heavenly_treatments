@@ -58,13 +58,14 @@ const ComponentLoader = ({
   };
 
   return (
-    <output
+    <div
       className={cn(
         'bg-muted rounded-md',
         priorityStyles[priority],
         'motion-reduce:animate-none',
         className || 'h-32'
       )}
+      role="status"
       aria-live={priority === 'high' ? 'assertive' : 'polite'}
       aria-busy="true"
       aria-label={ariaLabel}
@@ -74,7 +75,7 @@ const ComponentLoader = ({
           <div className="text-muted-foreground text-sm">Loading…</div>
         </div>
       )}
-    </output>
+    </div>
   );
 };
 
@@ -195,7 +196,7 @@ export const DynamicExperienceSection = createDynamicComponent(
 export const DynamicServicesSection = createDynamicComponent(
   () => import(/* webpackChunkName: "services-section" */ '@/components/Sections/Services'),
   {
-    className: 'h-80',
+    className: 'h-80 [content-visibility:auto]',
     ariaLabel: 'Loading services section',
     priority: 'high',
     withErrorBoundary: true,

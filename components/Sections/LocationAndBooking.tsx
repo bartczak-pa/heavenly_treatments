@@ -36,7 +36,7 @@ export default function LocationAndBookingSection({
 }: LocationAndBookingSectionProps) {
   const reactId = useId();
   const sectionId = id ?? `location-booking-${reactId}`;
-  const headingId = `${sectionId}-heading-${reactId}`;
+  const headingId = `${sectionId}-heading`;
   
   return (
     <section 
@@ -56,11 +56,9 @@ export default function LocationAndBookingSection({
           </header>
           
           <div className="space-y-6 text-center">
-            <address className="not-italic">
-              <p className={PARAGRAPH_CLASS}>
-                {CONTENT.location}
-              </p>
-            </address>
+            <p className={PARAGRAPH_CLASS}>
+              {CONTENT.location}
+            </p>
             
             <div className="space-y-4">
               <p className={PARAGRAPH_CLASS}>

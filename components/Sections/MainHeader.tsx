@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useId } from 'react';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import OptimizedImage from '@/components/OptimizedImage';
 import Link from 'next/link';
@@ -8,8 +9,8 @@ import Link from 'next/link';
 // Component configuration constants
 const HERO_CONFIG = {
   heights: {
-    mobile: 'h-[60vh]',
-    desktop: 'md:h-[70vh]'
+    mobile: 'h-[60svh]',
+    desktop: 'md:h-[70svh]'
   },
   image: {
     src: 'young-woman-having-face-massage-relaxing-spa-salon',
@@ -27,7 +28,7 @@ const HERO_CONFIG = {
 // CSS class combinations for better readability
 const styles = {
   hero: `relative ${HERO_CONFIG.heights.mobile} ${HERO_CONFIG.heights.desktop} w-full 
-         flex items-center justify-center text-center text-white overflow-hidden`,
+         flex items-center justify-center text-center overflow-hidden`,
   
   imageContainer: 'absolute inset-0 z-0',
   
@@ -50,7 +51,8 @@ const styles = {
 } as const;
 
 type MainHeaderProps = {
-  // Future extensibility - props can be added here
+  id?: string;
+  className?: string;
 }
 
 /**
@@ -65,17 +67,22 @@ type MainHeaderProps = {
  * - Accessible markup with proper semantic structure
  * - Customizable through HERO_CONFIG constant
  */
-const MainHeader: React.FC<MainHeaderProps> = () => {
+const MainHeader: React.FC<MainHeaderProps> = ({ id, className }) => {
+    const reactId = useId();
+    const sectionId = id ?? `main-hero-${reactId}`;
+    const headingId = `${sectionId}-heading`;
+    
     return (
-        <header 
-          className={styles.hero}
-          aria-label="Main hero section"
+        <section 
+          id={sectionId}
+          className={cn(styles.hero, className)}
+          aria-labelledby={headingId}
         >
             {/* Background image with overlay */}
             <div className={styles.imageContainer}> 
                 <OptimizedImage
                     src={HERO_CONFIG.image.src}
-                    alt={HERO_CONFIG.image.alt}
+                    alt=""
                     fill
                     sizes="100vw"
                     style={{ objectFit: 'cover' }}
@@ -87,7 +94,7 @@ const MainHeader: React.FC<MainHeaderProps> = () => {
 
             {/* Main content */}
             <div className={styles.contentWrapper}>
-                <h1 className={styles.title}>
+                <h1 id={headingId} className={styles.title}>
                     {HERO_CONFIG.content.title}
                 </h1>
                 
@@ -99,14 +106,13 @@ const MainHeader: React.FC<MainHeaderProps> = () => {
                   size="lg" 
                   asChild 
                   className={styles.ctaButton}
-                  aria-label={`${HERO_CONFIG.content.ctaText} - Navigate to treatments page`}
                 >
                     <Link href={HERO_CONFIG.content.ctaLink}>
                         {HERO_CONFIG.content.ctaText}
                     </Link>
                 </Button>
             </div>
-        </header>
+        </section>
     )
 }
 

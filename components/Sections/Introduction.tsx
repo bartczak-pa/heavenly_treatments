@@ -1,3 +1,6 @@
+import { useId } from 'react';
+import { cn } from '@/lib/utils';
+
 type IntroductionSectionProps = {
   id?: string;
   className?: string;
@@ -17,14 +20,16 @@ const CONTENT = {
   paragraphs: readonly { id: string; text: string }[];
 };
 
-export default function IntroductionSection({ id = "introduction", className }: IntroductionSectionProps) {
-  const headingId = `${id}-heading`;
+export default function IntroductionSection({ id, className }: IntroductionSectionProps) {
+  const reactId = useId();
+  const sectionId = id ?? `introduction-${reactId}`;
+  const headingId = `${sectionId}-heading`;
   
   return (
     <section
-      id={id}
+      id={sectionId}
       aria-labelledby={headingId}
-      className={["py-16 md:py-24 bg-background", className].filter(Boolean).join(" ")}
+      className={cn("py-16 md:py-24 bg-background", className)}
     >
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center space-y-4">

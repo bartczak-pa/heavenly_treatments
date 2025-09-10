@@ -229,7 +229,7 @@ export default function Navbar() {
     treatmentCategories.map((category) => ({
       ...category,
       IconComponent: category.iconName ? categoryIconMap[category.iconName] : null,
-    })), [treatmentCategories, categoryIconMap]);
+    })), []);
 
   return (
     <header className="w-full border-b bg-secondary/15 backdrop-blur supports-[backdrop-filter]:bg-secondary/15 z-40">
@@ -255,7 +255,7 @@ export default function Navbar() {
         {/* Centered Logo - Flex grow with center alignment */}
         <div className="flex-1 flex items-center justify-center px-8">
           <Link href="/" className="flex items-center space-x-2">
-            <span className="text-xl font-bold font-serif text-primary whitespace-nowrap">Heavenly Treatments with Hayleybell</span>
+            <span className="text-xl font-bold font-serif text-primary truncate">Heavenly Treatments with Hayleybell</span>
           </Link>
         </div>
 
@@ -274,7 +274,7 @@ export default function Navbar() {
         {/* Centered Logo */}
         <div className="flex-1 flex justify-center">
           <Link href="/" className="flex items-center space-x-2">
-            <span className="text-l sm:text-2xl font-bold font-serif text-primary">Heavenly Treatments with Hayleybell</span>
+            <span className="text-lg sm:text-2xl font-bold font-serif text-primary">Heavenly Treatments with Hayleybell</span>
           </Link>
         </div>
 
