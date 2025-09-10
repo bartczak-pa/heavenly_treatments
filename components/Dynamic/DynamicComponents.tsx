@@ -16,7 +16,8 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { ComponentType, type JSX, Suspense } from 'react';
+import type { ComponentType, JSX } from 'react';
+import { Suspense } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { cn } from '@/lib/utils';
 
@@ -107,185 +108,130 @@ const DynamicErrorFallback = ({ retry }: { retry?: () => void }) => (
  */
 function withDynamicBoundary<P extends Record<string, any>>(
   DynamicComponent: ComponentType<P>,
-  fallbackProps?: LoadingConfig
+  fallback?: LoadingConfig | null
 ) {
-  return function BoundedDynamicComponent(props: P) {
+  function BoundedDynamicComponent(props: P) {
     return (
       <ErrorBoundary
-        fallback={
-          <DynamicErrorFallback
-            retry={() => window.location.reload()}
-          />
-        }
+        fallback={<DynamicErrorFallback retry={() => window.location.reload()} />}
       >
-        <Suspense fallback={<ComponentLoader {...fallbackProps} />}>
+        <Suspense
+          fallback={
+            fallback === null
+              ? null
+              : <ComponentLoader {...(fallback ?? {})} />
+          }
+        >
           <DynamicComponent {...props} />
         </Suspense>
       </ErrorBoundary>
     );
-  };
+  }
+
+  BoundedDynamicComponent.displayName =
+    `withDynamicBoundary(${(DynamicComponent as any).displayName ||
+      (DynamicComponent as any).name ||
+      'Component'})`;
+
+  return BoundedDynamicComponent;
 }
 
 // Dynamic imports for heavy/non-critical components with webpack chunk names
 // Note: SSR flags are removed since this is a client component ('use client')
 
 // Contact Form - Heavy component with many dependencies (react-hook-form, zod, turnstile)
-const DynamicContactFormCore = dynamic(
+export const DynamicContactForm = createDynamicComponent(
   () => import(/* webpackChunkName: "contact-form" */ '@/components/Contact/ContactForm'),
   {
-    loading: () => (
-      <ComponentLoader
-        className="h-96"
-        priority="normal"
-        ariaLabel="Loading contact form"
-      />
-    ),
+    className: 'h-96',
+    ariaLabel: 'Loading contact form',
+    priority: 'normal',
+    withErrorBoundary: true,
   }
 );
-
-export const DynamicContactForm = withDynamicBoundary(DynamicContactFormCore, {
-  className: 'h-96',
-  ariaLabel: 'Loading contact form'
-});
 
 // Map Embed - Third-party iframe, not critical for initial render
-const DynamicMapEmbedCore = dynamic(
+export const DynamicMapEmbed = createDynamicComponent(
   () => import(/* webpackChunkName: "map-embed" */ '@/components/Contact/MapEmbed'),
   {
-    loading: () => (
-      <ComponentLoader
-        className="h-64"
-        priority="low"
-        ariaLabel="Loading map"
-      />
-    ),
+    className: 'h-64',
+    ariaLabel: 'Loading map',
+    priority: 'low',
+    withErrorBoundary: true,
   }
 );
-
-export const DynamicMapEmbed = withDynamicBoundary(DynamicMapEmbedCore, {
-  className: 'h-64',
-  ariaLabel: 'Loading map'
-});
 
 // Cookie Consent - Not critical for initial render, user interaction dependent
-const DynamicCookieConsentWrapperCore = dynamic(
+export const DynamicCookieConsentWrapper = createDynamicComponent(
   () => import(/* webpackChunkName: "cookie-consent" */ '@/components/Layout/CookieConsentWrapper'),
   {
-    loading: () => null, // No loader needed for cookie consent
+    withErrorBoundary: false, // No fallback UI needed for cookie consent
   }
 );
-
-export const DynamicCookieConsentWrapper = withDynamicBoundary(DynamicCookieConsentWrapperCore);
 
 // Testimonials - Can be loaded after initial page render for better performance
-const DynamicTestimonialsCore = dynamic(
+export const DynamicTestimonials = createDynamicComponent(
   () => import(/* webpackChunkName: "testimonials" */ '@/components/Sections/Testimonials'),
   {
-    loading: () => (
-      <ComponentLoader
-        className="h-48"
-        priority="normal"
-        ariaLabel="Loading testimonials"
-      />
-    ),
+    className: 'h-48',
+    ariaLabel: 'Loading testimonials',
+    priority: 'normal',
+    withErrorBoundary: true,
   }
 );
-
-export const DynamicTestimonials = withDynamicBoundary(DynamicTestimonialsCore, {
-  className: 'h-48',
-  ariaLabel: 'Loading testimonials'
-});
 
 // Experience Section - Nice to have but not critical for above-the-fold
-const DynamicExperienceSectionCore = dynamic(
+export const DynamicExperienceSection = createDynamicComponent(
   () => import(/* webpackChunkName: "experience-section" */ '@/components/Sections/Experience'),
   {
-    loading: () => (
-      <ComponentLoader
-        className="h-64"
-        priority="normal"
-        ariaLabel="Loading experience section"
-      />
-    ),
+    className: 'h-64',
+    ariaLabel: 'Loading experience section',
+    priority: 'normal',
+    withErrorBoundary: true,
   }
 );
-
-export const DynamicExperienceSection = withDynamicBoundary(DynamicExperienceSectionCore, {
-  className: 'h-64',
-  ariaLabel: 'Loading experience section'
-});
 
 // Services Section - Important for SEO but can be split for performance  
-const DynamicServicesSectionCore = dynamic(
+export const DynamicServicesSection = createDynamicComponent(
   () => import(/* webpackChunkName: "services-section" */ '@/components/Sections/Services'),
   {
-    loading: () => (
-      <ComponentLoader
-        className="h-80"
-        priority="high"
-        ariaLabel="Loading services section"
-      />
-    ),
+    className: 'h-80',
+    ariaLabel: 'Loading services section',
+    priority: 'high',
+    withErrorBoundary: true,
   }
 );
-
-export const DynamicServicesSection = withDynamicBoundary(DynamicServicesSectionCore, {
-  className: 'h-80',
-  ariaLabel: 'Loading services section',
-  priority: 'high'
-});
 
 // Filtered Treatments Display - Heavy component with filtering logic
-const DynamicFilteredTreatmentsDisplayCore = dynamic(
+export const DynamicFilteredTreatmentsDisplay = createDynamicComponent(
   () => import(/* webpackChunkName: "treatments-display" */ '@/components/Treatments/FilteredTreatmentsDisplay'),
   {
-    loading: () => (
-      <ComponentLoader
-        className="h-96"
-        priority="high"
-        ariaLabel="Loading treatments"
-      />
-    ),
+    className: 'h-96',
+    ariaLabel: 'Loading treatments',
+    priority: 'high',
+    withErrorBoundary: true,
   }
 );
-
-export const DynamicFilteredTreatmentsDisplay = withDynamicBoundary(DynamicFilteredTreatmentsDisplayCore, {
-  className: 'h-96',
-  ariaLabel: 'Loading treatments',
-  priority: 'high'
-});
 
 // Category Filters - Interactive component, can be loaded dynamically
-const DynamicCategoryFiltersCore = dynamic(
+export const DynamicCategoryFilters = createDynamicComponent(
   () => import(/* webpackChunkName: "category-filters" */ '@/components/Treatments/CategoryFilters'),
   {
-    loading: () => (
-      <ComponentLoader
-        className="h-16"
-        priority="high"
-        ariaLabel="Loading filters"
-        showText={false}
-      />
-    ),
+    className: 'h-16',
+    ariaLabel: 'Loading filters',
+    priority: 'high',
+    showText: false,
+    withErrorBoundary: true,
   }
 );
-
-export const DynamicCategoryFilters = withDynamicBoundary(DynamicCategoryFiltersCore, {
-  className: 'h-16',
-  ariaLabel: 'Loading filters',
-  priority: 'high',
-  showText: false
-});
 
 // Google Analytics - Third-party script, not critical for initial render
-const DynamicGoogleAnalyticsCore = dynamic(
+export const DynamicGoogleAnalytics = createDynamicComponent(
   () => import(/* webpackChunkName: "google-analytics" */ '@/components/Analytics/GoogleAnalytics'),
   {
-    loading: () => null,
+    withErrorBoundary: false, // No fallback UI needed for analytics
   }
 );
-
-export const DynamicGoogleAnalytics = withDynamicBoundary(DynamicGoogleAnalyticsCore);
 
 /**
  * Configuration options for dynamic component creation
