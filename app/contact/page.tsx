@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import { headers } from 'next/headers';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import HeroSection from '@/components/Shared/HeroSection';
 import ContactInfo from '@/components/Contact/ContactInfo';
@@ -9,7 +10,8 @@ import {
   DynamicMapEmbed
 } from '@/components/Dynamic/DynamicComponents';
 import { contactInfo } from '@/lib/data/contactInfo';
-import { generateHealthAndBeautyBusinessJsonLd, ContactInfo as ContactInfoType } from '@/lib/jsonLsUtils';
+import { generateHealthAndBeautyBusinessJsonLd, ContactInfo as JsonLdContactInfo } from '@/lib/jsonLsUtils';
+import type { ContactInfoType } from '@/lib/data/contactInfo';
 
 // Page content constants for better maintainability and i18n support
 const PAGE_CONTENT = {
@@ -43,24 +45,46 @@ const PAGE_CONTENT = {
 } as const;
 
 // Utility functions
-function getBaseUrl(): string {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-  if (!baseUrl) {
-    console.warn(PAGE_CONTENT.errors.baseUrlMissing);
+async function getBaseUrl(): Promise<string | null> {
+  const envUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  if (envUrl) return envUrl;
+  
+  try {
+    const h = await headers();
+    const host = h.get('x-forwarded-host') ?? h.get('host');
+    const proto = h.get('x-forwarded-proto') ?? 'https';
+    if (host) {
+      console.warn(PAGE_CONTENT.errors.baseUrlMissing);
+      return `${proto}://${host}`;
+    }
+  } catch {
+    // headers() not available at build time (static generation)
   }
-  return baseUrl || '';
+  
+  console.warn(PAGE_CONTENT.errors.baseUrlMissing);
+  return null;
 }
 
 function validateTreatmentParam(param: unknown): string | undefined {
-  if (typeof param === 'string' && param.length > 0 && param.length < 100) {
-    return param.trim();
+  if (typeof param === 'string') {
+    const v = param.trim();
+    if (v.length > 0 && v.length < 100) {
+      // Optional: enforce a safe pattern
+      // if (!/^[\p{L}\p{N}\s\-,'/&()]+$/u.test(v)) return undefined;
+      return v;
+    }
   }
   return undefined;
 }
 
 function isValidContactInfo(data: unknown): data is ContactInfoType {
-  return typeof data === 'object' && data !== null && 
-         'businessName' in data && 'email' in data;
+  if (!data || typeof data !== 'object') return false;
+  const d = data as Partial<ContactInfoType> & Record<string, unknown>;
+  return typeof d.businessName === 'string'
+    && typeof d.email === 'string'
+    && typeof d.phone === 'string'
+    && typeof d.address === 'object'
+    && Array.isArray(d.openingHours);
 }
 
 function safeGenerateJsonLd() {
@@ -69,7 +93,17 @@ function safeGenerateJsonLd() {
       console.warn(PAGE_CONTENT.errors.invalidContactInfo);
       return null;
     }
-    return generateHealthAndBeautyBusinessJsonLd(contactInfo);
+    
+    // Transform ContactInfoType to JsonLdContactInfo format
+    const jsonLdContactInfo: JsonLdContactInfo = {
+      address: contactInfo.address,
+      phone: contactInfo.phone,
+      email: contactInfo.email,
+      openingHours: contactInfo.openingHours,
+      mapSrc: contactInfo.mapSrc || '' // Provide fallback if mapSrc is undefined
+    };
+    
+    return generateHealthAndBeautyBusinessJsonLd(jsonLdContactInfo);
   } catch (error) {
     console.error(PAGE_CONTENT.errors.jsonLdGeneration, error);
     return null;
@@ -77,21 +111,19 @@ function safeGenerateJsonLd() {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const baseUrl = getBaseUrl();
+  const baseUrl = await getBaseUrl();
   const { title, description, siteName, locale, imageWidth, imageHeight } = PAGE_CONTENT.metadata;
-  const canonicalUrl = `${baseUrl}/contact`;
-  const imageUrl = `${baseUrl}/images/logo.png`;
+  const canonicalUrl = baseUrl ? `${baseUrl}/contact` : undefined;
+  const imageUrl = baseUrl ? `${baseUrl}/images/logo.png` : '/images/logo.png';
 
   return {
     title,
     description,
-    alternates: {
-      canonical: canonicalUrl,
-    },
+    alternates: canonicalUrl ? { canonical: canonicalUrl } : undefined,
     openGraph: {
       title,
       description,
-      url: canonicalUrl,
+      ...(canonicalUrl ? { url: canonicalUrl } : {}),
       siteName,
       images: [{
         url: imageUrl,
@@ -137,7 +169,7 @@ function ContactPageContent({ initialTreatment }: ContactPageContentProps) {
 
 function ContactFormSection({ initialTreatment }: ContactFormSectionProps) {
   return (
-    <div className="lg:order-1" role="main" aria-labelledby="contact-form-heading">
+    <section className="lg:order-1" aria-labelledby="contact-form-heading">
       <h2 
         id="contact-form-heading"
         className="font-serif text-3xl font-semibold mb-6 text-primary"
@@ -145,7 +177,7 @@ function ContactFormSection({ initialTreatment }: ContactFormSectionProps) {
         {PAGE_CONTENT.sections.contactForm}
       </h2>
       <DynamicContactForm initialTreatment={initialTreatment} />
-    </div>
+    </section>
   );
 }
 
@@ -166,10 +198,9 @@ function LocationInfoSection() {
   );
 }
 
-export default async function ContactPage({ params, searchParams }: ContactPageProps) {
+export default async function ContactPage({ searchParams }: ContactPageProps) {
   try {
-    // Params currently unused but required by Next.js
-    await params;
+    // Params currently unused but required by Next.js  
     const awaitedSearchParams = await searchParams;
     
     // Validate and sanitize search params
