@@ -1,13 +1,54 @@
-'use client';
-
 import React from 'react';
-import { contactData, contactLinks } from '@/lib/data/contact';
+import { Clock, MapPin, Smartphone } from 'lucide-react';
+
+const contactData = {
+  title: "Get In Touch",
+  info: [
+    {
+      icon: Clock,
+      title: "Opening Hours",
+      details: ["Mon to Sun: 9 AM – 7 PM"],
+      ariaLabel: "Business opening hours"
+    },
+    {
+      icon: MapPin,
+      title: "Location",
+      details: [
+        "6 Easter Softlaw Farm Cottage",
+        "TD5 8BJ Kelso"
+      ],
+      ariaLabel: "Business address and location"
+    },
+    {
+      icon: Smartphone,
+      title: "Contact",
+      details: [
+        "hayley@heavenly-treatments.co.uk",
+        "07960 315 337"
+      ],
+      ariaLabel: "Contact information including email and phone"
+    }
+  ]
+} as const;
+
+const contactLinks = {
+  email: {
+    href: "mailto:hayley@heavenly-treatments.co.uk",
+    text: "hayley@heavenly-treatments.co.uk",
+    ariaLabel: "Send email to Hayley"
+  },
+  phone: {
+    href: "tel:07960315337",
+    text: "07960 315 337",
+    ariaLabel: "Call Hayley at 07960 315 337"
+  }
+} as const;
 
 const ContactInfo = () => {
     return (
-        <section className="py-16 md:py-24 bg-background" aria-labelledby="contact-heading"> 
+        <section className="py-16 md:py-24 bg-background" aria-labelledby="contact-heading">
           <div className="container mx-auto px-4">
-            <h2 
+            <h2
               id="contact-heading"
               className="font-serif text-3xl md:text-4xl font-semibold text-primary text-center mb-12"
             >
@@ -18,14 +59,14 @@ const ContactInfo = () => {
               {contactData.info.map((item, index) => {
                 const Icon = item.icon;
                 return (
-                  <div 
+                  <div
                     key={index}
-                    className="flex items-start gap-4" 
+                    className="flex items-start gap-4"
                     role="region"
                     aria-label={item.ariaLabel}
                   >
-                    <Icon 
-                      className="h-6 w-6 text-primary flex-shrink-0 mt-1" 
+                    <Icon
+                      className="h-6 w-6 text-primary flex-shrink-0 mt-1"
                       aria-hidden="true"
                     />
                     <div>
@@ -39,8 +80,8 @@ const ContactInfo = () => {
                           const linkData = isEmail ? contactLinks.email : contactLinks.phone;
                           return (
                             <p key={detailIndex} className="font-sans text-muted-foreground text-sm">
-                              <a 
-                                href={linkData.href} 
+                              <a
+                                href={linkData.href}
                                 className="hover:text-primary transition-colors focus:text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-sm"
                                 aria-label={linkData.ariaLabel}
                               >
@@ -51,8 +92,8 @@ const ContactInfo = () => {
                         }
                         // Regular text for other details
                         return (
-                          <p 
-                            key={detailIndex} 
+                          <p
+                            key={detailIndex}
                             className="font-sans text-muted-foreground text-sm"
                           >
                             {detail}
