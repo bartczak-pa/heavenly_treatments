@@ -1,63 +1,113 @@
-'use client';
-
 import React from 'react';
 import { Clock, MapPin, Smartphone } from 'lucide-react';
 
+const contactData = {
+  title: "Get In Touch",
+  info: [
+    {
+      icon: Clock,
+      title: "Opening Hours",
+      details: ["Mon to Sun: 9 AM – 7 PM"],
+      ariaLabel: "Business opening hours"
+    },
+    {
+      icon: MapPin,
+      title: "Location",
+      details: [
+        "6 Easter Softlaw Farm Cottage",
+        "TD5 8BJ Kelso"
+      ],
+      ariaLabel: "Business address and location"
+    },
+    {
+      icon: Smartphone,
+      title: "Contact",
+      details: [
+        "hayley@heavenly-treatments.co.uk",
+        "07960 315 337"
+      ],
+      ariaLabel: "Contact information including email and phone"
+    }
+  ]
+} as const;
+
+const contactLinks = {
+  email: {
+    href: "mailto:hayley@heavenly-treatments.co.uk",
+    text: "hayley@heavenly-treatments.co.uk",
+    ariaLabel: "Send email to Hayley"
+  },
+  phone: {
+    href: "tel:07960315337",
+    text: "07960 315 337",
+    ariaLabel: "Call Hayley at 07960 315 337"
+  }
+} as const;
+
 const ContactInfo = () => {
     return (
-        <section className="py-16 md:py-24 bg-background"> 
+        <section className="py-16 md:py-24 bg-background" aria-labelledby="contact-heading">
           <div className="container mx-auto px-4">
-            {/* Centered Title for the section */}
-            {
-            <h2 className="font-serif text-3xl md:text-4xl font-semibold text-primary text-center mb-12">
-              Get In Touch
-            </h2> 
-            }
+            <h2
+              id="contact-heading"
+              className="font-serif text-3xl md:text-4xl font-semibold text-primary text-center mb-12"
+            >
+              {contactData.title}
+            </h2>
 
-            {/* Horizontal layout */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 max-w-5xl mx-auto">
-              
-              {/* Hours Info */}
-              <div className="flex items-start gap-4">
-                <Clock className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-lg text-foreground mb-1">Opening Hours</h3>
-                  <p className="font-sans text-muted-foreground text-sm">Mon to Sun: 9 AM – 7 PM</p>
-                </div>
-              </div>
-
-              {/* Location Info */}
-              <div className="flex items-start gap-4">
-                <MapPin className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-lg text-foreground mb-1">Location</h3>
-                  <p className="font-sans text-muted-foreground text-sm">6 Easter Softlaw Farm Cottage</p>
-                  <p className="font-sans text-muted-foreground text-sm">TD5 8BJ Kelso</p>
-                </div>
-              </div>
-
-              {/* Contact Info */}
-              <div className="flex items-start gap-4">
-                <Smartphone className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold text-lg text-foreground mb-1">Contact</h3>
-                  <p className="font-sans text-muted-foreground text-sm">
-                    <a href="mailto:hayley@heavenly-treatments.co.uk" className="hover:text-primary transition-colors">
-                      hayley@heavenly-treatments.co.uk
-                    </a>
-                  </p>
-                  <p className="font-sans text-muted-foreground text-sm">
-                    <a href="tel:07960315337" className="hover:text-primary transition-colors">
-                      07960 315337
-                    </a>
-                  </p>
-                </div>
-              </div>
-
+              {contactData.info.map((item, index) => {
+                const Icon = item.icon;
+                return (
+                  <div
+                    key={index}
+                    className="flex items-start gap-4"
+                    role="region"
+                    aria-label={item.ariaLabel}
+                  >
+                    <Icon
+                      className="h-6 w-6 text-primary flex-shrink-0 mt-1"
+                      aria-hidden="true"
+                    />
+                    <div>
+                      <h3 className="font-semibold text-lg text-foreground mb-1">
+                        {item.title}
+                      </h3>
+                      {item.details.map((detail, detailIndex) => {
+                        // Handle contact details with links
+                        if (item.title === "Contact") {
+                          const isEmail = detail.includes("@");
+                          const linkData = isEmail ? contactLinks.email : contactLinks.phone;
+                          return (
+                            <p key={detailIndex} className="font-sans text-muted-foreground text-sm">
+                              <a
+                                href={linkData.href}
+                                className="hover:text-primary transition-colors focus:text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-sm"
+                                aria-label={linkData.ariaLabel}
+                              >
+                                {linkData.text}
+                              </a>
+                            </p>
+                          );
+                        }
+                        // Regular text for other details
+                        return (
+                          <p
+                            key={detailIndex}
+                            className="font-sans text-muted-foreground text-sm"
+                          >
+                            {detail}
+                          </p>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
-    )
-}
+    );
+};
 
 export default ContactInfo;
