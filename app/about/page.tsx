@@ -5,7 +5,7 @@ import { MainLayout } from '@/components/Layout/MainLayout';
 import MeetTherapist from '@/components/Sections/MeetTherapist';
 import { contactInfo } from '@/lib/data/contactInfo';
 import Script from 'next/script';
-import { generateHealthAndBeautyBusinessJsonLd, ContactInfo as SchemaContactInfo } from '@/lib/jsonLsUtils';
+import { generateHealthAndBeautyBusinessJsonLd } from '@/lib/jsonLsUtils';
 
 // Loading component for lazy-loaded sections
 const SectionSkeleton = () => (
@@ -86,8 +86,24 @@ export async function generateMetadata(): Promise<Metadata> {
  */
 
 export default function AboutPage() {
-  // Generate JSON-LD once per server request
-  const jsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as SchemaContactInfo);
+  // Generate JSON-LD once per request with explicit field mapping
+  const jsonLd = generateHealthAndBeautyBusinessJsonLd({
+    address: {
+      streetAddress: contactInfo.address.streetAddress,
+      addressLocality: contactInfo.address.addressLocality,
+      postalCode: contactInfo.address.postalCode,
+      addressCountry: contactInfo.address.addressCountry
+    },
+    phone: contactInfo.phone,
+    email: contactInfo.email,
+    openingHours: contactInfo.openingHours.map(hours => ({
+      dayOfWeek: hours.dayOfWeek,
+      opens: hours.opens,
+      closes: hours.closes
+    })),
+    // Handle optional mapSrc safely - provide empty string if undefined
+    mapSrc: contactInfo.mapSrc ?? ''
+  });
 
   return (
     <MainLayout>
