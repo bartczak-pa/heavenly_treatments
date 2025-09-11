@@ -53,7 +53,7 @@ async function getBaseUrl(): Promise<string | null> {
     const h = await headers();
     const host = h.get('x-forwarded-host') ?? h.get('host');
     const proto = h.get('x-forwarded-proto') ?? 'https';
-    if (host) {
+    if (host && host.trim()) {
       console.warn(PAGE_CONTENT.errors.baseUrlMissing);
       return `${proto}://${host}`;
     }
@@ -69,8 +69,8 @@ function validateTreatmentParam(param: unknown): string | undefined {
   if (typeof param === 'string') {
     const v = param.trim();
     if (v.length > 0 && v.length < 100) {
-      // Optional: enforce a safe pattern
-      // if (!/^[\p{L}\p{N}\s\-,'/&()]+$/u.test(v)) return undefined;
+      // Enforce a safe pattern to prevent XSS
+      if (!/^[\p{L}\p{N}\s\-,'/&()]+$/u.test(v)) return undefined;
       return v;
     }
   }
@@ -83,6 +83,7 @@ function isValidContactInfo(data: unknown): data is ContactInfoType {
   return typeof d.businessName === 'string'
     && typeof d.email === 'string'
     && typeof d.phone === 'string'
+    && d.address !== null
     && typeof d.address === 'object'
     && Array.isArray(d.openingHours);
 }
