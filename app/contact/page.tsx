@@ -95,13 +95,14 @@ function safeGenerateJsonLd() {
     }
     
     // Transform ContactInfoType to JsonLdContactInfo format
-    const jsonLdContactInfo: JsonLdContactInfo = {
+    // Handle optional mapSrc by conditionally including it
+    const jsonLdContactInfo = {
       address: contactInfo.address,
       phone: contactInfo.phone,
       email: contactInfo.email,
       openingHours: contactInfo.openingHours,
-      mapSrc: contactInfo.mapSrc || '' // Provide fallback if mapSrc is undefined
-    };
+      ...(typeof contactInfo.mapSrc === 'string' && contactInfo.mapSrc ? { mapSrc: contactInfo.mapSrc } : {}),
+    } as JsonLdContactInfo;
     
     return generateHealthAndBeautyBusinessJsonLd(jsonLdContactInfo);
   } catch (error) {
@@ -114,7 +115,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const baseUrl = await getBaseUrl();
   const { title, description, siteName, locale, imageWidth, imageHeight } = PAGE_CONTENT.metadata;
   const canonicalUrl = baseUrl ? `${baseUrl}/contact` : undefined;
-  const imageUrl = baseUrl ? `${baseUrl}/images/logo.png` : '/images/logo.png';
+  const imageUrl = baseUrl ? `${baseUrl}/images/logo.png` : undefined;
 
   return {
     title,
@@ -125,12 +126,14 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       ...(canonicalUrl ? { url: canonicalUrl } : {}),
       siteName,
-      images: [{
-        url: imageUrl,
-        width: imageWidth,
-        height: imageHeight,
-        alt: `${siteName} Contact Page`,
-      }],
+      ...(imageUrl ? {
+        images: [{
+          url: imageUrl,
+          width: imageWidth,
+          height: imageHeight,
+          alt: `${siteName} Contact Page`,
+        }],
+      } : {}),
       locale,
       type: 'website',
     },
@@ -200,10 +203,8 @@ function LocationInfoSection() {
 
 export default async function ContactPage({ searchParams }: ContactPageProps) {
   try {
-    // Params currently unused but required by Next.js  
-    const awaitedSearchParams = await searchParams;
-    
     // Validate and sanitize search params
+    const awaitedSearchParams = await searchParams;
     const initialTreatment = validateTreatmentParam(awaitedSearchParams?.treatment);
     
     // Safe JSON-LD generation with error handling
@@ -212,6 +213,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
     return (
       <MainLayout>
         {jsonLd && (
+          /* biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD requires innerHTML; payload is JSON.stringify of trusted constants. */
           <Script 
             id="localbusiness-jsonld"
             type="application/ld+json"
@@ -233,7 +235,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
     // Fallback to basic layout with error message
     return (
       <MainLayout>
-        <div className="container mx-auto px-4 py-16">
+        <div className="container mx-auto px-4 py-16" aria-live="polite" role="status">
           <div className="text-center">
             <h1 className="text-2xl font-serif text-primary mb-4">{PAGE_CONTENT.fallback.title}</h1>
             <p className="text-muted-foreground">{PAGE_CONTENT.fallback.message}</p>
