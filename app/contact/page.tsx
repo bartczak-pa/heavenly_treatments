@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import { headers } from 'next/headers';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import HeroSection from '@/components/Shared/HeroSection';
 import ContactInfo from '@/components/Contact/ContactInfo';
@@ -9,36 +10,131 @@ import {
   DynamicMapEmbed
 } from '@/components/Dynamic/DynamicComponents';
 import { contactInfo } from '@/lib/data/contactInfo';
-import { generateHealthAndBeautyBusinessJsonLd, ContactInfo as ContactInfoType } from '@/lib/jsonLsUtils';
+import { generateHealthAndBeautyBusinessJsonLd, ContactInfo as JsonLdContactInfo } from '@/lib/jsonLsUtils';
+import type { ContactInfoType } from '@/lib/data/contactInfo';
+
+// Page content constants for better maintainability and i18n support
+const PAGE_CONTENT = {
+  hero: {
+    title: "Book Your Visit at My Kelso Cottage Spa",
+    subtitle: "I would love to hear from you! Please fill out the form below to inquire about bookings or ask any questions.",
+    imageUrl: "/images/contact/heavenly-treatments-from-outside.jpg"
+  },
+  sections: {
+    contactForm: "Booking Inquiry & Contact Form",
+    location: "How to find me"
+  },
+  metadata: {
+    title: 'Book Your Visit | Contact Hayleybell in Kelso',
+    description: 'Contact Heavenly Treatments to book an appointment or ask a question. Find our location, opening hours, and use our contact form.',
+    siteName: 'Heavenly Treatments with Hayleybell',
+    locale: 'en_GB',
+    imageWidth: 1200,
+    imageHeight: 630
+  },
+  errors: {
+    invalidContactInfo: 'Invalid contact info, skipping JSON-LD generation',
+    jsonLdGeneration: 'Failed to generate JSON-LD:',
+    pageRender: 'Error rendering contact page:',
+    baseUrlMissing: 'NEXT_PUBLIC_BASE_URL not set, using empty string'
+  },
+  fallback: {
+    title: "Contact Us",
+    message: "We're experiencing technical difficulties. Please try again later."
+  }
+} as const;
+
+// Utility functions
+async function getBaseUrl(): Promise<string | null> {
+  const envUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  if (envUrl) return envUrl;
+  
+  try {
+    const h = await headers();
+    const host = h.get('x-forwarded-host') ?? h.get('host');
+    const proto = h.get('x-forwarded-proto') ?? 'https';
+    if (host) {
+      console.warn(PAGE_CONTENT.errors.baseUrlMissing);
+      return `${proto}://${host}`;
+    }
+  } catch {
+    // headers() not available at build time (static generation)
+  }
+  
+  console.warn(PAGE_CONTENT.errors.baseUrlMissing);
+  return null;
+}
+
+function validateTreatmentParam(param: unknown): string | undefined {
+  if (typeof param === 'string') {
+    const v = param.trim();
+    if (v.length > 0 && v.length < 100) {
+      // Optional: enforce a safe pattern
+      // if (!/^[\p{L}\p{N}\s\-,'/&()]+$/u.test(v)) return undefined;
+      return v;
+    }
+  }
+  return undefined;
+}
+
+function isValidContactInfo(data: unknown): data is ContactInfoType {
+  if (!data || typeof data !== 'object') return false;
+  const d = data as Partial<ContactInfoType> & Record<string, unknown>;
+  return typeof d.businessName === 'string'
+    && typeof d.email === 'string'
+    && typeof d.phone === 'string'
+    && typeof d.address === 'object'
+    && Array.isArray(d.openingHours);
+}
+
+function safeGenerateJsonLd() {
+  try {
+    if (!isValidContactInfo(contactInfo)) {
+      console.warn(PAGE_CONTENT.errors.invalidContactInfo);
+      return null;
+    }
+    
+    // Transform ContactInfoType to JsonLdContactInfo format
+    // Handle optional mapSrc by conditionally including it
+    const jsonLdContactInfo = {
+      address: contactInfo.address,
+      phone: contactInfo.phone,
+      email: contactInfo.email,
+      openingHours: contactInfo.openingHours,
+      ...(typeof contactInfo.mapSrc === 'string' && contactInfo.mapSrc ? { mapSrc: contactInfo.mapSrc } : {}),
+    } as JsonLdContactInfo;
+    
+    return generateHealthAndBeautyBusinessJsonLd(jsonLdContactInfo);
+  } catch (error) {
+    console.error(PAGE_CONTENT.errors.jsonLdGeneration, error);
+    return null;
+  }
+}
 
 export async function generateMetadata(): Promise<Metadata> {
-  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
-  const pageTitle = 'Book Your Visit | Contact Hayleybell in Kelso';
-  const pageDescription = 'Contact Heavenly Treatments to book an appointment or ask a question. Find our location, opening hours, and use our contact form.';
-  const imageUrl = `${BASE_URL}/images/logo.png`;
-  const siteName = 'Heavenly Treatments with Hayleybell';
-  const canonicalUrl = `${BASE_URL}/contact`;
+  const baseUrl = await getBaseUrl();
+  const { title, description, siteName, locale, imageWidth, imageHeight } = PAGE_CONTENT.metadata;
+  const canonicalUrl = baseUrl ? `${baseUrl}/contact` : undefined;
+  const imageUrl = baseUrl ? `${baseUrl}/images/logo.png` : undefined;
 
   return {
-    title: pageTitle,
-    description: pageDescription,
-    alternates: {
-      canonical: canonicalUrl,
-    },
+    title,
+    description,
+    alternates: canonicalUrl ? { canonical: canonicalUrl } : undefined,
     openGraph: {
-      title: pageTitle,
-      description: pageDescription,
-      url: canonicalUrl,
-      siteName: siteName,
-      images: [
-        {
+      title,
+      description,
+      ...(canonicalUrl ? { url: canonicalUrl } : {}),
+      siteName,
+      ...(imageUrl ? {
+        images: [{
           url: imageUrl,
-          width: 1200,
-          height: 630,
-          alt: `${siteName} Contact Page Image`,
-        },
-      ],
-      locale: 'en_GB',
+          width: imageWidth,
+          height: imageHeight,
+          alt: `${siteName} Contact Page`,
+        }],
+      } : {}),
+      locale,
       type: 'website',
     },
   };
@@ -49,55 +145,103 @@ interface ContactPageProps {
     searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function ContactPage({ params, searchParams }: ContactPageProps) {
+interface ContactPageContentProps {
+  initialTreatment?: string;
+}
 
-    // Params currently unused but required by Next.js
-    await params;
+interface ContactFormSectionProps {
+  initialTreatment?: string;
+}
+
+// Component definitions
+function ContactPageContent({ initialTreatment }: ContactPageContentProps) {
+  return (
+    <section 
+      className="py-16 md:py-24 bg-background"
+      aria-label="Contact information and booking form"
+    >
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-16">
+          <ContactFormSection initialTreatment={initialTreatment} />
+          <LocationInfoSection />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ContactFormSection({ initialTreatment }: ContactFormSectionProps) {
+  return (
+    <section className="lg:order-1" aria-labelledby="contact-form-heading">
+      <h2 
+        id="contact-form-heading"
+        className="font-serif text-3xl font-semibold mb-6 text-primary"
+      >
+        {PAGE_CONTENT.sections.contactForm}
+      </h2>
+      <DynamicContactForm initialTreatment={initialTreatment} />
+    </section>
+  );
+}
+
+function LocationInfoSection() {
+  return (
+    <aside className="lg:order-2 space-y-8" aria-labelledby="location-info-heading">
+      <div>
+        <h2 
+          id="location-info-heading"
+          className="font-serif text-3xl font-semibold mb-6 text-primary"
+        >
+          {PAGE_CONTENT.sections.location}
+        </h2>
+        <DynamicMapEmbed />
+      </div>
+      <ContactInfo />
+    </aside>
+  );
+}
+
+export default async function ContactPage({ searchParams }: ContactPageProps) {
+  try {
+    // Validate and sanitize search params
     const awaitedSearchParams = await searchParams;
+    const initialTreatment = validateTreatmentParam(awaitedSearchParams?.treatment);
     
-    const initialTreatment = typeof awaitedSearchParams?.treatment === 'string' 
-        ? awaitedSearchParams.treatment 
-        : undefined;
-
-
-    const jsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfoType);
+    // Safe JSON-LD generation with error handling
+    const jsonLd = safeGenerateJsonLd();
 
     return (
-        <MainLayout>
-            <Script 
-                id="localbusiness-jsonld"
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
+      <MainLayout>
+        {jsonLd && (
+          /* biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD requires innerHTML; payload is JSON.stringify of trusted constants. */
+          <Script 
+            id="localbusiness-jsonld"
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
+        )}
 
-            <HeroSection  
-                title="Book Your Visit at My Kelso Cottage Spa"
-                subtitle="I would love to hear from you! Please fill out the form below to inquire about bookings or ask any questions."
-                imageUrl="/images/contact/heavenly-treatments-from-outside.jpg"
-            />
+        <HeroSection  
+          title={PAGE_CONTENT.hero.title}
+          subtitle={PAGE_CONTENT.hero.subtitle}
+          imageUrl={PAGE_CONTENT.hero.imageUrl}
+        />
 
-            <section className="py-16 md:py-24 bg-background">
-                <div className="container mx-auto px-4">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-16">
-                        <div className="lg:order-1">
-                            <h2 className="font-serif text-3xl font-semibold mb-6 text-primary">
-                                Booking Inquiry & Contact Form
-                            </h2>
-                            <DynamicContactForm initialTreatment={initialTreatment} />
-                        </div>
-
-                        <div className="lg:order-2 space-y-8">
-                            <div>
-                                <h2 className="font-serif text-3xl font-semibold mb-6 text-primary">
-                                    How to find me
-                                </h2>
-                                <DynamicMapEmbed />
-                            </div>
-                            <ContactInfo />
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </MainLayout>
+        <ContactPageContent initialTreatment={initialTreatment} />
+      </MainLayout>
     );
+  } catch (error) {
+    console.error(PAGE_CONTENT.errors.pageRender, error);
+    // Fallback to basic layout with error message
+    return (
+      <MainLayout>
+        <div className="container mx-auto px-4 py-16" aria-live="polite" role="status">
+          <div className="text-center">
+            <h1 className="text-2xl font-serif text-primary mb-4">{PAGE_CONTENT.fallback.title}</h1>
+            <p className="text-muted-foreground">{PAGE_CONTENT.fallback.message}</p>
+          </div>
+        </div>
+      </MainLayout>
+    );
+  }
 }
