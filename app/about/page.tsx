@@ -27,13 +27,10 @@ const SectionSkeleton = () => (
   </div>
 );
 
-// Lazy load below-the-fold components via next/dynamic with loading components
-// Next.js 15 doesn't support suspense option, so we use manual Suspense wrappers for SSR streaming
+// Lazy load below-the-fold components via next/dynamic with Suspense wrappers for SSR streaming
 const MyStudio = dynamic(() => import('@/components/Sections/MyStudio'));
 const ContactInfo = dynamic(() => import('@/components/Sections/ContactInfo'));
-const CTASection = dynamic(() => import('@/components/Sections/Cta'), {
-  loading: () => <SectionSkeleton />
-});
+const CTASection = dynamic(() => import('@/components/Sections/Cta'));
 
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
@@ -114,12 +111,14 @@ export default function AboutPage() {
             <MyStudio />
           </Suspense>
           
-          <CTASection 
-            title="Ready to Relax and Rejuvenate?"
-            description="Book your appointment today and start your journey towards wellness."
-            buttonText="Book Now"
-            buttonLink="/booking"
-          />
+          <Suspense fallback={<SectionSkeleton />}>
+            <CTASection 
+              title="Ready to Relax and Rejuvenate?"
+              description="Book your appointment today and start your journey towards wellness."
+              buttonText="Book Now"
+              buttonLink="/booking"
+            />
+          </Suspense>
           
           <Suspense fallback={<SectionSkeleton />}>
             <ContactInfo />
