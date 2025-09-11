@@ -1,5 +1,4 @@
-'use client';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -51,12 +50,18 @@ const CTASection = ({
     buttonVariant = 'secondary',
     className
 }: CTAProps) => {
-    const uid = React.useId();
-    const headingId = `${uid}-heading`;
-    const descId = `${uid}-desc`;
-    const variantStyles = VARIANT_STYLES[variant];
-    const headingColor = VARIANT_HEADING_COLORS[variant];
-    const descriptionColor = VARIANT_DESCRIPTION_COLORS[variant];
+    // Memoize computed values to prevent unnecessary recalculations
+    const { uid, headingId, descId, variantStyles, headingColor, descriptionColor } = useMemo(() => {
+        const uid = Math.random().toString(36).substr(2, 9); // Simplified ID generation
+        return {
+            uid,
+            headingId: `${uid}-heading`,
+            descId: `${uid}-desc`,
+            variantStyles: VARIANT_STYLES[variant],
+            headingColor: VARIANT_HEADING_COLORS[variant],
+            descriptionColor: VARIANT_DESCRIPTION_COLORS[variant]
+        };
+    }, [variant]);
 
     return (
         <section 
