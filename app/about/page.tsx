@@ -1,4 +1,4 @@
-import React, { JSX, Suspense } from 'react';
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { MainLayout } from '@/components/Layout/MainLayout';
@@ -88,7 +88,7 @@ export async function generateMetadata(): Promise<Metadata> {
  * )
  */
 
-const AboutPage: React.FC = (): JSX.Element => {
+export default function AboutPage() {
   // Generate JSON-LD once per server request
   const jsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as SchemaContactInfo);
 
@@ -130,5 +130,3 @@ const AboutPage: React.FC = (): JSX.Element => {
     </MainLayout>
   );
 }
-
-export default AboutPage;
