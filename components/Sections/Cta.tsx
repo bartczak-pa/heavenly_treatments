@@ -25,9 +25,15 @@ interface CTAProps {
 }
 
 const VARIANT_STYLES = {
-    primary: 'bg-primary text-primary-foreground',
-    secondary: 'bg-secondary text-secondary-foreground',
-    muted: 'bg-muted text-muted-foreground'
+    primary: 'bg-primary',
+    secondary: 'bg-secondary',
+    muted: 'bg-muted'
+} as const;
+
+const VARIANT_HEADING_COLORS = {
+    primary: 'text-primary-foreground',
+    secondary: 'text-secondary-foreground',
+    muted: 'text-muted-foreground'
 } as const;
 
 const VARIANT_DESCRIPTION_COLORS = {
@@ -49,6 +55,7 @@ const CTASection = ({
     const headingId = `${uid}-heading`;
     const descId = `${uid}-desc`;
     const variantStyles = VARIANT_STYLES[variant];
+    const headingColor = VARIANT_HEADING_COLORS[variant];
     const descriptionColor = VARIANT_DESCRIPTION_COLORS[variant];
 
     return (
@@ -63,7 +70,10 @@ const CTASection = ({
             <div className="container mx-auto px-4 text-center">
                 <h2 
                     id={headingId}
-                    className="font-serif text-3xl md:text-4xl font-semibold mb-4"
+                    className={cn(
+                        'font-serif text-3xl md:text-4xl font-semibold mb-4',
+                        headingColor
+                    )}
                 >
                     {title}
                 </h2>
