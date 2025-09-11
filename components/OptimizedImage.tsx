@@ -75,11 +75,10 @@ const OptimizedImage = memo<OptimizedImageProps>(({
   
   // Memoize sorted sizes to prevent re-sorting on every render
   const sortedSizes = useMemo(() => {
-    if (!metadata?.sizes) return null;
-    // Create a stable reference by converting to string for comparison
-    const sizesKey = metadata.sizes.join(',');
-    return [...metadata.sizes].sort((a, b) => a - b);
-  }, [metadata?.sizes]);
+    const sizes = metadata?.sizes;
+    if (!sizes?.length) return null;
+    return [...sizes].sort((a, b) => a - b);
+  }, [metadata?.sizes?.join(',')]);
   
   // Generate responsive sizes if not provided
   const responsiveSizes = props.sizes || (sortedSizes?.length 
@@ -108,8 +107,8 @@ const OptimizedImage = memo<OptimizedImageProps>(({
       blurDataURL={metadata?.blurDataURL}
       sizes={responsiveSizes}
       {...props}
-      // Use custom loader for responsive variants
-      {...(customLoader && { loader: customLoader })}
+      // Use custom loader for responsive variants only if user didn't provide one
+      {...(!('loader' in props) && customLoader ? { loader: customLoader } : {})}
       // Enhanced error handling
       onError={(_e) => {
         // Call external error reporting if provided

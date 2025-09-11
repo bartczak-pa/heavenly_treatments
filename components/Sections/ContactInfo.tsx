@@ -32,18 +32,7 @@ const contactData = {
   ]
 } as const;
 
-const contactLinks = {
-  email: {
-    href: "mailto:hayley@heavenly-treatments.co.uk",
-    text: "hayley@heavenly-treatments.co.uk",
-    ariaLabel: "Send email to Hayley"
-  },
-  phone: {
-    href: "tel:07960315337",
-    text: "07960 315 337",
-    ariaLabel: "Call Hayley at 07960 315 337"
-  }
-} as const;
+// Contact links are now generated dynamically from the data to prevent drift
 
 interface ContactInfoProps {
   className?: string;
@@ -64,36 +53,52 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ className }) => {
               {contactData.info.map((item, index) => {
                 const Icon = item.icon;
                 return (
-                  <div
+                  <section
                     key={index}
                     className="flex items-start gap-4"
-                    role="region"
-                    aria-label={item.ariaLabel}
+                    aria-labelledby={`contact-item-${index}`}
                   >
                     <Icon
                       className="h-6 w-6 text-primary flex-shrink-0 mt-1"
                       aria-hidden="true"
                     />
                     <div>
-                      <h3 className="font-semibold text-lg text-foreground mb-1">
+                      <h3 id={`contact-item-${index}`} className="font-semibold text-lg text-foreground mb-1">
                         {item.title}
                       </h3>
                       {item.details.map((detail, detailIndex) => {
                         // Handle contact details with links
                         if (item.title === "Contact") {
                           const isEmail = detail.includes("@");
-                          const linkData = isEmail ? contactLinks.email : contactLinks.phone;
+                          const href = isEmail ? `mailto:${detail}` : `tel:${detail.replace(/\\s+/g, '')}`;
+                          const ariaLabel = isEmail ? `Send email to ${detail}` : `Call ${detail}`;
                           return (
                             <p key={`contact-detail-${detailIndex}`} className="font-sans text-muted-foreground text-sm">
                               <a
-                                href={linkData.href}
+                                href={href}
                                 className="hover:text-primary transition-colors focus:text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-sm"
-                                aria-label={linkData.ariaLabel}
+                                aria-label={ariaLabel}
                                 rel="noopener noreferrer"
                               >
-                                {linkData.text}
+                                {detail}
                               </a>
                             </p>
+                          );
+                        }
+                        // Handle address with semantic element
+                        if (item.title === "Location") {
+                          return (
+                            <address key={`detail-${detailIndex}`} className="font-sans text-muted-foreground text-sm not-italic">
+                              {detail}
+                            </address>
+                          );
+                        }
+                        // Handle opening hours with semantic element
+                        if (item.title === "Opening Hours") {
+                          return (
+                            <time key={`detail-${detailIndex}`} className="font-sans text-muted-foreground text-sm">
+                              {detail}
+                            </time>
                           );
                         }
                         // Regular text for other details
@@ -107,7 +112,7 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ className }) => {
                         );
                       })}
                     </div>
-                  </div>
+                  </section>
                 );
               })}
             </div>

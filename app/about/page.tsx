@@ -1,34 +1,42 @@
-import React, { JSX, useMemo, lazy, Suspense } from 'react';
+import React, { JSX } from 'react';
 import type { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import MeetTherapist from '@/components/Sections/MeetTherapist';
 import { contactInfo } from '@/lib/data/contactInfo';
 import Script from 'next/script';
-import { generateHealthAndBeautyBusinessJsonLd, ContactInfo as ContactInfoType } from '@/lib/jsonLsUtils';
-
-// Lazy load below-fold components for better performance
-const MyStudio = lazy(() => import('@/components/Sections/MyStudio'));
-const ContactInfo = lazy(() => import('@/components/Sections/ContactInfo'));
-const CTASection = lazy(() => import('@/components/Sections/Cta'));
+import { generateHealthAndBeautyBusinessJsonLd, ContactInfo as SchemaContactInfo } from '@/lib/jsonLsUtils';
 
 // Loading component for lazy-loaded sections
 const SectionSkeleton = () => (
-  <div className="py-16 bg-gray-50 animate-pulse">
+  <div className="py-16 bg-gray-50 animate-pulse" role="status" aria-live="polite" aria-busy="true">
     <div className="container mx-auto px-4 max-w-4xl">
-      <div className="h-8 bg-gray-200 rounded w-48 mx-auto mb-8"></div>
+      <span className="sr-only">Loading section…</span>
+      <div className="h-8 bg-gray-200 rounded w-48 mx-auto mb-8" aria-hidden="true"></div>
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="lg:w-2/3 space-y-4">
-          <div className="h-4 bg-gray-200 rounded"></div>
-          <div className="h-4 bg-gray-200 rounded"></div>
-          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+          <div className="h-4 bg-gray-200 rounded" aria-hidden="true"></div>
+          <div className="h-4 bg-gray-200 rounded" aria-hidden="true"></div>
+          <div className="h-4 bg-gray-200 rounded w-3/4" aria-hidden="true"></div>
         </div>
         <div className="lg:w-1/3">
-          <div className="h-48 bg-gray-200 rounded"></div>
+          <div className="h-48 bg-gray-200 rounded" aria-hidden="true"></div>
         </div>
       </div>
     </div>
   </div>
 );
+
+// Lazy load below-the-fold components via next/dynamic with loading component
+const MyStudio = dynamic(() => import('@/components/Sections/MyStudio'), {
+  loading: () => <SectionSkeleton />
+});
+const ContactInfo = dynamic(() => import('@/components/Sections/ContactInfo'), {
+  loading: () => <SectionSkeleton />
+});
+const CTASection = dynamic(() => import('@/components/Sections/Cta'), {
+  loading: () => <SectionSkeleton />
+});
 
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
@@ -84,11 +92,8 @@ export async function generateMetadata(): Promise<Metadata> {
  */
 
 const AboutPage: React.FC = (): JSX.Element => {
-  // Memoize JSON-LD to prevent regeneration on every render
-  const jsonLd = useMemo(
-    () => generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfoType),
-    []
-  );
+  // Generate JSON-LD once per server request
+  const jsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as SchemaContactInfo);
 
   return (
     <MainLayout>
@@ -108,22 +113,16 @@ const AboutPage: React.FC = (): JSX.Element => {
         <main id="main-content">
           <MeetTherapist />
           
-          <Suspense fallback={<SectionSkeleton />}>
-            <MyStudio />
-          </Suspense>
+          <MyStudio />
           
-          <Suspense fallback={<SectionSkeleton />}>
-            <CTASection 
-              title="Ready to Relax and Rejuvenate?"
-              description="Book your appointment today and start your journey towards wellness."
-              buttonText="Book Now"
-              buttonLink="/booking"
-            />
-          </Suspense>
+          <CTASection 
+            title="Ready to Relax and Rejuvenate?"
+            description="Book your appointment today and start your journey towards wellness."
+            buttonText="Book Now"
+            buttonLink="/booking"
+          />
           
-          <Suspense fallback={<SectionSkeleton />}>
-            <ContactInfo />
-          </Suspense>
+          <ContactInfo />
         </main>
         
       </div>
