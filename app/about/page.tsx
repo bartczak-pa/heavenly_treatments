@@ -1,4 +1,4 @@
-import React, { JSX } from 'react';
+import React, { JSX, Suspense } from 'react';
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { MainLayout } from '@/components/Layout/MainLayout';
@@ -9,7 +9,7 @@ import { generateHealthAndBeautyBusinessJsonLd, ContactInfo as SchemaContactInfo
 
 // Loading component for lazy-loaded sections
 const SectionSkeleton = () => (
-  <div className="py-16 bg-gray-50 animate-pulse" role="status" aria-live="polite" aria-busy="true">
+  <div className="py-16 bg-gray-50 animate-pulse" aria-live="polite" aria-busy="true">
     <div className="container mx-auto px-4 max-w-4xl">
       <span className="sr-only">Loading section…</span>
       <div className="h-8 bg-gray-200 rounded w-48 mx-auto mb-8" aria-hidden="true"></div>
@@ -27,13 +27,10 @@ const SectionSkeleton = () => (
   </div>
 );
 
-// Lazy load below-the-fold components via next/dynamic with loading component
-const MyStudio = dynamic(() => import('@/components/Sections/MyStudio'), {
-  loading: () => <SectionSkeleton />
-});
-const ContactInfo = dynamic(() => import('@/components/Sections/ContactInfo'), {
-  loading: () => <SectionSkeleton />
-});
+// Lazy load below-the-fold components via next/dynamic with loading components
+// Next.js 15 doesn't support suspense option, so we use manual Suspense wrappers for SSR streaming
+const MyStudio = dynamic(() => import('@/components/Sections/MyStudio'));
+const ContactInfo = dynamic(() => import('@/components/Sections/ContactInfo'));
 const CTASection = dynamic(() => import('@/components/Sections/Cta'), {
   loading: () => <SectionSkeleton />
 });
@@ -113,7 +110,9 @@ const AboutPage: React.FC = (): JSX.Element => {
         <main id="main-content">
           <MeetTherapist />
           
-          <MyStudio />
+          <Suspense fallback={<SectionSkeleton />}>
+            <MyStudio />
+          </Suspense>
           
           <CTASection 
             title="Ready to Relax and Rejuvenate?"
@@ -122,7 +121,9 @@ const AboutPage: React.FC = (): JSX.Element => {
             buttonLink="/booking"
           />
           
-          <ContactInfo />
+          <Suspense fallback={<SectionSkeleton />}>
+            <ContactInfo />
+          </Suspense>
         </main>
         
       </div>
