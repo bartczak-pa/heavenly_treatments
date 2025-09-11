@@ -75,8 +75,10 @@ const OptimizedImage = memo<OptimizedImageProps>(({
   
   // Memoize sorted sizes to prevent re-sorting on every render
   const sortedSizes = useMemo(() => {
-    return metadata?.sizes ? [...metadata.sizes].sort((a, b) => a - b) : null;
-  }, [metadata?.sizes]);
+    const sizes = metadata?.sizes;
+    if (!sizes?.length) return null;
+    return [...sizes].sort((a, b) => a - b);
+  }, [metadata?.sizes?.join(',')]);
   
   // Generate responsive sizes if not provided
   const responsiveSizes = props.sizes || (sortedSizes?.length 
@@ -84,11 +86,15 @@ const OptimizedImage = memo<OptimizedImageProps>(({
     : undefined
   );
   
-  // Custom loader for responsive variants
-  const customLoader: ImageLoader | undefined = sortedSizes ? ({ width }) => {
-    const candidate = sortedSizes.find(s => s >= width) ?? sortedSizes[sortedSizes.length - 1];
-    return metadata!.src.replace(/\.webp$/, `_${candidate}w.webp`);
-  } : undefined;
+  // Memoize custom loader for responsive variants to prevent recreation
+  const customLoader: ImageLoader | undefined = useMemo(() => {
+    if (!sortedSizes || !metadata) return undefined;
+    
+    return ({ width }) => {
+      const candidate = sortedSizes.find(s => s >= width) ?? sortedSizes[sortedSizes.length - 1];
+      return metadata.src.replace(/\.webp$/, `_${candidate}w.webp`);
+    };
+  }, [sortedSizes, metadata]);
 
   return (
     <Image
@@ -101,8 +107,8 @@ const OptimizedImage = memo<OptimizedImageProps>(({
       blurDataURL={metadata?.blurDataURL}
       sizes={responsiveSizes}
       {...props}
-      // Use custom loader for responsive variants
-      {...(customLoader && { loader: customLoader })}
+      // Use custom loader for responsive variants only if user didn't provide one
+      {...(!('loader' in props) && customLoader ? { loader: customLoader } : {})}
       // Enhanced error handling
       onError={(_e) => {
         // Call external error reporting if provided
