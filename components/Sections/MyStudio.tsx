@@ -5,6 +5,7 @@ interface MyStudioProps {
   className?: string;
 }
 
+// Static content moved outside component to prevent recreation on renders
 const STUDIO_CONTENT = {
   title: "My studio",
   paragraphs: [
@@ -28,18 +29,18 @@ const MyStudio: React.FC<MyStudioProps> = ({ className = "" }) => {
           <div className="lg:w-2/3">
             <div className="space-y-4 text-gray-700">
               {STUDIO_CONTENT.paragraphs.map((paragraph, index) => (
-                <p key={index} className="leading-relaxed">
+                <p key={`studio-paragraph-${index}`} className="leading-relaxed">
                   {paragraph}
                 </p>
               ))}
             </div>
           </div>
           <div className="w-full lg:w-1/2">
-            <div className="relative w-full h-[400px] sm:h-[450px] md:h-[500px] lg:h-[550px] rounded-lg overflow-hidden shadow-lg mx-auto lg:mx-0">
+            <div className="relative w-full aspect-[4/5] sm:aspect-[3/4] md:aspect-[4/5] lg:h-[550px] rounded-lg overflow-hidden shadow-lg mx-auto lg:mx-0">
               <OptimizedImage
                 src="heavenly-treatments-room"
                 fallback="/images/about/heavenly-treatments-room.jpg"
-                alt="Tranquil spa studio interior featuring comfortable treatment space in Kelso cottage setting"
+                alt="Spa treatment room interior at Heavenly Treatments"
                 fill
                 style={{ objectFit: 'cover' }}
                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 40vw"

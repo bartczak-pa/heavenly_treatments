@@ -1,6 +1,7 @@
 import React from 'react';
 import { Clock, MapPin, Smartphone } from 'lucide-react';
 
+// Static data moved outside component to prevent recreation
 const contactData = {
   title: "Get In Touch",
   info: [
@@ -44,9 +45,13 @@ const contactLinks = {
   }
 } as const;
 
-const ContactInfo = () => {
+interface ContactInfoProps {
+  className?: string;
+}
+
+const ContactInfo: React.FC<ContactInfoProps> = ({ className }) => {
     return (
-        <section className="py-16 md:py-24 bg-background" aria-labelledby="contact-heading">
+        <section className={`py-16 md:py-24 bg-background ${className || ''}`} aria-labelledby="contact-heading">
           <div className="container mx-auto px-4">
             <h2
               id="contact-heading"
@@ -79,11 +84,12 @@ const ContactInfo = () => {
                           const isEmail = detail.includes("@");
                           const linkData = isEmail ? contactLinks.email : contactLinks.phone;
                           return (
-                            <p key={detailIndex} className="font-sans text-muted-foreground text-sm">
+                            <p key={`contact-detail-${detailIndex}`} className="font-sans text-muted-foreground text-sm">
                               <a
                                 href={linkData.href}
                                 className="hover:text-primary transition-colors focus:text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-sm"
                                 aria-label={linkData.ariaLabel}
+                                rel="noopener noreferrer"
                               >
                                 {linkData.text}
                               </a>
@@ -93,7 +99,7 @@ const ContactInfo = () => {
                         // Regular text for other details
                         return (
                           <p
-                            key={detailIndex}
+                            key={`detail-${detailIndex}`}
                             className="font-sans text-muted-foreground text-sm"
                           >
                             {detail}

@@ -75,7 +75,10 @@ const OptimizedImage = memo<OptimizedImageProps>(({
   
   // Memoize sorted sizes to prevent re-sorting on every render
   const sortedSizes = useMemo(() => {
-    return metadata?.sizes ? [...metadata.sizes].sort((a, b) => a - b) : null;
+    if (!metadata?.sizes) return null;
+    // Create a stable reference by converting to string for comparison
+    const sizesKey = metadata.sizes.join(',');
+    return [...metadata.sizes].sort((a, b) => a - b);
   }, [metadata?.sizes]);
   
   // Generate responsive sizes if not provided
@@ -84,11 +87,15 @@ const OptimizedImage = memo<OptimizedImageProps>(({
     : undefined
   );
   
-  // Custom loader for responsive variants
-  const customLoader: ImageLoader | undefined = sortedSizes ? ({ width }) => {
-    const candidate = sortedSizes.find(s => s >= width) ?? sortedSizes[sortedSizes.length - 1];
-    return metadata!.src.replace(/\.webp$/, `_${candidate}w.webp`);
-  } : undefined;
+  // Memoize custom loader for responsive variants to prevent recreation
+  const customLoader: ImageLoader | undefined = useMemo(() => {
+    if (!sortedSizes || !metadata) return undefined;
+    
+    return ({ width }) => {
+      const candidate = sortedSizes.find(s => s >= width) ?? sortedSizes[sortedSizes.length - 1];
+      return metadata.src.replace(/\.webp$/, `_${candidate}w.webp`);
+    };
+  }, [sortedSizes, metadata]);
 
   return (
     <Image
