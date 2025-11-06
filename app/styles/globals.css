@@ -105,6 +105,7 @@
   --line-height-tight: 1.2;
   --line-height-normal: 1.5;
   --line-height-relaxed: 1.75;
+  --line-height-loose: 1.8;
 
   /* Font weights */
   --font-weight-light: 300;
@@ -117,8 +118,10 @@
   --letter-spacing-tighter: -0.05em;
   --letter-spacing-tight: -0.025em;
   --letter-spacing-normal: 0;
+  --letter-spacing-narrow: 0.015em;
   --letter-spacing-wide: 0.025em;
   --letter-spacing-wider: 0.05em;
+  --letter-spacing-widest: 0.1em;
 }
 
 .dark {
@@ -172,25 +175,34 @@
   }
   h1 {
     @apply font-serif text-4xl md:text-5xl font-bold leading-tight text-primary mb-6;
+    letter-spacing: var(--letter-spacing-tighter);
   }
 
   h2 {
-    @apply font-serif text-3xl md:text-4xl font-semibold leading-tight text-primary mb-4;
+    @apply font-serif text-3xl md:text-4xl font-bold leading-tight text-primary mb-4;
+    letter-spacing: var(--letter-spacing-tight);
   }
 
   h3 {
-    @apply font-serif text-2xl md:text-3xl font-medium leading-tight text-primary mb-3;
+    @apply font-serif text-2xl md:text-3xl font-semibold leading-snug text-primary mb-3;
+    letter-spacing: var(--letter-spacing-narrow);
   }
 
   h4 {
-    @apply font-serif text-xl md:text-2xl font-medium leading-tight text-primary mb-2;
+    @apply font-serif text-xl md:text-2xl font-semibold leading-snug text-primary mb-2;
+    letter-spacing: var(--letter-spacing-narrow);
   }
 
   p {
     @apply font-sans text-base leading-relaxed mb-4 text-foreground;
+    letter-spacing: var(--letter-spacing-narrow);
+  }
+
+  strong {
+    @apply font-semibold;
   }
 
   blockquote {
-    @apply font-serif text-lg italic border-l-4 border-primary pl-4 py-2 my-6;
+    @apply font-serif text-lg italic border-l-4 border-primary pl-4 py-2 my-6 leading-relaxed;
   }
 }
