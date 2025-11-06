@@ -54,8 +54,8 @@
   --popover: oklch(0.98 0.005 240);
   --popover-foreground: oklch(0.15 0.03 240);
 
-  /* Primary Color */
-  --primary: oklch(0.7 0.1922 13.3);
+  /* Primary Color - Refined Rose/Mauve (more sophisticated than bright pink) */
+  --primary: oklch(0.65 0.15 13);
   /* Foreground for Primary: Needs high contrast (light) */
   --primary-foreground: oklch(0.98 0.005 240); /* Using light base */
 
@@ -81,7 +81,7 @@
   --input: oklch(0.92 0.01 240);
 
   /* Ring: Focus indicator, using Primary */
-  --ring: oklch(0.7 0.1922 13.3);
+  --ring: oklch(0.65 0.15 13);
 
   /* Radius */
   --radius: 0.5rem; /* Default shadcn radius, adjust if needed */
@@ -163,7 +163,7 @@
   --input: oklch(0.25 0.03 240);
 
   /* Ring: Focus indicator, using Primary */
-  --ring: oklch(0.7 0.1922 13.3);
+  --ring: oklch(0.65 0.15 13);
 }
 
 @layer base {
