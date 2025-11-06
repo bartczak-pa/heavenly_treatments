@@ -69,21 +69,33 @@ export default function CategoryFilters({ selectedCategory, categories }: Catego
       {/* Desktop Buttons */}
       <div className="hidden sm:flex flex-wrap justify-center gap-2">
         <Button
-          variant={selectedCategory === 'all' ? 'default' : 'ghost'}
+          variant={selectedCategory === 'all' ? 'default' : 'outline'}
           onClick={() => handleFilterChange('all')}
           size="sm"
           aria-pressed={selectedCategory === 'all'}
+          className={`transition-all duration-200 ease-out ${
+            selectedCategory === 'all'
+              ? 'shadow-md hover:shadow-lg scale-100'
+              : 'hover:bg-muted hover:border-primary/50'
+          }`}
         >
+          {selectedCategory === 'all' && <span className="mr-1.5">✓</span>}
           All Treatments
         </Button>
         {categories.map((category) => (
           <Button
             key={category.id}
-            variant={selectedCategory === category.slug ? 'default' : 'ghost'}
+            variant={selectedCategory === category.slug ? 'default' : 'outline'}
             onClick={() => handleFilterChange(category.slug)}
             size="sm"
             aria-pressed={selectedCategory === category.slug}
+            className={`transition-all duration-200 ease-out ${
+              selectedCategory === category.slug
+                ? 'shadow-md hover:shadow-lg scale-100'
+                : 'hover:bg-muted hover:border-primary/50'
+            }`}
           >
+            {selectedCategory === category.slug && <span className="mr-1.5">✓</span>}
             {category.name}
           </Button>
         ))}
@@ -91,7 +103,7 @@ export default function CategoryFilters({ selectedCategory, categories }: Catego
       {/* Mobile Select Dropdown */}
       <div className="sm:hidden w-full max-w-xs">
         <Select value={selectedCategory} onValueChange={handleFilterChange}>
-          <SelectTrigger>
+          <SelectTrigger className="transition-all duration-200 ease-out">
             <SelectValue placeholder="Select a category" />
           </SelectTrigger>
           <SelectContent>
