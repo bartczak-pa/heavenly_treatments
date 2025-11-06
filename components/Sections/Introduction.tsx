@@ -34,13 +34,13 @@ export default function IntroductionSection({ id, className }: IntroductionSecti
       className={cn("py-16 md:py-24 bg-background", className)}
     >
       <div className="container mx-auto px-4">
-        <div className="max-w-3xl mx-auto text-center space-y-4">
+        <div className="max-w-3xl mx-auto text-center space-y-8">
           <header>
             <h2 id={headingId} className="font-serif text-3xl md:text-4xl font-semibold text-primary">
               {CONTENT.heading}
             </h2>
           </header>
-          <div className="space-y-4">
+          <div className="space-y-6">
             {CONTENT.paragraphs.map((paragraph) => (
               <p key={paragraph.id} className={PARAGRAPH_CLASS}>
                 {paragraph.text}

@@ -38,15 +38,15 @@ const Testimonials = () => {
                             key={index}
                             className="flex flex-col overflow-hidden shadow-md group transition-all duration-300 ease-out hover:shadow-lg hover:-translate-y-1"
                         >
-                            <CardHeader className="px-4 py-1">
-                                <div className="flex flex-col">
+                            <CardHeader className="px-4 py-4">
+                                <div className="flex flex-col space-y-2">
                                     <h4 className="font-semibold text-primary">{testimonial.name}</h4>
                                     <p className="text-sm text-muted-foreground">
                                         {testimonial.customerType}
                                     </p>
                                 </div>
                             </CardHeader>
-                            <CardContent className="flex-grow p-6 pt-0">
+                            <CardContent className="flex-grow px-4 py-0">
                                 <p className="font-sans text-foreground/80 italic">&quot;{testimonial.testimonial}&quot;</p>
                             </CardContent>
                         </Card>
