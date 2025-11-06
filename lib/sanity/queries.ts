@@ -44,6 +44,7 @@ export const allTreatmentsQuery = groq`
     price,
     keyFeatures,
     image,
+    freshaUrl,
     category->{
       _id,
       name,
@@ -65,6 +66,7 @@ export const treatmentBySlugQuery = groq`
     price,
     keyFeatures,
     image,
+    freshaUrl,
     category->{
       _id,
       name,
@@ -86,6 +88,7 @@ export const treatmentsByCategoryQuery = groq`
     price,
     keyFeatures,
     image,
+    freshaUrl,
     category->{
       _id,
       name,

@@ -23,6 +23,7 @@ export interface SanityTreatment {
   price: string;
   keyFeatures?: string[];
   image: SanityImageSource;
+  freshaUrl?: string;
   category: {
     _id: string;
     name: string;

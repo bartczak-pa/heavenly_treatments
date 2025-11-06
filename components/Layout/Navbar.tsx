@@ -1,9 +1,10 @@
 
 'use client';
 
-import React, { useState, useMemo, memo } from 'react';
+import React, { useState, useMemo, memo, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { getClientBookingVariant, getBookingUrl, trackBookingClick, type BookingVariant } from '@/lib/ab-test';
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -57,6 +58,8 @@ interface MobileNavigationMenuProps {
   isTreatmentsOpen: boolean;
   setIsTreatmentsOpen: (open: boolean) => void;
   categories: TreatmentCategory[];
+  bookingUrl: string;
+  handleBookingClick: () => void;
 }
 
 interface TreatmentDropdownContentProps {
@@ -143,7 +146,9 @@ MobileNavigationLinks.displayName = 'MobileNavigationLinks';
 const MobileNavigationMenu = memo<MobileNavigationMenuProps>(({
   isTreatmentsOpen,
   setIsTreatmentsOpen,
-  categories
+  categories,
+  bookingUrl,
+  handleBookingClick
 }) => (
   <div className="flex flex-col space-y-3 mt-4 pl-4 pr-4">
     <MobileNavigationLinks />
@@ -190,7 +195,7 @@ const MobileNavigationMenu = memo<MobileNavigationMenuProps>(({
 
     <div className="pt-4">
       <Button variant="default" className="w-full" asChild>
-        <Link href="/treatments">
+        <Link href={bookingUrl} onClick={handleBookingClick}>
           Book Now
         </Link>
       </Button>
@@ -218,6 +223,7 @@ export default function Navbar({ categories }: NavbarProps) {
    * - Integration with TreatmentCategoryLinks component
    * - Uses Radix UI components for accessibility
    * - Optimized performance with memoization
+   * - A/B testing for booking flow optimization
    *
    * @component
    * @example
@@ -228,6 +234,23 @@ export default function Navbar({ categories }: NavbarProps) {
    * @returns {JSX.Element} A responsive navigation bar
    */
   const [isMobileTreatmentsOpen, setIsMobileTreatmentsOpen] = useState(false);
+  const [bookingVariant, setBookingVariant] = useState<BookingVariant | null>(null);
+
+  // Get A/B test variant on mount
+  useEffect(() => {
+    const variant = getClientBookingVariant();
+    setBookingVariant(variant);
+  }, []);
+
+  // Get booking URL based on variant (no specific treatment for navbar)
+  const bookingUrl = useMemo(() => getBookingUrl(null, bookingVariant), [bookingVariant]);
+
+  // Handle booking CTA click with tracking
+  const handleBookingClick = () => {
+    if (bookingVariant) {
+      trackBookingClick(bookingVariant, undefined, undefined, 'navbar');
+    }
+  };
 
   // Memoize processed treatment categories to prevent unnecessary re-renders
   const processedCategories = useMemo<ProcessedTreatmentCategory[]>(() =>
@@ -267,7 +290,7 @@ export default function Navbar({ categories }: NavbarProps) {
         {/* Right Navigation - Fixed width container */}
         <div className="flex items-center justify-end w-32">
           <Button variant="default" size="lg" asChild>
-            <Link href="/treatments">
+            <Link href={bookingUrl} onClick={handleBookingClick}>
               Book Now
             </Link>
           </Button>
@@ -299,6 +322,8 @@ export default function Navbar({ categories }: NavbarProps) {
                 isTreatmentsOpen={isMobileTreatmentsOpen}
                 setIsTreatmentsOpen={setIsMobileTreatmentsOpen}
                 categories={categories}
+                bookingUrl={bookingUrl}
+                handleBookingClick={handleBookingClick}
               />
             </SheetContent>
           </Sheet>

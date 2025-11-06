@@ -1,16 +1,15 @@
 import React from 'react';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import { getTreatmentBySlug, getAllTreatmentSlugs, getCategories } from '@/lib/cms/treatments';
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
 import { Clock, PoundSterling, CheckCircle } from 'lucide-react';
 import { Metadata } from 'next';
 import Script from 'next/script';
 import { contactInfo } from '@/lib/data/contactInfo';
 import { generateServiceJsonLd, ContactInfo, generateBreadcrumbJsonLd } from '@/lib/jsonLsUtils';
 import { config } from '@/lib/config';
+import TreatmentBookingButton from '@/components/Treatments/TreatmentBookingButton';
 
 // Revalidate this page every hour
 export const revalidate = 3600;
@@ -37,8 +36,6 @@ export default async function TreatmentDetailPage({ params }: Props) {
   const categories = await getCategories();
   const categoryData = categories.find(cat => cat.slug === treatment.category);
   const categoryName = categoryData ? categoryData.name : treatment.category; // Fallback to slug if name not found
-
-  const contactHref = `/contact?treatment=${encodeURIComponent(treatment.title)}`;
 
   // --- Prepare Breadcrumb Data ---
   let BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -125,11 +122,9 @@ export default async function TreatmentDetailPage({ params }: Props) {
               )}
 
               <div className="pt-4">
-                <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90" asChild>
-                  <Link href={contactHref}>
-                    Book This Treatment
-                  </Link>
-                </Button>
+                <TreatmentBookingButton treatment={treatment}>
+                  Book This Treatment
+                </TreatmentBookingButton>
               </div>
             </div>
           </div>

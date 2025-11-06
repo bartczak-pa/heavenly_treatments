@@ -11,21 +11,23 @@
 
 'use client';
 
-import React, { memo } from 'react';
+import React, { memo, useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
 import OptimizedImage from '@/components/OptimizedImage';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Treatment } from '@/lib/data/treatments';
+import { SanityTreatment } from '@/lib/sanity/types';
 import { Clock, PoundSterling } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { getClientBookingVariant, getBookingUrl, trackBookingClick, type BookingVariant } from '@/lib/ab-test';
+import { urlFor } from '@/lib/sanity/image';
 
 /**
  * Props interface for the TreatmentCard component
  */
 interface TreatmentCardProps {
   /** Treatment data object containing all display information */
-  treatment: Treatment;
+  treatment: SanityTreatment;
 };
 
 /**
@@ -52,8 +54,31 @@ interface TreatmentCardProps {
  * ```
  */
 const TreatmentCard = memo<TreatmentCardProps>(({ treatment }) => {
-  const contactHref: string = `/contact?treatment=${encodeURIComponent(treatment.title)}`;
-  const detailHref: string = `/treatments/${treatment.category}/${treatment.slug}`;
+  const [bookingVariant, setBookingVariant] = useState<BookingVariant | null>(null);
+
+  // Get A/B test variant on mount
+  useEffect(() => {
+    const variant = getClientBookingVariant();
+    setBookingVariant(variant);
+  }, []);
+
+  // Get booking URL based on variant and treatment
+  const bookingUrl = useMemo(
+    () => getBookingUrl(treatment, bookingVariant),
+    [treatment, bookingVariant]
+  );
+
+  // Handle booking CTA click with tracking
+  const handleBookingClick = () => {
+    if (bookingVariant) {
+      trackBookingClick(bookingVariant, treatment.title, undefined, 'treatment_card');
+    }
+  };
+
+  const detailHref: string = `/treatments/${treatment.category.slug}/${treatment.slug}`;
+
+  // Get image URL from Sanity
+  const imageUrl = treatment.image ? urlFor(treatment.image).width(800).height(600).url() : null;
 
   return (
     <Card className={cn(
@@ -61,9 +86,9 @@ const TreatmentCard = memo<TreatmentCardProps>(({ treatment }) => {
       "pt-0 pb-4"
     )}>
       <Link href={detailHref} className="block relative w-full h-52 overflow-hidden">
-        {treatment.image ? (
+        {imageUrl ? (
           <OptimizedImage
-            src={treatment.image}
+            src={imageUrl}
             alt={treatment.title}
             fill
             style={{ objectFit: 'cover' }}
@@ -103,7 +128,7 @@ const TreatmentCard = memo<TreatmentCardProps>(({ treatment }) => {
           </span>
         </div>
         <Button asChild variant="secondary" size="sm">
-          <Link href={contactHref}>Book Now</Link>
+          <Link href={bookingUrl} onClick={handleBookingClick}>Book Now</Link>
         </Button>
       </CardFooter>
     </Card>

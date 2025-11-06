@@ -1,9 +1,10 @@
 'use client';
 
-import { useId } from "react";
+import { useId, useEffect, useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { getClientBookingVariant, getBookingUrl, trackBookingClick, type BookingVariant } from '@/lib/ab-test';
 
 type LocationAndBookingSectionProps = {
   id?: string;
@@ -30,14 +31,32 @@ const CONTENT = {
   buttonHref: string;
 };
 
-export default function LocationAndBookingSection({ 
-  id, 
-  className 
+export default function LocationAndBookingSection({
+  id,
+  className
 }: LocationAndBookingSectionProps) {
   const reactId = useId();
   const sectionId = id ?? `location-booking-${reactId}`;
   const headingId = `${sectionId}-heading`;
-  
+
+  const [bookingVariant, setBookingVariant] = useState<BookingVariant | null>(null);
+
+  // Get A/B test variant on mount
+  useEffect(() => {
+    const variant = getClientBookingVariant();
+    setBookingVariant(variant);
+  }, []);
+
+  // Get booking URL based on variant (no specific treatment for this CTA)
+  const bookingUrl = useMemo(() => getBookingUrl(null, bookingVariant), [bookingVariant]);
+
+  // Handle booking CTA click with tracking
+  const handleBookingClick = () => {
+    if (bookingVariant) {
+      trackBookingClick(bookingVariant, undefined, undefined, 'location_booking_section');
+    }
+  };
+
   return (
     <section 
       id={sectionId}
@@ -77,7 +96,7 @@ export default function LocationAndBookingSection({
           
           <div className="text-center">
             <Button asChild variant="default" size="lg">
-              <Link href={CONTENT.buttonHref}>{CONTENT.buttonText}</Link>
+              <Link href={bookingUrl} onClick={handleBookingClick}>{CONTENT.buttonText}</Link>
             </Button>
           </div>
         </article>

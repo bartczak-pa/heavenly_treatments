@@ -72,6 +72,16 @@ export default defineType({
       ],
       validation: (Rule) => Rule.required(),
     }),
+    defineField({
+      name: 'freshaUrl',
+      title: 'Fresha Booking URL',
+      type: 'url',
+      description: 'Optional: Direct booking link on Fresha for this specific treatment',
+      validation: (Rule) =>
+        Rule.uri({
+          scheme: ['http', 'https'],
+        }),
+    }),
   ],
   preview: {
     select: {
