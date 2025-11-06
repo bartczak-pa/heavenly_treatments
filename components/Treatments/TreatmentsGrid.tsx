@@ -11,7 +11,7 @@
 'use client';
 
 import React, { memo } from 'react';
-import { Treatment, } from '@/lib/data/treatments';
+import { SanityTreatment } from '@/lib/sanity/types';
 import TreatmentCard from '@/components/Treatments/TreatmentCard';
 
 /**
@@ -19,7 +19,7 @@ import TreatmentCard from '@/components/Treatments/TreatmentCard';
  */
 interface TreatmentsGridProps {
     /** Array of treatments to display in the grid */
-    treatments: Treatment[];
+    treatments: SanityTreatment[];
 }
 
 /**
@@ -44,9 +44,9 @@ const TreatmentsGrid = memo<TreatmentsGridProps>(({ treatments }) => {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {treatments.map((treatment) => (
-                <TreatmentCard 
-                    key={treatment.id} 
-                    treatment={treatment} 
+                <TreatmentCard
+                    key={treatment._id}
+                    treatment={treatment}
                 />
             ))}
         </div>
