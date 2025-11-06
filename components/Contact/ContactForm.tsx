@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Turnstile from 'react-turnstile';
-import { getTreatments, Treatment } from '@/lib/data/treatments';
+import { Treatment } from '@/lib/data/treatments';
 import { ContactFormData, contactFormSchema } from '@/lib/validations/contact';
 import { useContactFormToast } from '@/hooks/useContactFormToast';
 import { useRouter } from 'next/navigation';
@@ -30,56 +30,56 @@ import {
     FormMessage,
   } from "@/components/ui/form";
 import { ReloadIcon, Cross2Icon } from "@radix-ui/react-icons";
-import * as Toast from "@radix-ui/react-toast"; 
+import * as Toast from "@radix-ui/react-toast";
 
 
 // Add prop for initial treatment
 interface ContactFormProps {
     initialTreatment?: string;
+    treatments: Treatment[];
 }
 
-export default function ContactForm({ initialTreatment }: ContactFormProps) {
+export default function ContactForm({ initialTreatment, treatments }: ContactFormProps) {
 
   /**
    * ContactForm Component
-   * 
+   *
    * A form component for handling contact and booking requests. It includes:
    * - Personal information fields (name, email, phone)
    * - Treatment selection
    * - Message and scheduling details
    * - Turnstile verification
    * - Toast notifications for feedback
-   * 
+   *
    * Features:
    * - Form validation using Zod
    * - Cloudflare Turnstile integration for spam prevention
    * - Responsive design
    * - Accessible form controls
    * - Toast notifications for success/error states
-   * 
+   *
    * @component
    * @example
    * ```tsx
    * // Basic usage
-   * <ContactForm />
-   * 
+   * <ContactForm treatments={treatments} />
+   *
    * // With initial treatment pre-selected
-   * <ContactForm initialTreatment="pumpkin-pie-pamper" />
+   * <ContactForm initialTreatment="pumpkin-pie-pamper" treatments={treatments} />
    * ```
-   * 
+   *
    * @param {ContactFormProps} props - Component props
    * @param {string} [props.initialTreatment] - Optional treatment slug to pre-select
-   * 
+   * @param {Treatment[]} props.treatments - Array of available treatments for selection
+   *
    * @returns {JSX.Element} A contact form with validation and submission handling
    */
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string>('');
-  
+
   // Use the custom hook for toast management
   const { toastState, setToastOpen, showToast } = useContactFormToast();
-  
-  const treatments: Treatment[] = getTreatments();
 
   // 1. Initialize Form with react-hook-form + Zod
   const form = useForm<ContactFormData>({

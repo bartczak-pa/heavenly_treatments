@@ -3,19 +3,20 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { treatmentCategories } from '@/lib/data/treatments';
+import { TreatmentCategory } from '@/lib/data/treatments';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { config } from '@/lib/config';
 
 interface ServicesSectionProps {
+  categories: TreatmentCategory[];
   showAllButton?: boolean;
 }
 
-const ServicesSection: React.FC<ServicesSectionProps> = ({ showAllButton = true }) => {
+const ServicesSection: React.FC<ServicesSectionProps> = ({ categories, showAllButton = true }) => {
     const [showAll, setShowAll] = useState(!showAllButton);
-    const totalCategories = treatmentCategories.length;
+    const totalCategories = categories.length;
     const initialVisibleCount = config.ui.INITIAL_VISIBLE_TREATMENTS;
 
     return (
@@ -29,7 +30,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ showAllButton = true 
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {treatmentCategories.map((category, index) => (
+                    {categories.map((category, index) => (
                         <Link
                             key={category.id}
                             href={`/treatments?category=${category.slug}`}

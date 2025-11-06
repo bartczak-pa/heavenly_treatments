@@ -4,12 +4,13 @@ import Script from 'next/script';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import HeroSection from '@/components/Shared/HeroSection';
 import ContactInfo from '@/components/Contact/ContactInfo';
-import { 
-  DynamicContactForm,
+import ContactForm from '@/components/Contact/ContactForm';
+import {
   DynamicMapEmbed
 } from '@/components/Dynamic/DynamicComponents';
 import { contactInfo } from '@/lib/data/contactInfo';
 import { generateHealthAndBeautyBusinessJsonLd, ContactInfo as ContactInfoType } from '@/lib/jsonLsUtils';
+import { getTreatments } from '@/lib/cms/treatments';
 
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
@@ -54,23 +55,23 @@ export default async function ContactPage({ params, searchParams }: ContactPageP
     // Params currently unused but required by Next.js
     await params;
     const awaitedSearchParams = await searchParams;
-    
-    const initialTreatment = typeof awaitedSearchParams?.treatment === 'string' 
-        ? awaitedSearchParams.treatment 
+
+    const initialTreatment = typeof awaitedSearchParams?.treatment === 'string'
+        ? awaitedSearchParams.treatment
         : undefined;
 
-
+    const treatments = await getTreatments();
     const jsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfoType);
 
     return (
         <MainLayout>
-            <Script 
+            <Script
                 id="localbusiness-jsonld"
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 
-            <HeroSection  
+            <HeroSection
                 title="Book Your Visit at My Kelso Cottage Spa"
                 subtitle="I would love to hear from you! Please fill out the form below to inquire about bookings or ask any questions."
                 imageUrl="/images/contact/heavenly-treatments-from-outside.jpg"
@@ -83,7 +84,7 @@ export default async function ContactPage({ params, searchParams }: ContactPageP
                             <h2 className="font-serif text-3xl font-semibold mb-6 text-primary">
                                 Booking Inquiry & Contact Form
                             </h2>
-                            <DynamicContactForm initialTreatment={initialTreatment} />
+                            <ContactForm initialTreatment={initialTreatment} treatments={treatments} />
                         </div>
 
                         <div className="lg:order-2 space-y-8">

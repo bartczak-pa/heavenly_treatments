@@ -14,7 +14,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { getCategories, TreatmentCategorySlug } from '@/lib/data/treatments'; 
+import { TreatmentCategorySlug, TreatmentCategory } from '@/lib/data/treatments';
 
 /**
  * Props interface for the CategoryFilters component
@@ -22,27 +22,28 @@ import { getCategories, TreatmentCategorySlug } from '@/lib/data/treatments';
 interface CategoryFiltersProps {
   /** Currently selected category slug or 'all' for all treatments */
   selectedCategory: TreatmentCategorySlug | 'all';
+  /** Treatment categories to display in filters */
+  categories: TreatmentCategory[];
 }
 
 /**
  * Category filters component with responsive design
- * 
+ *
  * Displays treatment category filters with different interfaces for desktop and mobile:
  * - Desktop: Button-based horizontal filter bar
  * - Mobile: Dropdown select component for space efficiency
- * 
+ *
  * Handles URL navigation without scroll reset for better UX.
- * 
+ *
  * @param props - Component props
  * @returns JSX element representing the category filter interface
- * 
+ *
  * @example
  * ```typescript
- * <CategoryFilters selectedCategory="facial-treatments" />
+ * <CategoryFilters selectedCategory="facial-treatments" categories={categories} />
  * ```
  */
-export default function CategoryFilters({ selectedCategory }: CategoryFiltersProps) {
-  const categories = getCategories();
+export default function CategoryFilters({ selectedCategory, categories }: CategoryFiltersProps) {
   const router = useRouter();
 
   /**
