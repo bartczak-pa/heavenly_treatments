@@ -19,6 +19,12 @@ const nextConfig = {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [320, 640, 1024, 1280, 1536, 1920],
     imageSizes: [320, 640, 1024],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.sanity.io',
+      },
+    ],
   },
   async rewrites() {
     return [

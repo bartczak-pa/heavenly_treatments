@@ -30,7 +30,7 @@ function transformCategory(
     name: sanityCategory.name,
     description: sanityCategory.description,
     shortDescription: sanityCategory.shortDescription,
-    image: getImageUrl(sanityCategory.image, 800),
+    image: getImageUrl(sanityCategory.image, 800, undefined, 90),
     iconName: sanityCategory.iconName,
   };
 }
@@ -47,9 +47,9 @@ function transformTreatment(sanityTreatment: SanityTreatment): Treatment {
     duration: sanityTreatment.duration,
     price: sanityTreatment.price,
     keyFeatures: sanityTreatment.keyFeatures,
-    image: getImageUrl(sanityTreatment.image, 600),
-    imageWidth: 600,
-    imageHeight: 400,
+    image: getImageUrl(sanityTreatment.image, 1000, undefined, 90),
+    imageWidth: 1000,
+    imageHeight: 667,
     category: sanityTreatment.category.slug as TreatmentCategorySlug,
   };
 }

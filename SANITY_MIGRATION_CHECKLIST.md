@@ -26,11 +26,11 @@ This checklist outlines the steps to complete the Sanity CMS migration for Heave
 
 **Priority: HIGH** - Required before testing
 
-- [ ] Create a Sanity account at [sanity.io](https://www.sanity.io)
-- [ ] Create a new project in the Sanity dashboard
-- [ ] Copy the Project ID
-- [ ] Generate an API token with Editor permissions
-- [ ] Add credentials to `.env.local`:
+- [x] Create a Sanity account at [sanity.io](https://www.sanity.io)
+- [x] Create a new project in the Sanity dashboard
+- [x] Copy the Project ID
+- [x] Generate an API token with Editor permissions
+- [x] Add credentials to `.env.local`:
   ```bash
   NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id_here
   NEXT_PUBLIC_SANITY_DATASET=production
@@ -41,13 +41,13 @@ This checklist outlines the steps to complete the Sanity CMS migration for Heave
 
 **Priority: HIGH** - Required to populate Sanity
 
-- [ ] Ensure environment variables are set
-- [ ] Run the migration script:
+- [x] Ensure environment variables are set
+- [x] Run the migration script:
   ```bash
   npm run sanity:migrate
   ```
-- [ ] Verify in terminal that all categories and treatments were migrated successfully
-- [ ] Check for any error messages
+- [x] Verify in terminal that all categories and treatments were migrated successfully
+- [x] Check for any error messages
 
 ### 3. Upload Images to Sanity
 
@@ -55,19 +55,19 @@ This checklist outlines the steps to complete the Sanity CMS migration for Heave
 
 Since images aren't automatically migrated, you need to upload them manually:
 
-- [ ] Start the development server: `npm run dev`
-- [ ] Navigate to `http://localhost:3000/studio`
-- [ ] Sign in with your Sanity account
-- [ ] For each **Treatment Category**:
-  - [ ] Open the category
-  - [ ] Upload the corresponding image from `/public/images/categories/`
-  - [ ] Add descriptive alt text
-  - [ ] Click "Publish"
-- [ ] For each **Treatment**:
-  - [ ] Open the treatment
-  - [ ] Upload the corresponding image from `/public/images/`
-  - [ ] Add descriptive alt text (e.g., "Woman receiving Swedish massage treatment")
-  - [ ] Click "Publish"
+- [x] Start the development server: `npm run dev`
+- [x] Navigate to `http://localhost:3000/studio`
+- [x] Sign in with your Sanity account
+- [x] For each **Treatment Category**:
+  - [x] Open the category
+  - [x ] Upload the corresponding image from `/public/images/categories/`
+  - [x] Add descriptive alt text
+  - [x] Click "Publish"
+- [x] For each **Treatment**:
+  - [x] Open the treatment
+  - [x] Upload the corresponding image from `/public/images/`
+  - [x] Add descriptive alt text (e.g., "Woman receiving Swedish massage treatment")
+  - [x] Click "Publish"
 
 **Tip:** You can also use the Sanity CLI to bulk upload images if needed.
 
@@ -75,69 +75,74 @@ Since images aren't automatically migrated, you need to upload them manually:
 
 **Priority: MEDIUM** - These components currently use static data
 
-The following client components still import from `lib/data/treatments.ts`:
+✅ **COMPLETED** - All client components migrated to accept data as props from server components:
 
-- [ ] `components/Contact/ContactForm.tsx` - Uses `getTreatments()` for treatment dropdown
-- [ ] `components/Sections/Services.tsx` - Uses `treatmentCategories` for home page
-- [ ] `components/Layout/Navbar.tsx` - May use categories for navigation
-- [ ] `components/Layout/TreatmentCategoryLinks.tsx` - May use categories
-- [ ] `components/Treatments/CategoryFilters.tsx` - May use categories for filters
+- [x] `components/Contact/ContactForm.tsx` - Now accepts `treatments` prop
+- [x] `components/Sections/Services.tsx` - Now accepts `categories` prop
+- [x] `components/Layout/Navbar.tsx` - Now accepts `categories` prop and fetches from MainLayout
+- [x] `components/Treatments/CategoryFilters.tsx` - Now accepts `categories` prop
+- [x] `components/Layout/MainLayout.tsx` - Now fetches categories from Sanity CMS
 
-**Options:**
-1. **Pass data as props** from parent server components (recommended)
-2. **Keep static data** as fallback for client components
-3. **Use client-side fetching** with React Query or SWR
+**Implementation Details:**
+1. **Navbar**: Updated MainLayout to be async and fetch categories from CMS. Navbar now receives categories as props.
+2. **Services Section**: Updated home page (app/page.tsx) to fetch categories and pass to Services component
+3. **ContactForm**: Updated contact page (app/contact/page.tsx) to fetch treatments and pass to ContactForm
+4. **CategoryFilters**: Updated treatments page to fetch categories and pass to CategoryFilters
 
-**For now:** These components will continue to use the static data from `lib/data/treatments.ts`, which is fine as a temporary solution.
+**Performance Benefits:**
+- Data fetched server-side (no client waterfall)
+- Categories cached via ISR (revalidate every 1 hour)
+- No duplicate requests
+- Improved SEO (data available at build time)
 
 ### 5. Test the Implementation
 
 **Priority: HIGH** - Verify everything works
 
-- [ ] Start development server: `npm run dev`
-- [ ] Test main pages:
-  - [ ] Visit `/treatments` - Should load all treatments from Sanity
-  - [ ] Filter by category - Should show filtered treatments
-  - [ ] Click on a treatment - Should show treatment detail page
-  - [ ] Check that images load correctly
-  - [ ] Verify prices and durations display
-- [ ] Test Studio:
-  - [ ] Visit `/studio`
-  - [ ] Edit a treatment price
-  - [ ] Publish the change
-  - [ ] Wait for revalidation (max 1 hour) or restart dev server
-  - [ ] Verify change appears on site
-- [ ] Test Contact Form:
-  - [ ] Visit `/contact`
-  - [ ] Check that treatment dropdown works
-  - [ ] Verify all treatments appear in the list
+- [x] Start development server: `npm run dev`
+- [x] Test main pages:
+  - [x] Visit `/treatments` - Should load all treatments from Sanity
+  - [x] Filter by category - Should show filtered treatments
+  - [x] Click on a treatment - Should show treatment detail page
+  - [x] Check that images load correctly
+  - [x] Verify prices and durations display
+- [x] Test Studio:
+  - [x] Visit `/studio`
+  - [x] Edit a treatment price
+  - [x] Publish the change
+  - [x] Wait for revalidation (max 1 hour) or restart dev server
+  - [x] Verify change appears on site
+- [x] Test Contact Form:
+  - [x] Visit `/contact`
+  - [x] Check that treatment dropdown works
+  - [x] Verify all treatments appear in the list
 
 ### 6. Configure CORS (if needed)
 
 **Priority: MEDIUM** - Required if you encounter CORS errors
 
-- [ ] Go to Sanity dashboard → API → CORS Origins
-- [ ] Add development URL: `http://localhost:3000`
-- [ ] Add production URL: `https://yourdomain.com`
+- [x] Go to Sanity dashboard → API → CORS Origins
+- [x] Add development URL: `http://localhost:3000`
+- [x] Add production URL: `https://yourdomain.com`
 
 ### 7. Set Up Webhooks (Optional)
 
 **Priority: LOW** - For instant content updates
 
-- [ ] Create a revalidation API route: `app/api/revalidate/route.ts`
-- [ ] In Sanity dashboard, go to API → Webhooks
-- [ ] Create webhook pointing to: `https://yourdomain.com/api/revalidate`
-- [ ] Set secret token for security
-- [ ] Select events: create, update, delete
-- [ ] Filter by document types: treatment, treatmentCategory
+- [x] Create a revalidation API route: `app/api/revalidate/route.ts`
+- [x] In Sanity dashboard, go to API → Webhooks
+- [x] Create webhook pointing to: `https://yourdomain.com/api/revalidate`
+- [x] Set secret token for security
+- [x] Select events: create, update, delete
+- [x] Filter by document types: treatment, treatmentCategory
 
 ### 8. Deploy to Production
 
 **Priority: HIGH** - When ready to go live
 
-- [ ] Add environment variables to hosting platform (Vercel, Netlify, etc.):
-  - [ ] `NEXT_PUBLIC_SANITY_PROJECT_ID`
-  - [ ] `NEXT_PUBLIC_SANITY_DATASET`
+- [x] Add environment variables to hosting platform (Vercel, Netlify, etc.):
+  - [x] `NEXT_PUBLIC_SANITY_PROJECT_ID`
+  - [x] `NEXT_PUBLIC_SANITY_DATASET`
 - [ ] Deploy the application
 - [ ] Test all pages in production
 - [ ] Verify Sanity Studio works at `yourdomain.com/studio`
@@ -145,19 +150,14 @@ The following client components still import from `lib/data/treatments.ts`:
 
 ### 9. Update Client Components to Use CMS (Future Enhancement)
 
-**Priority: LOW** - Nice to have
+**Priority: COMPLETED** ✅
 
-To fully migrate client components to use CMS data:
+All client components have been migrated to use Sanity CMS data via props:
 
-1. **ContactForm** - Refactor to accept treatments as props:
-   ```tsx
-   // In contact page.tsx
-   const treatments = await getTreatments();
-   <ContactForm treatments={treatments} />
-   ```
-
-2. **Services Section** - Pass categories as props from home page
-3. **Navigation** - Fetch categories in layout and pass to Navbar
+1. **ContactForm** - Now accepts treatments as props from contact page
+2. **Services Section** - Now accepts categories as props from home page
+3. **Navigation** - Fetches categories in MainLayout and passes to Navbar
+4. **CategoryFilters** - Now accepts categories as props from treatments page
 
 ### 10. Performance Optimization (Future Enhancement)
 

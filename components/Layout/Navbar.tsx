@@ -26,7 +26,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Menu, ChevronRight, ChevronDown } from 'lucide-react';
-import { treatmentCategories, categoryIconMap, type TreatmentCategory } from '@/lib/data/treatments';
+import { categoryIconMap, type TreatmentCategory } from '@/lib/data/treatments';
 import TreatmentCategoryLinks from '@/components/Layout/TreatmentCategoryLinks';
 import { cn } from '@/lib/utils';
 
@@ -56,6 +56,7 @@ interface ProcessedTreatmentCategory extends TreatmentCategory {
 interface MobileNavigationMenuProps {
   isTreatmentsOpen: boolean;
   setIsTreatmentsOpen: (open: boolean) => void;
+  categories: TreatmentCategory[];
 }
 
 interface TreatmentDropdownContentProps {
@@ -141,7 +142,8 @@ MobileNavigationLinks.displayName = 'MobileNavigationLinks';
 
 const MobileNavigationMenu = memo<MobileNavigationMenuProps>(({
   isTreatmentsOpen,
-  setIsTreatmentsOpen
+  setIsTreatmentsOpen,
+  categories
 }) => (
   <div className="flex flex-col space-y-3 mt-4 pl-4 pr-4">
     <MobileNavigationLinks />
@@ -176,7 +178,7 @@ const MobileNavigationMenu = memo<MobileNavigationMenuProps>(({
             All Treatments
           </Link>
           <TreatmentCategoryLinks
-            categories={treatmentCategories}
+            categories={categories}
             showIcon={true}
             baseLinkClasses={styles.mobile.categoryLink}
             textClasses="text-secondary-foreground hover:text-primary"
@@ -198,7 +200,11 @@ const MobileNavigationMenu = memo<MobileNavigationMenuProps>(({
 
 MobileNavigationMenu.displayName = 'MobileNavigationMenu';
 
-export default function Navbar() {
+interface NavbarProps {
+  categories: TreatmentCategory[];
+}
+
+export default function Navbar({ categories }: NavbarProps) {
   /**
    * Navbar Component
    *
@@ -216,7 +222,7 @@ export default function Navbar() {
    * @component
    * @example
    * ```tsx
-   * <Navbar />
+   * <Navbar categories={categories} />
    * ```
    *
    * @returns {JSX.Element} A responsive navigation bar
@@ -225,10 +231,10 @@ export default function Navbar() {
 
   // Memoize processed treatment categories to prevent unnecessary re-renders
   const processedCategories = useMemo<ProcessedTreatmentCategory[]>(() =>
-    treatmentCategories.map((category) => ({
+    categories.map((category) => ({
       ...category,
       IconComponent: category.iconName ? categoryIconMap[category.iconName] : null,
-    })), []);
+    })), [categories]);
 
   return (
     <header className="w-full border-b bg-secondary/15 backdrop-blur supports-[backdrop-filter]:bg-secondary/15 z-40">
@@ -292,6 +298,7 @@ export default function Navbar() {
               <MobileNavigationMenu
                 isTreatmentsOpen={isMobileTreatmentsOpen}
                 setIsTreatmentsOpen={setIsMobileTreatmentsOpen}
+                categories={categories}
               />
             </SheetContent>
           </Sheet>

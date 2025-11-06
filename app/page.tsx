@@ -1,23 +1,25 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { MainLayout } from '@/components/Layout/MainLayout';
-import { 
+import {
   DynamicTestimonials,
   DynamicExperienceSection,
   DynamicServicesSection
 } from '@/components/Dynamic/DynamicComponents';
 
 import MainHeader from '@/components/Sections/MainHeader';
+import ServicesSection from '@/components/Sections/Services';
 import Script from 'next/script';
 import { contactInfo } from '@/lib/data/contactInfo';
-import { 
-  generateWebSiteJsonLd, 
-  generateHealthAndBeautyBusinessJsonLd, 
-  ContactInfo as ContactInfoType 
+import {
+  generateWebSiteJsonLd,
+  generateHealthAndBeautyBusinessJsonLd,
+  ContactInfo as ContactInfoType
 } from '@/lib/jsonLsUtils';
 import { config } from '@/lib/config';
 import LocationAndBookingSection from '@/components/Sections/LocationAndBooking';
 import IntroductionSection from '@/components/Sections/Introduction';
+import { getCategories } from '@/lib/cms/treatments';
 
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
@@ -48,32 +50,33 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const HomePage: React.FC = () => {
+async function HomePage() {
   const webSiteJsonLd = generateWebSiteJsonLd();
   const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfoType);
+  const categories = await getCategories();
 
   return (
     <MainLayout>
-      <Script 
+      <Script
         id="homepage-jsonld"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ 
+        dangerouslySetInnerHTML={{
           __html: JSON.stringify([webSiteJsonLd, businessJsonLd])
         }}
       />
       <MainHeader />
 
       <IntroductionSection />
-      <DynamicServicesSection showAllButton={false} /> 
+      <ServicesSection categories={categories} showAllButton={false} />
 
-     
+
       <DynamicExperienceSection />
-      
+
       <LocationAndBookingSection />
 
       <DynamicTestimonials />
     </MainLayout>
   );
-};
+}
 
 export default HomePage;

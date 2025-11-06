@@ -141,18 +141,18 @@ export default async function TreatmentsPage(props: Props) {
    
   const _params = awaitedParams; // Assign awaited params to unused variable
 
-  const currentSelection: TreatmentCategorySlug | 'all' = 
-    selectedCategorySlug && categoryData 
-      ? selectedCategorySlug 
+  const currentSelection: TreatmentCategorySlug | 'all' =
+    selectedCategorySlug
+      ? selectedCategorySlug
       : 'all';
 
-  const currentCategoryData: TreatmentCategory | null = 
-    currentSelection === 'all' 
-      ? null 
-      : categoryData ?? null; 
+  const currentCategoryData: TreatmentCategory | null =
+    currentSelection === 'all'
+      ? null
+      : categoryData ?? null;
 
-  
-  const filteredTreatments = 
+
+  const filteredTreatments =
     currentSelection === 'all'
       ? allTreatments
       : allTreatments.filter(treatment => treatment.category === currentSelection);
@@ -173,8 +173,9 @@ export default async function TreatmentsPage(props: Props) {
           </h1>
 
           <div className="flex justify-center mb-2 lg:mb-12">
-            <DynamicCategoryFilters 
+            <DynamicCategoryFilters
               selectedCategory={currentSelection}
+              categories={categories}
             />
           </div>
 
