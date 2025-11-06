@@ -21,8 +21,8 @@ export interface ImageOptimizationOptions {
   compression?: 'auto' | 'jpeg' | 'webp' | 'png';
   /** Progressive JPEG loading */
   progressive?: boolean;
-  /** Whether to crop to specified dimensions */
-  fit?: 'clamp' | 'clip' | 'crop' | 'fill' | 'fillmax' | 'max' | 'scale' | 'min';
+  /** Fit mode for image resizing */
+  fit?: 'clip' | 'crop' | 'fill' | 'fillmax' | 'max' | 'scale' | 'min';
   /** Device pixel ratio for responsive images (default 1) */
   dpr?: number;
 }
@@ -76,8 +76,14 @@ export function getImageUrl(
 
   let imageBuilder = urlFor(source)
     .auto('format') // Automatically use best format (AVIF, WebP, JPEG)
-    .quality(quality) // Set quality level
-    .fit(fit); // Specify fit mode
+    .quality(quality); // Set quality level
+
+  // Apply fit mode if provided
+  if (fit && fit !== 'max') {
+    imageBuilder = imageBuilder.fit(fit);
+  } else {
+    imageBuilder = imageBuilder.fit('max'); // Default fit mode
+  }
 
   // Apply compression settings for specific formats
   if (compression !== 'auto') {
