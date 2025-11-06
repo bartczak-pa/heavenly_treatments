@@ -112,7 +112,7 @@ const DesktopNavigationLinks = memo(() => (
   <>
     {navigationItems.map((item) => (
       <NavigationMenuItem key={item.href}>
-        <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), "bg-transparent")}>
+        <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), "bg-transparent transition-all duration-200 ease-out hover:text-primary hover:bg-primary/10 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-primary after:transition-all after:duration-300 hover:after:w-full")}>
           <Link href={item.href}>
             {item.label}
           </Link>
@@ -259,7 +259,7 @@ export default function Navbar({ categories }: NavbarProps) {
 
         {/* Centered Logo - Flex grow with center alignment */}
         <div className="flex-1 flex items-center justify-center px-8">
-          <Link href="/" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2 transition-all duration-300 ease-out hover:scale-105 hover:drop-shadow-md">
             <span className="text-xl font-bold font-serif text-primary truncate">Heavenly Treatments with Hayleybell</span>
           </Link>
         </div>
@@ -278,7 +278,7 @@ export default function Navbar({ categories }: NavbarProps) {
       <div className="flex lg:hidden items-center justify-between h-16 w-full px-4 sm:px-6">
         {/* Centered Logo */}
         <div className="flex-1 flex justify-center">
-          <Link href="/" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2 transition-all duration-300 ease-out hover:scale-105 hover:drop-shadow-md">
             <span className="text-lg sm:text-2xl font-bold font-serif text-primary">Heavenly Treatments with Hayleybell</span>
           </Link>
         </div>

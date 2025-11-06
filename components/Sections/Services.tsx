@@ -22,7 +22,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ categories, showAllBu
     return (
         <section className="py-16 md:py-24 bg-primary/10">
             <div className="container mx-auto px-4">
-                <h2 className="font-serif text-3xl md:text-4xl font-semibold text-primary text-center mb-4">
+                <h2 className="font-serif text-3xl md:text-4xl font-semibold text-primary text-center mb-6">
                     Explore My Services
                 </h2>
                 <p className="font-sans text-lg text-foreground/80 text-center mb-12 max-w-xl mx-auto">
@@ -40,7 +40,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ categories, showAllBu
                                 'md:block'
                              )}
                         >
-                             <Card className="flex flex-col h-full overflow-hidden shadow-md hover:shadow-xl group p-0">
+                             <Card className="flex flex-col h-full overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 group p-0 transition-all duration-300">
                                  <div className="relative w-full h-52 overflow-hidden">
                                     {category.image ? (
                                         <Image

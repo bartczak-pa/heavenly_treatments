@@ -163,10 +163,10 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         
         {/* First Name and Email Fields */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
             name="firstName"
@@ -238,7 +238,7 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
         />
 
         {/* Preferred Date/Time Fields */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               control={form.control}
               name="preferredDate"
@@ -356,10 +356,11 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
         </div>
         
         {/* 6. Submit Button */}
-        <Button 
-          type="submit" 
-          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-          disabled={isSubmitting || !turnstileToken} // Disable if submitting or Turnstile not verified
+        <Button
+          type="submit"
+          size="lg"
+          className="w-full"
+          disabled={isSubmitting || !turnstileToken}
         >
           {isSubmitting ? (
             <>

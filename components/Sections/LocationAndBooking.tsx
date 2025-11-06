@@ -46,29 +46,29 @@ export default function LocationAndBookingSection({
     >
       <div className="container mx-auto px-4">
         <article className="max-w-3xl mx-auto space-y-8">
-          <header className="text-center space-y-4">
-            <h2 
+          <header className="text-center space-y-6">
+            <h2
               id={headingId}
               className="font-serif text-3xl md:text-4xl font-semibold text-primary"
             >
               {CONTENT.heading}
             </h2>
           </header>
-          
+
           <div className="space-y-6 text-center">
             <p className={PARAGRAPH_CLASS}>
               {CONTENT.location}
             </p>
-            
-            <div className="space-y-4">
+
+            <div className="space-y-6">
               <p className={PARAGRAPH_CLASS}>
                 {CONTENT.availability}
               </p>
-              
+
               <p className={PARAGRAPH_CLASS}>
                 {CONTENT.process}
               </p>
-              
+
               <p className={`${PARAGRAPH_CLASS} font-medium`}>
                 {CONTENT.callToAction}
               </p>
