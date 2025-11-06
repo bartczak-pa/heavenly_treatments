@@ -57,7 +57,7 @@ const TreatmentCard = memo<TreatmentCardProps>(({ treatment }) => {
 
   return (
     <Card className={cn(
-      "flex flex-col h-full overflow-hidden hover:shadow-lg transition-all duration-300 group",
+      "flex flex-col h-full overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group",
       "pt-0 pb-4"
     )}>
       <Link href={detailHref} className="block relative w-full h-52 overflow-hidden">

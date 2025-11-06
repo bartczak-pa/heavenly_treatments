@@ -36,7 +36,7 @@ const Testimonials = () => {
                         // Use Card component
                         <Card
                             key={index}
-                            className="flex flex-col overflow-hidden shadow-lg group transition-all duration-300 ease-in-out hover:-translate-y-1"
+                            className="flex flex-col overflow-hidden shadow-md group transition-all duration-300 ease-out hover:shadow-lg hover:-translate-y-1"
                         >
                             <CardHeader className="px-4 py-1">
                                 <div className="flex flex-col">

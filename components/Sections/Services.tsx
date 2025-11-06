@@ -40,7 +40,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ categories, showAllBu
                                 'md:block'
                              )}
                         >
-                             <Card className="flex flex-col h-full overflow-hidden shadow-md hover:shadow-xl group p-0">
+                             <Card className="flex flex-col h-full overflow-hidden shadow-md hover:shadow-xl hover:-translate-y-1 group p-0 transition-all duration-300">
                                  <div className="relative w-full h-52 overflow-hidden">
                                     {category.image ? (
                                         <Image
