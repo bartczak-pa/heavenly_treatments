@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
-import { getTreatments, getCategories, TreatmentCategorySlug, TreatmentCategory } from '@/lib/data/treatments';
+import { getTreatments, getCategories } from '@/lib/cms/treatments';
+import { TreatmentCategorySlug, TreatmentCategory } from '@/lib/data/treatments';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import { 
   DynamicCategoryFilters,
@@ -14,6 +15,9 @@ import {
   generateBreadcrumbJsonLd 
 } from '@/lib/jsonLsUtils';
 import { config } from '@/lib/config';
+
+// Revalidate this page every hour
+export const revalidate = 3600;
 
 type Props = {
   params: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -37,9 +41,9 @@ export async function generateMetadata(
   let canonicalUrl = `${BASE_URL}/treatments`;
 
   const selectedCategorySlug = searchParams?.category as TreatmentCategorySlug | undefined;
-  
+
   if (selectedCategorySlug) {
-    const categories = getCategories(); 
+    const categories = await getCategories();
     const categoryData = categories.find(cat => cat.slug === selectedCategorySlug);
 
     if (categoryData) {
@@ -113,8 +117,8 @@ export default async function TreatmentsPage(props: Props) {
   // ----------------------
   
   // --- Prepare Breadcrumb Data ---
-  const allTreatments = getTreatments(); // Needed for filtering logic below
-  const categories: TreatmentCategory[] = getCategories(); // Needed for filters and breadcrumb name
+  const allTreatments = await getTreatments(); // Needed for filtering logic below
+  const categories: TreatmentCategory[] = await getCategories(); // Needed for filters and breadcrumb name
   const selectedCategorySlug = awaitedSearchParams?.category as TreatmentCategorySlug | undefined;
   const categoryData = selectedCategorySlug ? categories.find(cat => cat.slug === selectedCategorySlug) : null;
   const categoryName = categoryData ? categoryData.name : null;

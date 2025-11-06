@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { MainLayout } from '@/components/Layout/MainLayout';
-import { getTreatmentBySlug, getTreatments, getCategories } from '@/lib/data/treatments';
+import { getTreatmentBySlug, getAllTreatmentSlugs, getCategories } from '@/lib/cms/treatments';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Clock, PoundSterling, CheckCircle } from 'lucide-react';
@@ -12,6 +12,8 @@ import { contactInfo } from '@/lib/data/contactInfo';
 import { generateServiceJsonLd, ContactInfo, generateBreadcrumbJsonLd } from '@/lib/jsonLsUtils';
 import { config } from '@/lib/config';
 
+// Revalidate this page every hour
+export const revalidate = 3600;
 
 interface Props {
   params: Promise<{
@@ -25,14 +27,14 @@ interface Props {
 
 export default async function TreatmentDetailPage({ params }: Props) {
   const { treatmentSlug } = await params;
-  const treatment = getTreatmentBySlug(treatmentSlug);
+  const treatment = await getTreatmentBySlug(treatmentSlug);
 
   if (!treatment) {
     notFound();
   }
 
   // Fetch category data for breadcrumb name
-  const categories = getCategories();
+  const categories = await getCategories();
   const categoryData = categories.find(cat => cat.slug === treatment.category);
   const categoryName = categoryData ? categoryData.name : treatment.category; // Fallback to slug if name not found
 
@@ -158,7 +160,7 @@ export default async function TreatmentDetailPage({ params }: Props) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { treatmentSlug } = await params;
-  const treatment = getTreatmentBySlug(treatmentSlug);
+  const treatment = await getTreatmentBySlug(treatmentSlug);
 
   if (!treatment) {
     return {
@@ -189,9 +191,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams(): Promise<{ categorySlug: string; treatmentSlug: string }[]> {
-  const treatments = getTreatments();
-  return treatments.map((treatment) => ({
-    categorySlug: treatment.category,
-    treatmentSlug: treatment.slug,
+  const slugs = await getAllTreatmentSlugs();
+  return slugs.map((item) => ({
+    categorySlug: item.categorySlug,
+    treatmentSlug: item.slug,
   }));
 }

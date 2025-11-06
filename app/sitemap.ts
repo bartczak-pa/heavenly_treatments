@@ -1,13 +1,13 @@
 import { MetadataRoute } from 'next';
-import { getCategories, getTreatments } from '@/lib/data/treatments'; 
+import { getCategories, getTreatments } from '@/lib/cms/treatments';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
   if (!BASE_URL) {
     console.warn('WARN: NEXT_PUBLIC_BASE_URL environment variable is not set. Sitemap URLs will be relative.');
   }
-  const baseUrlOrDefault = BASE_URL || ''; 
+  const baseUrlOrDefault = BASE_URL || '';
 
   // Static pages
   const staticRoutes = [
@@ -18,12 +18,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ].map((route) => ({
     url: `${baseUrlOrDefault}${route}`,
     lastModified: new Date().toISOString(),
-    changeFrequency: 'monthly' as const, 
-    priority: route === '' ? 1.0 : 0.8, 
+    changeFrequency: 'monthly' as const,
+    priority: route === '' ? 1.0 : 0.8,
   }));
 
   // Dynamic treatment pages
-  const treatments = getTreatments();
+  const treatments = await getTreatments();
   const treatmentRoutes = treatments.map((treatment) => ({
     url: `${baseUrlOrDefault}/treatments/${treatment.category}/${treatment.slug}`,
     lastModified: new Date().toISOString(), // Consider using a date from your data if available
@@ -32,7 +32,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
 
-  const categories = getCategories();
+  const categories = await getCategories();
   const categoryRoutes = categories.map((category) => ({
     url: `${baseUrlOrDefault}/treatments?category=${category.slug}`,
     lastModified: new Date().toISOString(),
