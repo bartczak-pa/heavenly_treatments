@@ -15,7 +15,7 @@ import React, { memo } from 'react';
 import Link from 'next/link';
 import OptimizedImage from '@/components/OptimizedImage';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { BookingButton } from '@/components/BookingButton';
 import { Treatment } from '@/lib/data/treatments';
 import { Clock, PoundSterling } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -52,7 +52,6 @@ interface TreatmentCardProps {
  * ```
  */
 const TreatmentCard = memo<TreatmentCardProps>(({ treatment }) => {
-  const contactHref: string = `/contact?treatment=${encodeURIComponent(treatment.title)}`;
   const detailHref: string = `/treatments/${treatment.category}/${treatment.slug}`;
 
   return (
@@ -102,9 +101,15 @@ const TreatmentCard = memo<TreatmentCardProps>(({ treatment }) => {
             {treatment.price.replace('£', '')}
           </span>
         </div>
-        <Button asChild variant="secondary" size="sm">
-          <Link href={contactHref}>Book Now</Link>
-        </Button>
+        <BookingButton
+          context="treatment-card"
+          treatmentTitle={treatment.title}
+          freshaUrl={treatment.freshaUrl}
+          variant="secondary"
+          size="sm"
+        >
+          Book Now
+        </BookingButton>
       </CardFooter>
     </Card>
   );

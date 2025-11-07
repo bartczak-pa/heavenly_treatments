@@ -28,6 +28,7 @@ import {
 import { Menu, ChevronRight, ChevronDown } from 'lucide-react';
 import { categoryIconMap, type TreatmentCategory } from '@/lib/data/treatments';
 import TreatmentCategoryLinks from '@/components/Layout/TreatmentCategoryLinks';
+import { BookingButton } from '@/components/BookingButton';
 import { cn } from '@/lib/utils';
 
 // --- Style Constants ---
@@ -189,11 +190,13 @@ const MobileNavigationMenu = memo<MobileNavigationMenuProps>(({
     </Collapsible>
 
     <div className="pt-4">
-      <Button variant="default" className="w-full" asChild>
-        <Link href="/treatments">
-          Book Now
-        </Link>
-      </Button>
+      <BookingButton
+        context="navbar"
+        variant="default"
+        className="w-full"
+      >
+        Book Now
+      </BookingButton>
     </div>
   </div>
 ));
@@ -266,11 +269,9 @@ export default function Navbar({ categories }: NavbarProps) {
 
         {/* Right Navigation - Fixed width container */}
         <div className="flex items-center justify-end w-32">
-          <Button variant="default" size="lg" asChild>
-            <Link href="/treatments">
-              Book Now
-            </Link>
-          </Button>
+          <BookingButton context="navbar" variant="default" size="lg">
+            Book Now
+          </BookingButton>
         </div>
       </div>
 

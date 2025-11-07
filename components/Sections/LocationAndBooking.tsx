@@ -1,9 +1,8 @@
 'use client';
 
-import { useId } from "react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { useId } from 'react';
+import { BookingButton } from '@/components/BookingButton';
+import { cn } from '@/lib/utils';
 
 type LocationAndBookingSectionProps = {
   id?: string;
@@ -76,9 +75,13 @@ export default function LocationAndBookingSection({
           </div>
           
           <div className="text-center">
-            <Button asChild variant="default" size="lg">
-              <Link href={CONTENT.buttonHref}>{CONTENT.buttonText}</Link>
-            </Button>
+            <BookingButton
+              context="location-section"
+              variant="default"
+              size="lg"
+            >
+              {CONTENT.buttonText}
+            </BookingButton>
           </div>
         </article>
       </div>

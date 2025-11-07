@@ -1,10 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import { getTreatmentBySlug, getAllTreatmentSlugs, getCategories } from '@/lib/cms/treatments';
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
+import { BookingButton } from '@/components/BookingButton';
 import { Clock, PoundSterling, CheckCircle } from 'lucide-react';
 import { Metadata } from 'next';
 import Script from 'next/script';
@@ -37,8 +36,6 @@ export default async function TreatmentDetailPage({ params }: Props) {
   const categories = await getCategories();
   const categoryData = categories.find(cat => cat.slug === treatment.category);
   const categoryName = categoryData ? categoryData.name : treatment.category; // Fallback to slug if name not found
-
-  const contactHref = `/contact?treatment=${encodeURIComponent(treatment.title)}`;
 
   // --- Prepare Breadcrumb Data ---
   let BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -125,11 +122,15 @@ export default async function TreatmentDetailPage({ params }: Props) {
               )}
 
               <div className="pt-4">
-                <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90" asChild>
-                  <Link href={contactHref}>
-                    Book This Treatment
-                  </Link>
-                </Button>
+                <BookingButton
+                  context="treatment-detail"
+                  treatmentTitle={treatment.title}
+                  freshaUrl={treatment.freshaUrl}
+                  size="lg"
+                  className="w-full sm:w-auto bg-primary hover:bg-primary/90"
+                >
+                  Book This Treatment
+                </BookingButton>
               </div>
             </div>
           </div>
