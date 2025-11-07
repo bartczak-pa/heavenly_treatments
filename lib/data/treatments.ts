@@ -22,6 +22,7 @@ export interface Treatment {
     price: string;
     keyFeatures?: string[]; // Optional array of key features
     category: TreatmentCategorySlug; // Link to the category
+    freshaUrl?: string; // Optional Fresha booking URL (dedicated to this treatment)
   }
   
   /**

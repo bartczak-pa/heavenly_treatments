@@ -1,4 +1,4 @@
-// eslint-disable-next-line 
+// eslint-disable-next-line
 interface ProcessEnv {
   NODE_ENV: 'development' | 'production' | 'test';
   RESEND_API_KEY: string;
@@ -12,5 +12,7 @@ interface ProcessEnv {
   NEXT_PUBLIC_CALENDLY_USERNAME?: string;
   NEXT_PUBLIC_GA_MEASUREMENT_ID: string;
   NEXT_PUBLIC_GOOGLE_ADS_ID: string;
+  NEXT_PUBLIC_FRESHA_GENERAL_URL?: string;
+  NEXT_PUBLIC_AB_TEST_ENABLED?: string;
 }
 

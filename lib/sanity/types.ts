@@ -28,4 +28,5 @@ export interface SanityTreatment {
     name: string;
     slug: string;
   };
+  freshaUrl?: string;
 }
