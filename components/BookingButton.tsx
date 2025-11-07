@@ -2,7 +2,9 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Button, type ButtonProps } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
+import type { VariantProps } from 'class-variance-authority';
+import { buttonVariants } from '@/components/ui/button';
 import { useAbTestVariant } from '@/hooks/useAbTestVariant';
 import { getBookingUrl } from '@/lib/abTesting/getBookingUrl';
 import {
@@ -12,7 +14,7 @@ import {
 import type { BookingContext } from '@/lib/abTesting/getBookingUrl';
 
 interface BookingButtonProps
-  extends Omit<ButtonProps, 'asChild' | 'onClick'> {
+  extends VariantProps<typeof buttonVariants> {
   /** Context where the booking button is used */
   context: BookingContext;
   /** Treatment name for analytics and form prefill */
@@ -23,6 +25,8 @@ interface BookingButtonProps
   onClick?: () => void;
   /** Button text/children */
   children?: React.ReactNode;
+  /** CSS class name */
+  className?: string;
 }
 
 /**

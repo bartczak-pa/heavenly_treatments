@@ -51,6 +51,7 @@ function transformTreatment(sanityTreatment: SanityTreatment): Treatment {
     imageWidth: 1000,
     imageHeight: 667,
     category: sanityTreatment.category.slug as TreatmentCategorySlug,
+    freshaUrl: sanityTreatment.freshaUrl,
   };
 }
 
