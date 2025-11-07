@@ -67,19 +67,12 @@ const GoogleAnalytics: React.FC<GoogleAnalyticsProps> = ({
 
   // Allow Google Ads-only setups by checking for either measurementId or googleAdsId
   if (!consentGiven || (!measurementId && !googleAdsId)) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('Google Analytics script not loaded due to lack of consent or missing IDs.');
-    }
     return null;
-  }
-
-  if (process.env.NODE_ENV !== 'production') {
-    console.log('Loading Google Analytics script...');
   }
 
   // Validate measurement IDs to prevent XSS risks
   const isValidGoogleId = (id: string) => /^G-[A-Z0-9]+$|^AW-[0-9]+$|^DC-[0-9]+$/.test(id);
-  
+
   const validMeasurementId = measurementId && isValidGoogleId(measurementId) ? measurementId : null;
   const validGoogleAdsId = googleAdsId && isValidGoogleId(googleAdsId) ? googleAdsId : null;
 
@@ -89,11 +82,11 @@ const GoogleAnalytics: React.FC<GoogleAnalyticsProps> = ({
 
   return (
     <>
-      <Script 
+      <Script
         strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=${primaryId}`}
       />
-      <Script 
+      <Script
         id="gtag-config"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
