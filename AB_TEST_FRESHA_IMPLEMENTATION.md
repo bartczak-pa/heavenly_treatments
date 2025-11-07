@@ -14,7 +14,11 @@ Implement a 50/50 A/B test to compare Fresha booking system vs. current contact 
 
 ---
 
-## PHASE 1: Sanity Schema Updates
+## PHASE 1: Sanity Schema Updates ✅ COMPLETED
+
+**Commit:** `bf1ec6d` - feat: PHASE 1 - Add Sanity schema updates for Fresha A/B test integration
+
+**Status:** All schema files updated and registered. Ready for Sanity deployment.
 
 ### Step 1.1: Update Treatment Schema
 **File:** `sanity/schemas/treatment.ts`
@@ -85,7 +89,11 @@ schema.types.push(siteSettings);
 
 ---
 
-## PHASE 2: Environment Configuration
+## PHASE 2: Environment Configuration ✅ COMPLETED
+
+**Commit:** `4aa7153` - feat: PHASE 2 - Add environment type definitions for Fresha A/B test
+
+**Status:** Environment types defined. Fresha variables configured locally.
 
 ### Step 2.1: Add Environment Variables
 **File:** `.env.local` (UPDATE)
@@ -116,7 +124,11 @@ declare namespace NodeJS {
 
 ---
 
-## PHASE 3: Create A/B Test Utilities
+## PHASE 3: Create A/B Test Utilities ✅ COMPLETED
+
+**Commit:** `1343f46` - feat: PHASE 3 - Create A/B test utility functions
+
+**Status:** All utility functions created and tested locally.
 
 ### Step 3.1: Create Variant Assignment Utility
 **File:** `lib/abTesting/variantAssignment.ts` (CREATE NEW FILE)
@@ -379,7 +391,11 @@ export function trackFormSubmission() {
 
 ---
 
-## PHASE 4: Create Custom Hooks
+## PHASE 4: Create Custom Hooks ✅ COMPLETED
+
+**Commit:** `969b4bb` - feat: PHASE 4 - Create A/B test variant hook
+
+**Status:** Hook created and ready for use in components.
 
 ### Step 4.1: Create A/B Test Variant Hook
 **File:** `hooks/useAbTestVariant.ts` (CREATE NEW FILE)
@@ -440,7 +456,11 @@ export function useAbTestVariant(): VariantAssignment {
 
 ---
 
-## PHASE 5: Create Booking Button Component
+## PHASE 5: Create Booking Button Component ✅ COMPLETED
+
+**Commit:** `515b5e6` - feat: PHASE 5 - Create reusable BookingButton component
+
+**Status:** BookingButton component created and ready for integration.
 
 ### Step 5.1: Create Reusable BookingButton Component
 **File:** `components/BookingButton.tsx` (CREATE NEW FILE)
@@ -546,7 +566,11 @@ BookingButton.displayName = 'BookingButton';
 
 ---
 
-## PHASE 6: Update Components
+## PHASE 6: Update Components ✅ COMPLETED
+
+**Commit:** `3e0fb85` - feat: PHASE 6 - Replace all booking buttons with BookingButton component
+
+**Status:** All 4 booking button locations updated to use BookingButton component.
 
 ### Step 6.1: Update Navbar Component
 **File:** `components/Layout/Navbar.tsx`
