@@ -861,61 +861,80 @@ export const GA_EVENTS = {
 
 ---
 
-## PHASE 8: Fetch Fresha URLs from Sanity
+## PHASE 8: Fetch Fresha URLs from Sanity ✅ COMPLETED
 
-### Step 8.1: Create CMS Query for Treatment with Fresha URL
-**File:** `lib/cms/treatments.ts` (UPDATE - add these functions at the end)
+**Commit:** `522b784` - feat: Add Fresha URL support to CMS treatment queries (Phase 8)
+
+**Status:** Treatment data model updated to include freshaUrl field. All GROQ queries updated to
+fetch fresh URLs from Sanity.
+
+### Step 8.1: Add freshaUrl to Sanity Type Definition
+**File:** `lib/sanity/types.ts` (UPDATED)
+
+Added optional `freshaUrl?: string;` field to `SanityTreatment` interface:
 
 ```typescript
-/**
- * Fetch single treatment with Fresha URL
- */
-export async function getTreatmentWithFreshaUrl(slug: string) {
-  const query = `
-    *[_type == "treatment" && slug.current == $slug][0] {
-      ...,
-      "freshaUrl": freshaUrl,
-    }
-  `;
-
-  const treatment = await client.fetch(query, { slug });
-  return treatment;
-}
-
-/**
- * Fetch general Fresha URL from site settings
- */
-export async function getGeneralFreshaUrl() {
-  const query = `*[_type == "siteSettings"][0].freshaGeneralUrl`;
-  const url = await client.fetch(query);
-  return url;
+export interface SanityTreatment {
+  _id: string;
+  title: string;
+  slug: string;
+  description: string;
+  duration: string;
+  price: string;
+  keyFeatures?: string[];
+  image: SanityImageSource;
+  category: { /* ... */ };
+  freshaUrl?: string;  // NEW: Dedicated Fresha URL for treatment
 }
 ```
 
----
+### Step 8.2: Add freshaUrl to App Treatment Interface
+**File:** `lib/data/treatments.ts` (UPDATED)
 
-### Step 8.2: Update Treatment Detail Page to Fetch Fresha URL
-**File:** `app/treatments/[categorySlug]/[treatmentSlug]/page.tsx`
-
-If pulling from Sanity CMS, update the import:
+Added optional `freshaUrl?: string;` field to `Treatment` interface:
 
 ```typescript
-// UPDATE import from:
-import { getTreatmentBySlug, ... } from '@/lib/cms/treatments';
-
-// TO:
-import { getTreatmentWithFreshaUrl, ... } from '@/lib/cms/treatments';
+export interface Treatment {
+  id: string;
+  title: string;
+  slug: string;
+  // ... other fields
+  freshaUrl?: string;  // NEW: Fresha booking URL
+}
 ```
 
-Then update the fetch call in the component:
+### Step 8.3: Update Treatment Data Transformation
+**File:** `lib/cms/treatments.ts` (UPDATED)
+
+Updated `transformTreatment()` function to map freshaUrl from Sanity:
 
 ```typescript
-// BEFORE:
-const treatment = await getTreatmentBySlug(treatmentSlug);
-
-// AFTER:
-const treatment = await getTreatmentWithFreshaUrl(treatmentSlug);
+function transformTreatment(sanityTreatment: SanityTreatment): Treatment {
+  return {
+    // ... existing fields
+    freshaUrl: sanityTreatment.freshaUrl,  // NEW: Map from Sanity
+  };
+}
 ```
+
+### Step 8.4: Update GROQ Queries
+**File:** `lib/sanity/queries.ts` (UPDATED)
+
+Updated three treatment queries to include `freshaUrl` field:
+- `allTreatmentsQuery` - fetches all treatments with freshaUrl
+- `treatmentBySlugQuery` - fetches single treatment with freshaUrl
+- `treatmentsByCategoryQuery` - fetches category treatments with freshaUrl
+
+All queries now include:
+
+```groq
+freshaUrl,  // NEW: Fetch Fresha URL for each treatment
+```
+
+### Step 8.5: Fix BookingButton Props Type
+**File:** `components/BookingButton.tsx` (UPDATED)
+
+Fixed TypeScript import to properly use button variant props from shadcn/ui.
 
 ---
 
