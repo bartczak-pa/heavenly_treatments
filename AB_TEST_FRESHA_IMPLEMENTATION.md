@@ -943,27 +943,27 @@ Fixed TypeScript import to properly use button variant props from shadcn/ui.
 ### Step 9.1: Local Testing
 
 **Variant Assignment Testing:**
-- [ ] Clear all cookies in browser
-- [ ] Refresh page
-- [ ] Open DevTools → Application → Cookies → localhost
-- [ ] Check that `ab_test_variant` cookie is set
-- [ ] Reload page multiple times
-- [ ] Verify cookie value stays the same (persists)
-- [ ] Create new private/incognito window
-- [ ] Verify different variant is assigned (50/50 split across windows)
+- [x] Clear all cookies in browser
+- [x] Refresh page
+- [x] Open DevTools → Application → Cookies → localhost
+- [x] Check that `ab_test_variant` cookie is set
+- [x] Reload page multiple times
+- [x] Verify cookie value stays the same (persists)
+- [x] Create new private/incognito window
+- [x] Verify different variant is assigned (50/50 split across windows)
 
 **Button Functionality Testing:**
-- [ ] Test navbar desktop "Book Now" button → should redirect correctly
-- [ ] Test navbar mobile "Book Now" button → should redirect correctly
-- [ ] Test treatment card "Book Now" button → should redirect correctly
-- [ ] Test treatment detail page "Book This Treatment" button → should redirect correctly
-- [ ] Test LocationAndBooking section "Contact Me & Book" button → should redirect correctly
+- [x] Test navbar desktop "Book Now" button → should redirect correctly
+- [x] Test navbar mobile "Book Now" button → should redirect correctly
+- [x] Test treatment card "Book Now" button → should redirect correctly
+- [x] Test treatment detail page "Book This Treatment" button → should redirect correctly
+- [x] Test LocationAndBooking section "Contact Me & Book" button → should redirect correctly
 
 **Analytics Testing:**
-- [ ] Open DevTools → Console
-- [ ] Click any "Book Now" button
-- [ ] Check console for GA events (look for `gtag` calls)
-- [ ] Expected events: `ab_test_variant_assigned`, `booking_button_clicked`, `booking_redirect`
+- [x] Open DevTools → Console
+- [x] Click any "Book Now" button
+- [x] Check console for GA events (look for `gtag` calls)
+- [x] Expected events: `ab_test_variant_assigned`, `booking_button_clicked`, `booking_redirect`
 
 ### Step 9.2: Environment Variable Testing
 
@@ -997,14 +997,14 @@ npm run start
 
 ### Step 9.4: Sanity Data Testing
 
-- [ ] Go to Sanity Studio at `/studio`
-- [ ] Edit a treatment document
-- [ ] Scroll to "Fresha Booking URL (Dedicated)" field
-- [ ] Paste a dedicated Fresha URL
-- [ ] Save the treatment
-- [ ] Go to treatment detail page on website
-- [ ] If assigned to Fresha variant, should use dedicated URL
-- [ ] If assigned to Form variant, should use contact form
+- [x] Go to Sanity Studio at `/studio`
+- [x] Edit a treatment document
+- [x] Scroll to "Fresha Booking URL (Dedicated)" field
+- [x] Paste a dedicated Fresha URL
+- [x] Save the treatment
+- [x] Go to treatment detail page on website
+- [x] If assigned to Fresha variant, should use dedicated URL
+- [x] If assigned to Form variant, should use contact form
 
 ---
 

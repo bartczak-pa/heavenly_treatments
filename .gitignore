@@ -45,3 +45,7 @@ next-env.d.ts
 
 #playwright
 /.playwright-mcp
+
+# sanity
+.sanity/
+dist/
