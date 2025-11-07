@@ -46,7 +46,7 @@ export function trackBookingButtonClick(
   const { variant } = getVariantAssignment();
 
   window.gtag('event', 'booking_button_clicked', {
-    variant,
+    ab_test_variant: variant,
     context,
     treatment_name: treatmentName || 'none',
   });
@@ -67,7 +67,7 @@ export function trackBookingRedirect(
   const { variant } = getVariantAssignment();
 
   window.gtag('event', 'booking_redirect', {
-    variant,
+    ab_test_variant: variant,
     destination,
     context,
     treatment_name: treatmentName || 'none',
@@ -85,6 +85,6 @@ export function trackFormSubmission() {
   const { variant } = getVariantAssignment();
 
   window.gtag('event', 'booking_form_submitted', {
-    variant,
+    ab_test_variant: variant,
   });
 }
