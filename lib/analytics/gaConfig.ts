@@ -13,9 +13,18 @@
 export function initializeGACustomProperties() {
   if (typeof window === 'undefined' || !window.gtag) return;
 
+  const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  if (!measurementId) {
+    console.warn(
+      'GA4 Measurement ID not configured. ' +
+      'Set NEXT_PUBLIC_GA_MEASUREMENT_ID in environment variables.'
+    );
+    return;
+  }
+
   // Register custom dimension for A/B test variant
-  // (You'll need to set up these custom dimensions in GA4 dashboard first)
-  window.gtag('config', 'G_YOUR_MEASUREMENT_ID', {
+  // (Custom dimensions must be set up in GA4 dashboard first)
+  window.gtag('config', measurementId, {
     custom_map: {
       dimension1: 'ab_test_variant',
       dimension2: 'ab_test_cohort',
