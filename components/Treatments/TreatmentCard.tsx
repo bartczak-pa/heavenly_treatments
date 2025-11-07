@@ -16,18 +16,17 @@ import Link from 'next/link';
 import OptimizedImage from '@/components/OptimizedImage';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { SanityTreatment } from '@/lib/sanity/types';
+import { Treatment } from '@/lib/data/treatments';
 import { Clock, PoundSterling } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getClientBookingVariant, getBookingUrl, trackBookingClick, type BookingVariant } from '@/lib/ab-test';
-import { urlFor } from '@/lib/sanity/image';
 
 /**
  * Props interface for the TreatmentCard component
  */
 interface TreatmentCardProps {
   /** Treatment data object containing all display information */
-  treatment: SanityTreatment;
+  treatment: Treatment;
 };
 
 /**
@@ -75,10 +74,10 @@ const TreatmentCard = memo<TreatmentCardProps>(({ treatment }) => {
     }
   };
 
-  const detailHref: string = `/treatments/${treatment.category.slug}/${treatment.slug}`;
+  const detailHref: string = `/treatments/${treatment.category}/${treatment.slug}`;
 
-  // Get image URL from Sanity
-  const imageUrl = treatment.image ? urlFor(treatment.image).width(800).height(600).url() : null;
+  // Image is already a string URL from the transform layer
+  const imageUrl = treatment.image;
 
   return (
     <Card className={cn(

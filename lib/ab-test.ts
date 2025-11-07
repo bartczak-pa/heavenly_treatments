@@ -1,4 +1,4 @@
-import { SanityTreatment } from './sanity/types';
+import { Treatment } from './data/treatments';
 
 /**
  * A/B Test Utilities for Booking Flow Optimization
@@ -45,7 +45,7 @@ export function getClientBookingVariant(): BookingVariant | null {
  * @returns The appropriate booking URL for the variant
  */
 export function getBookingUrl(
-  treatment?: Pick<SanityTreatment, 'title' | 'freshaUrl'> | null,
+  treatment?: Pick<Treatment, 'title' | 'freshaUrl'> | null,
   variant?: BookingVariant | null
 ): string {
   // Default to variant A (contact form) if no variant assigned

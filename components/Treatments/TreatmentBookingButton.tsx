@@ -15,11 +15,11 @@ import React, { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { getClientBookingVariant, getBookingUrl, trackBookingClick, type BookingVariant } from '@/lib/ab-test';
-import { SanityTreatment } from '@/lib/sanity/types';
+import { Treatment } from '@/lib/data/treatments';
 
 interface TreatmentBookingButtonProps {
   /** Treatment data for booking */
-  treatment: Pick<SanityTreatment, 'title' | 'freshaUrl'>;
+  treatment: Pick<Treatment, 'title' | 'freshaUrl'>;
   /** Button size variant */
   size?: 'default' | 'sm' | 'lg' | 'icon';
   /** Custom class name */

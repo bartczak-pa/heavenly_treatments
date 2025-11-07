@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { SanityTreatment } from '@/lib/sanity/types';
+import { Treatment, TreatmentCategorySlug } from '@/lib/data/treatments';
 import TreatmentsGrid from '@/components/Treatments/TreatmentsGrid';
 import { Button } from '@/components/ui/button';
 import { config } from '@/lib/config';
 
 interface FilteredTreatmentsDisplayProps {
-  filteredTreatments: SanityTreatment[];
-  currentSelection: string;
+  filteredTreatments: Treatment[];
+  currentSelection: TreatmentCategorySlug | 'all';
 }
 
 const { INITIAL_VISIBLE_TREATMENTS, RESPONSIVE_INCREMENTS, BREAKPOINTS } = config.ui; 
@@ -44,7 +44,7 @@ export default function FilteredTreatmentsDisplay({
 
   const totalTreatments: number = filteredTreatments.length;
 
-  const treatmentsToShow: SanityTreatment[] = useMemo(() => {
+  const treatmentsToShow: Treatment[] = useMemo(() => {
     return filteredTreatments.slice(0, visibleCount);
   }, [filteredTreatments, visibleCount]);
   
