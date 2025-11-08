@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Metadata } from 'next';
-import { getTreatments, getCategories } from '@/lib/cms/treatments';
+import { getTreatments, getCategories, getTreatmentsByCategory } from '@/lib/cms/treatments';
 import { TreatmentCategorySlug, TreatmentCategory } from '@/lib/data/treatments';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import { 
@@ -116,8 +116,7 @@ export default async function TreatmentsPage(props: Props) {
   const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfo);
   // ----------------------
   
-  // --- Prepare Breadcrumb Data ---
-  const allTreatments = await getTreatments(); // Needed for filtering logic below
+  // --- Prepare Breadcrumb Data & Fetch Treatments ---
   const categories: TreatmentCategory[] = await getCategories(); // Needed for filters and breadcrumb name
   const selectedCategorySlug = awaitedSearchParams?.category as TreatmentCategorySlug | undefined;
   const categoryData = selectedCategorySlug ? categories.find(cat => cat.slug === selectedCategorySlug) : null;
@@ -129,16 +128,18 @@ export default async function TreatmentsPage(props: Props) {
   ];
 
   if (selectedCategorySlug && categoryName) {
-    breadcrumbItems.push({ 
-      name: categoryName, 
-      item: `${BASE_URL}/treatments?category=${selectedCategorySlug}` 
+    breadcrumbItems.push({
+      name: categoryName,
+      item: `${BASE_URL}/treatments?category=${selectedCategorySlug}`
     });
   }
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(breadcrumbItems);
-  // -----------------------------
-  
-  
-   
+  // --- OPTIMIZATION: Use parameterized query instead of fetching all and filtering client-side ---
+  const filteredTreatments = selectedCategorySlug
+    ? await getTreatmentsByCategory(selectedCategorySlug)
+    : await getTreatments();
+  // ----
+
   const _params = awaitedParams; // Assign awaited params to unused variable
 
   const currentSelection: TreatmentCategorySlug | 'all' =
@@ -150,12 +151,6 @@ export default async function TreatmentsPage(props: Props) {
     currentSelection === 'all'
       ? null
       : categoryData ?? null;
-
-
-  const filteredTreatments =
-    currentSelection === 'all'
-      ? allTreatments
-      : allTreatments.filter(treatment => treatment.category === currentSelection);
 
   return (
     <MainLayout>
