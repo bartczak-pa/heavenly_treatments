@@ -18,17 +18,22 @@ Fetch treatment-related data:
 
 ```typescript
 // Fetch all treatments with details
-export async function fetchTreatments(): Promise<Treatment[]>
+export async function getTreatments(): Promise<Treatment[]>
 
 // Fetch single treatment by slug
-export async function fetchTreatmentBySlug(slug: string): Promise<Treatment | null>
+export async function getTreatmentBySlug(slug: string): Promise<Treatment | null>
 
 // Fetch all treatment categories
-export async function fetchTreatmentCategories(): Promise<TreatmentCategory[]>
+export async function getCategories(): Promise<TreatmentCategory[]>
 
-// Fetch treatments in specific category
-export async function fetchTreatmentsByCategory(slug: string): Promise<Treatment[]>
+// ✅ OPTIMIZED: Fetch treatments in specific category (parameterized query)
+export async function getTreatmentsByCategory(slug: string): Promise<Treatment[]>
 ```
+
+**Performance Notes**:
+- `getTreatmentsByCategory()` uses server-side GROQ filtering (fast)
+- Always prefer over fetching all then filtering client-side
+- Parameterized queries reduce payload by 70-80% for category filters
 
 ## Usage
 

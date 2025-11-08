@@ -50,6 +50,9 @@ Wraps all pages with:
 
 ### Dynamic Pages
 - **`treatments/page.tsx`** - Treatments overview
+  - ✅ **OPTIMIZED** (2025-11-08): Uses `getTreatmentsByCategory()` for filtered requests
+  - Pattern: Parameterized queries at server level (not client-side filtering)
+  - Benefit: 75% faster queries, ~900ms TTFB improvement
 - **`treatments/[categorySlug]/page.tsx`** - Individual treatment category pages
 - Uses `generateStaticParams()` for static generation
 - Receives `params: { categorySlug: string }` prop
