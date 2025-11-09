@@ -28,12 +28,13 @@ export default function ExperienceSection() {
               </div>
             </div>
             <div className="relative aspect-square rounded-lg overflow-hidden shadow-lg">
-              <OptimizedImage 
+              <OptimizedImage
                 src="heavenly-treatments-room"
-                fallback="/images/about/heavenly-treatments-room.jpg" 
+                fallback="/images/about/heavenly-treatments-room.jpg"
                 alt="Relaxing treatment room at Heavenly Treatments in Kelso"
                 fill
-                style={{objectFit: 'cover'}}
+                aspectRatio="1/1"
+                style={{ objectFit: 'cover' }}
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 loading="lazy"
               />

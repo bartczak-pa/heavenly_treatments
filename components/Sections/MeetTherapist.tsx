@@ -29,6 +29,7 @@ const MeetTherapist: React.FC<MeetTherapistProps> = ({ className }) => {
                   alt="Owner of Heavenly Treatments spa"
                   width={300}
                   height={400}
+                  aspectRatio="3/4"
                   className="rounded-lg shadow-lg"
                   loading="lazy"
                 />

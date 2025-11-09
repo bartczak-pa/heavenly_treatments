@@ -194,28 +194,9 @@ export const DynamicServicesSection = createDynamicComponent(
   }
 );
 
-// Filtered Treatments Display - Heavy component with filtering logic
-export const DynamicFilteredTreatmentsDisplay = createDynamicComponent(
-  () => import(/* webpackChunkName: "treatments-display" */ '@/components/Treatments/FilteredTreatmentsDisplay'),
-  {
-    className: 'h-96',
-    ariaLabel: 'Loading treatments',
-    priority: 'high',
-    withErrorBoundary: true,
-  }
-);
-
-// Category Filters - Interactive component, can be loaded dynamically
-export const DynamicCategoryFilters = createDynamicComponent(
-  () => import(/* webpackChunkName: "category-filters" */ '@/components/Treatments/CategoryFilters'),
-  {
-    className: 'h-16',
-    ariaLabel: 'Loading filters',
-    priority: 'high',
-    showText: false,
-    withErrorBoundary: true,
-  }
-);
+// NOTE: Removed DynamicFilteredTreatmentsDisplay and DynamicCategoryFilters
+// These are now imported statically in /app/treatments/page.tsx for better FCP
+// They are critical above-the-fold components that should not be code-split
 
 // Google Analytics - Third-party script, not critical for initial render
 export const DynamicGoogleAnalytics = createDynamicComponent(

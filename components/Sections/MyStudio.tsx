@@ -42,6 +42,7 @@ const MyStudio: React.FC<MyStudioProps> = ({ className = "" }) => {
                 fallback="/images/about/heavenly-treatments-room.jpg"
                 alt="Spa treatment room interior at Heavenly Treatments"
                 fill
+                aspectRatio="4/5"
                 style={{ objectFit: 'cover' }}
                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 40vw"
                 className="rounded-lg"
