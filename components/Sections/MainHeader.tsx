@@ -81,15 +81,18 @@ const MainHeader: React.FC<MainHeaderProps> = ({ id, className }) => {
         >
             {/* Background image with overlay */}
             <div className={styles.imageContainer}>
-                <OptimizedImage
-                    src={HERO_CONFIG.image.src}
-                    alt={HERO_CONFIG.image.decorative ? "" : HERO_CONFIG.image.alt}
-                    fill
-                    sizes="100vw"
-                    style={{ objectFit: 'cover' }}
-                    priority
-                    fallback={HERO_CONFIG.image.fallback}
-                />
+                <div className="relative w-full h-full">
+                    <OptimizedImage
+                        src={HERO_CONFIG.image.src}
+                        alt={HERO_CONFIG.image.decorative ? "" : HERO_CONFIG.image.alt}
+                        fill
+                        skipAutoAspectRatio
+                        sizes="100vw"
+                        style={{ objectFit: 'cover' }}
+                        priority
+                        fallback={HERO_CONFIG.image.fallback}
+                    />
+                </div>
                 <div className={styles.overlay} aria-hidden="true" />
             </div>
 

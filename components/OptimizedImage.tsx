@@ -23,6 +23,12 @@ interface OptimizedImageProps extends Omit<ImageProps, 'src' | 'blurDataURL' | '
    * Reserves layout space before image loads, preventing layout shift
    */
   aspectRatio?: string;
+  /**
+   * Skip auto aspect-ratio calculation from metadata
+   * Use for hero/background images where parent has fixed height
+   * and you want image to fill naturally with objectFit: cover
+   */
+  skipAutoAspectRatio?: boolean;
 }
 
 /**
@@ -167,6 +173,7 @@ const OptimizedImage = memo<OptimizedImageProps>(({
   fallback,
   onOptimizedError,
   aspectRatio,
+  skipAutoAspectRatio,
   ...props
 }) => {
   /**
@@ -250,9 +257,10 @@ const OptimizedImage = memo<OptimizedImageProps>(({
   if (aspectRatio) {
     // Explicit aspect ratio (preferred) - user has specified exact proportions
     containerStyle.aspectRatio = aspectRatio;
-  } else if (props.fill && metadata?.width && metadata?.height) {
+  } else if (props.fill && metadata?.width && metadata?.height && !skipAutoAspectRatio) {
     // Auto-calculate from metadata when using fill={true} without explicit aspectRatio
     // This provides CLS prevention even without manual aspectRatio prop
+    // Skip this if skipAutoAspectRatio={true} (for hero/background images with fixed parent height)
     containerStyle.aspectRatio = `${metadata.width} / ${metadata.height}`;
   }
 
