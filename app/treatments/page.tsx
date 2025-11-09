@@ -3,10 +3,8 @@ import type { Metadata } from 'next';
 import { getTreatments, getCategories, getTreatmentsByCategory } from '@/lib/cms/treatments';
 import { TreatmentCategorySlug, TreatmentCategory } from '@/lib/data/treatments';
 import { MainLayout } from '@/components/Layout/MainLayout';
-import { 
-  DynamicCategoryFilters,
-  DynamicFilteredTreatmentsDisplay 
-} from '@/components/Dynamic/DynamicComponents';
+import CategoryFilters from '@/components/Treatments/CategoryFilters';
+import FilteredTreatmentsDisplay from '@/components/Treatments/FilteredTreatmentsDisplay';
 import { contactInfo } from '@/lib/data/contactInfo';
 import Script from 'next/script';
 import { 
@@ -168,7 +166,7 @@ export default async function TreatmentsPage(props: Props) {
           </h1>
 
           <div className="flex justify-center mb-2 lg:mb-12">
-            <DynamicCategoryFilters
+            <CategoryFilters
               selectedCategory={currentSelection}
               categories={categories}
             />
@@ -182,7 +180,7 @@ export default async function TreatmentsPage(props: Props) {
             </div>
           )}
 
-          <DynamicFilteredTreatmentsDisplay 
+          <FilteredTreatmentsDisplay
             filteredTreatments={filteredTreatments}
             currentSelection={currentSelection}
           />
