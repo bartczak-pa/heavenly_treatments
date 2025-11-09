@@ -85,6 +85,7 @@ const MainHeader: React.FC<MainHeaderProps> = ({ id, className }) => {
                     src={HERO_CONFIG.image.src}
                     alt={HERO_CONFIG.image.decorative ? "" : HERO_CONFIG.image.alt}
                     fill
+                    aspectRatio="16/9"
                     sizes="100vw"
                     style={{ objectFit: 'cover' }}
                     priority

@@ -268,7 +268,7 @@ const OptimizedImage = memo<OptimizedImageProps>(({
    */
   if (Object.keys(containerStyle).length > 0) {
     return (
-      <div style={containerStyle} className="relative overflow-hidden w-full">
+      <div style={containerStyle} className={`relative overflow-hidden w-full ${props.fill ? 'h-full' : ''}`}>
         <Image
           src={imageSrc}
           // Width/Height Strategy (Phase 4.2 optimization):
