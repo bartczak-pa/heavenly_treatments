@@ -80,11 +80,12 @@ const MainHeader: React.FC<MainHeaderProps> = ({ id, className }) => {
           aria-labelledby={headingId}
         >
             {/* Background image with overlay */}
-            <div className={styles.imageContainer}> 
+            <div className={styles.imageContainer}>
                 <OptimizedImage
                     src={HERO_CONFIG.image.src}
                     alt={HERO_CONFIG.image.decorative ? "" : HERO_CONFIG.image.alt}
                     fill
+                    aspectRatio="16/9"
                     sizes="100vw"
                     style={{ objectFit: 'cover' }}
                     priority
