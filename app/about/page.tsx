@@ -173,13 +173,15 @@ export default function AboutPage() {
       />
 
       <div className="flex flex-col">
-        <header className="mt-10 mb-12">
-          <h1 className="font-serif text-3xl md:text-4xl font-semibold text-primary text-center">
-            Meet Hayley Bell - Your Kelso Massage & Beauty Therapist
-          </h1>
-          <p className="text-center text-gray-600 mt-4 max-w-3xl mx-auto px-4">
-            7 years of professional experience | Trained at Mary Reid Spa Academy | Former Sheraton & Schloss therapist
-          </p>
+        <header className="bg-secondary/30 py-12 mb-12">
+          <div className="container mx-auto px-4">
+            <h1 className="font-serif text-3xl md:text-4xl font-semibold text-primary text-center">
+              Meet Hayley Bell - Your Kelso Massage & Beauty Therapist
+            </h1>
+            <p className="text-center text-gray-600 mt-4 max-w-3xl mx-auto">
+              7 years of professional experience | Trained at Mary Reid Spa Academy | Former Sheraton & Schloss therapist
+            </p>
+          </div>
         </header>
 
         <main id="main-content">
