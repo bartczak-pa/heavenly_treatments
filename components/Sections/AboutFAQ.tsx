@@ -104,7 +104,7 @@ const AboutFAQ: React.FC<AboutFAQProps> = ({ className = "" }) => {
 
         <div className="mt-12 text-center">
           <p className="text-gray-700 mb-4">
-            Have more questions? I'd be happy to help!
+            Have more questions? I&apos;d be happy to help!
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <a
