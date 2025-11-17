@@ -133,7 +133,7 @@ interface BreadcrumbItem {
 
 /**
  * Generates JSON-LD structured data for a BreadcrumbList schema.
- * 
+ *
  * @param items - An array of BreadcrumbItem objects, in order.
  * @returns The JSON-LD object representing the breadcrumb list.
  */
@@ -149,5 +149,74 @@ export function generateBreadcrumbJsonLd(items: BreadcrumbItem[]) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: itemListElement,
+  };
+}
+
+/**
+ * Generates JSON-LD structured data for a Person schema (therapist).
+ *
+ * @returns The JSON-LD object representing the person/therapist.
+ */
+export function generatePersonJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Hayley Bell',
+    jobTitle: 'Massage & Beauty Therapist',
+    description: 'Qualified massage and beauty therapist with over 7 years of experience, trained at Mary Reid Spa Academy. Specializing in luxury spa treatments in Kelso, Scottish Borders.',
+    image: `${BASE_URL}/images/about/owner-of-heavenly-treatments.jpg`,
+    url: `${BASE_URL}/about`,
+    worksFor: {
+      '@type': 'HealthAndBeautyBusiness',
+      name: 'Heavenly Treatments with Hayleybell',
+    },
+    alumniOf: {
+      '@type': 'EducationalOrganization',
+      name: 'Mary Reid Spa Academy',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Edinburgh',
+        addressCountry: 'GB',
+      },
+    },
+    knowsAbout: [
+      'Massage Therapy',
+      'Beauty Treatments',
+      'Spa Therapy',
+      'Facial Treatments',
+      'Holistic Wellness',
+    ],
+    sameAs: [
+      'https://www.facebook.com/heavenlytreatmentswithhayleybell',
+      'https://www.instagram.com/heavenlytreatments_hayleybell/',
+    ],
+  };
+}
+
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+/**
+ * Generates JSON-LD structured data for an FAQPage schema.
+ *
+ * @param faqs - An array of FAQ items with questions and answers.
+ * @returns The JSON-LD object representing the FAQ page.
+ */
+export function generateFAQJsonLd(faqs: FAQItem[]) {
+  const mainEntity = faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer,
+    },
+  }));
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: mainEntity,
   };
 }
