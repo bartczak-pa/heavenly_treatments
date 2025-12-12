@@ -43,7 +43,7 @@
     "clsx": "^2.1.1",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.487.0",
-    "next": "15.2.4",
+    "next": "15.2.8",
     "next-sanity": "^11.6.5",
     "react": "^19.0.0",
     "react-cookie-consent": "^9.0.0",
