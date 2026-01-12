@@ -131,6 +131,21 @@ export function generateHealthAndBeautyBusinessJsonLd(
 /**
  * Generates JSON-LD structured data for a WebSite schema.
  *
+ * NOTE: SearchAction schema is intentionally not included because the site
+ * does not have a dedicated /search endpoint. Adding SearchAction without
+ * a functional search endpoint would violate Google's structured data guidelines
+ * and could result in manual actions or rich result removal.
+ *
+ * If a search feature is implemented in the future, add the SearchAction like so:
+ * potentialAction: {
+ *   '@type': 'SearchAction',
+ *   target: {
+ *     '@type': 'EntryPoint',
+ *     urlTemplate: `${BASE_URL}/search?q={search_term_string}`
+ *   },
+ *   'query-input': 'required name=search_term_string'
+ * }
+ *
  * @returns The JSON-LD object representing the website.
  */
 export function generateWebSiteJsonLd() {

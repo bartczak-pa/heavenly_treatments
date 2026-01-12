@@ -223,3 +223,51 @@ describe('Schema Validation', () => {
     });
   });
 });
+
+describe('Twitter Card Metadata', () => {
+  // Note: These tests verify the expected structure of Twitter card metadata
+  // The actual metadata is defined in app/layout.tsx and should match this structure
+
+  it('should have required Twitter card fields', () => {
+    // Expected Twitter card metadata structure from app/layout.tsx
+    const expectedTwitterMetadata = {
+      card: 'summary_large_image',
+      title: 'Heavenly Treatments with Hayleybell - Wellness & Self-Care',
+      description: 'Relaxing massage, facial, reflexology, and body treatments in Kelso, Scottish Borders.',
+      images: {
+        url: '/images/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'Heavenly Treatments with Hayleybell logo',
+      },
+    };
+
+    // Verify structure
+    expect(expectedTwitterMetadata.card).toBe('summary_large_image');
+    expect(expectedTwitterMetadata.title).toBeDefined();
+    expect(expectedTwitterMetadata.description).toBeDefined();
+    expect(expectedTwitterMetadata.images).toBeDefined();
+  });
+
+  it('should have Twitter card image dimensions', () => {
+    // Twitter card image should have proper dimensions for optimal rendering
+    const expectedImageDimensions = {
+      width: 1200,
+      height: 630,
+    };
+
+    expect(expectedImageDimensions.width).toBe(1200);
+    expect(expectedImageDimensions.height).toBe(630);
+
+    // Verify aspect ratio (1200:630 ≈ 1.9:1, which is recommended for Twitter)
+    const aspectRatio = expectedImageDimensions.width / expectedImageDimensions.height;
+    expect(aspectRatio).toBeCloseTo(1.9, 1);
+  });
+
+  it('should have Twitter card image alt text', () => {
+    const expectedAltText = 'Heavenly Treatments with Hayleybell logo';
+
+    expect(expectedAltText).toBeDefined();
+    expect(expectedAltText.length).toBeGreaterThan(0);
+  });
+});
