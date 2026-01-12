@@ -68,7 +68,12 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Heavenly Treatments with Hayleybell - Wellness & Self-Care',
     description: 'Relaxing massage, facial, reflexology, and body treatments in Kelso, Scottish Borders.',
-    images: ['/images/logo.png'],
+    images: {
+      url: '/images/logo.png',
+      width: 1200,
+      height: 630,
+      alt: 'Heavenly Treatments with Hayleybell logo',
+    },
   },
 };
 

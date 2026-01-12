@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { cache } from 'react';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getCategories, getTreatmentsByCategory } from '@/lib/cms/treatments';
@@ -18,6 +18,11 @@ import { config } from '@/lib/config';
 // Revalidate this page every hour
 export const revalidate = 3600;
 
+// Cache getCategories to avoid duplicate calls between metadata and component
+const getCachedCategories = cache(async () => {
+  return await getCategories();
+});
+
 interface Props {
   params: Promise<{
     categorySlug: string;
@@ -26,7 +31,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { categorySlug } = await params;
-  const categories = await getCategories();
+  const categories = await getCachedCategories();
   const categoryData = categories.find(cat => cat.slug === categorySlug);
 
   if (!categoryData) {
@@ -69,7 +74,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams(): Promise<{ categorySlug: string }[]> {
-  const categories = await getCategories();
+  const categories = await getCachedCategories();
   return categories.map((category) => ({
     categorySlug: category.slug,
   }));
@@ -79,8 +84,8 @@ export default async function CategoryPage({ params }: Props) {
   const { categorySlug } = await params;
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
 
-  // Fetch categories and validate
-  const categories: TreatmentCategory[] = await getCategories();
+  // Fetch categories and validate (using cached version to avoid duplicate calls)
+  const categories: TreatmentCategory[] = await getCachedCategories();
   const categoryData = categories.find(cat => cat.slug === categorySlug);
 
   if (!categoryData) {
@@ -93,7 +98,7 @@ export default async function CategoryPage({ params }: Props) {
   // Generate JSON-LD structured data (server-generated, trusted content)
   const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfo);
   const breadcrumbItems = [
-    { name: 'Home', item: BASE_URL || '/' },
+    { name: 'Home', item: BASE_URL ? BASE_URL : '/' },
     { name: 'Treatments', item: `${BASE_URL}/treatments` },
     { name: categoryData.name, item: `${BASE_URL}/treatments/${categorySlug}` },
   ];

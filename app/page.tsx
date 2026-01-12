@@ -76,11 +76,8 @@ const homepageFAQs = [
 
 async function HomePage() {
   const webSiteJsonLd = generateWebSiteJsonLd();
-  // Include aggregateRating in business schema (placeholder values - TODO: integrate real review data)
-  const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(
-    contactInfo as ContactInfoType,
-    { ratingValue: 4.9, reviewCount: 50 }
-  );
+  // Business schema without aggregateRating (will be added when real review data is integrated)
+  const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfoType);
   const faqJsonLd = generateFAQJsonLd(homepageFAQs);
   const categories = await getCategories();
 

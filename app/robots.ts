@@ -6,7 +6,11 @@ import { MetadataRoute } from 'next';
  * @see https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots
  */
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.heavenly-treatments.co.uk';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+  if (!baseUrl) {
+    throw new Error('NEXT_PUBLIC_BASE_URL is not set - required for robots.txt generation');
+  }
 
   return {
     rules: [
