@@ -1,5 +1,0 @@
-# Allow all crawlers full access
-User-agent: *
-Allow: /
-
-Sitemap: https://www.heavenly-treatments.co.uk/sitemap.xml

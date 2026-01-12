@@ -38,19 +38,11 @@ export default async function TreatmentDetailPage({ params }: Props) {
   const categoryName = categoryData ? categoryData.name : treatment.category; // Fallback to slug if name not found
 
   // --- Prepare Breadcrumb Data ---
-  let BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-  if (!BASE_URL) {
-    if (typeof window !== 'undefined') {
-      BASE_URL = window.location.origin;
-    } else {
-      // In production, this should be set. For development, use a fallback
-      BASE_URL = process.env.NODE_ENV === 'production' ? 'https://heavenly-treatments.com' : 'http://localhost:3000';
-    }
-  }
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
   const breadcrumbItems = [
     { name: 'Home', item: BASE_URL },
     { name: 'Treatments', item: `${BASE_URL}/treatments` },
-    { name: categoryName, item: `${BASE_URL}/treatments?category=${treatment.category}` },
+    { name: categoryName, item: `${BASE_URL}/treatments/${treatment.category}` },
     { name: treatment.title, item: `${BASE_URL}/treatments/${treatment.category}/${treatment.slug}` },
   ];
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(breadcrumbItems);
@@ -169,22 +161,27 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
   const description = treatment.description.substring(0, config.seo.MAX_DESCRIPTION_LENGTH);
+  const canonicalUrl = `${BASE_URL}/treatments/${treatment.category}/${treatment.slug}`;
 
   return {
     title: `${treatment.title} | My Cottage Spa Treatments`,
     description: description,
+    alternates: {
+      canonical: canonicalUrl,
+    },
     openGraph: {
       title: `${treatment.title} | Hayleybell's Cottage Spa`,
       description: description,
-      url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/treatments/${treatment.category}/${treatment.slug}`,
+      url: canonicalUrl,
       type: 'article',
       images: treatment.image
-        ? [{ 
-            url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}${treatment.image}`,
+        ? [{
+            url: `${BASE_URL}${treatment.image}`,
             alt: `Image showing ${treatment.title.toLowerCase()} treatment being performed`,
-            width: 800, 
-            height: 800, 
+            width: 800,
+            height: 800,
           }]
         : [],
     },

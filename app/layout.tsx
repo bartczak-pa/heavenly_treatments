@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   metadataBase: process.env.NEXT_PUBLIC_BASE_URL ? new URL(process.env.NEXT_PUBLIC_BASE_URL) : undefined,
   title: {
     default: 'Heavenly Treatments with Hayleybell - Wellness & Self-Care',
-    template: '%s | Heavenly Treatments with Hayleybell', 
+    template: '%s | Heavenly Treatments with Hayleybell',
   },
   description: "Discover relaxing massage therapies, rejuvenating facials, and holistic body treatments in Kelso. Book your journey to wellness with Heavenly Treatments.",
   keywords: ['Massage', 'Facial', 'Reflexology', 'Body Treatments', 'Kelso', 'Wellness', 'Spa', 'Heavenly Treatments', 'Heavenly Treatments with Hayleybell', 'Heavenly Treatments with Hayleybell Kelso', 'Scottish Borders', 'Scottish Borders Massage', 'Scottish Borders Facials', 'Scottish Borders Body Treatments'],
@@ -58,11 +58,17 @@ export const metadata: Metadata = {
     images: [
       {
         url: '/images/logo.png',
-        width: 1200, // Standard OG width
-        height: 630, // Standard OG height
+        width: 1200,
+        height: 630,
         alt: 'Heavenly Treatments with Hayleybell logo',
       },
     ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Heavenly Treatments with Hayleybell - Wellness & Self-Care',
+    description: 'Relaxing massage, facial, reflexology, and body treatments in Kelso, Scottish Borders.',
+    images: ['/images/logo.png'],
   },
 };
 
