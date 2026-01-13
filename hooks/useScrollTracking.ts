@@ -84,7 +84,8 @@ export function useScrollTracking(options: ScrollTrackingOptions = {}): void {
   const pathnameRef = useRef(pathname);
   pathnameRef.current = pathname;
 
-  // Memoized scroll handler - uses refs to avoid dependency changes
+  // Scroll handler that checks thresholds - uses refs for current values
+  // to avoid recreation on every render
   const checkScrollThresholds = useCallback(() => {
     const scrollHeight =
       document.documentElement.scrollHeight - window.innerHeight;
@@ -115,13 +116,6 @@ export function useScrollTracking(options: ScrollTrackingOptions = {}): void {
     });
   }, []); // No dependencies - uses refs for current values
 
-  // Store throttled handler in a ref to prevent recreation
-  // This preserves the internal lastCall state across re-renders
-  const throttledHandlerRef = useRef<(() => void) | null>(null);
-  if (!throttledHandlerRef.current) {
-    throttledHandlerRef.current = throttle(checkScrollThresholds, SCROLL_THROTTLE_MS);
-  }
-
   useEffect(() => {
     if (!enabled) {
       return;
@@ -130,7 +124,9 @@ export function useScrollTracking(options: ScrollTrackingOptions = {}): void {
     // Reset tracked thresholds on route change
     trackedThresholds.current = new Set();
 
-    const throttledHandler = throttledHandlerRef.current!;
+    // Create throttled handler fresh for each effect run
+    // This ensures clean state when route changes or component remounts
+    const throttledHandler = throttle(checkScrollThresholds, SCROLL_THROTTLE_MS);
 
     // Add passive scroll listener for better performance
     window.addEventListener('scroll', throttledHandler, { passive: true });
