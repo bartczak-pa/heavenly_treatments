@@ -53,7 +53,12 @@ export function generateServiceJsonLd(treatment: Treatment, contactInfo: Contact
             address: contactInfo.address,
             telephone: contactInfo.phone,
             email: contactInfo.email,
-            openingHoursSpecification: contactInfo.openingHours,
+            openingHoursSpecification: contactInfo.openingHours.map(hours => ({
+                '@type': 'OpeningHoursSpecification',
+                dayOfWeek: hours.dayOfWeek,
+                opens: hours.opens,
+                closes: hours.closes,
+            })),
             hasMap: contactInfo.mapSrc,
         },
         timeRequired: treatment.duration,
@@ -102,7 +107,12 @@ export function generateHealthAndBeautyBusinessJsonLd(
         address: contactInfo.address,
         telephone: contactInfo.phone,
         email: contactInfo.email,
-        openingHours: contactInfo.openingHours,
+        openingHoursSpecification: contactInfo.openingHours.map(hours => ({
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: hours.dayOfWeek,
+            opens: hours.opens,
+            closes: hours.closes,
+        })),
         hasMap: contactInfo.mapSrc,
         geo: {
             '@type': 'GeoCoordinates',
