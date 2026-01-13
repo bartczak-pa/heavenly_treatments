@@ -277,10 +277,20 @@ export function trackFormInteraction(data: FormInteractionData): void {
 
 /**
  * Generate a unique transaction ID for booking confirmations
+ * Uses crypto.randomUUID() for cryptographically secure random IDs
  */
 export function generateTransactionId(): string {
+  // Use crypto.randomUUID() if available (browser/Node 19+), fallback for older environments
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return `booking_${crypto.randomUUID()}`;
+  }
+  // Fallback: timestamp + crypto.getRandomValues for older environments
   const timestamp = Date.now();
-  const random = Math.random().toString(36).slice(2, 9);
+  const randomBytes = new Uint8Array(8);
+  crypto.getRandomValues(randomBytes);
+  const random = Array.from(randomBytes)
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
   return `booking_${timestamp}_${random}`;
 }
 

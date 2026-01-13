@@ -361,11 +361,13 @@ describe('GA4 Analytics', () => {
       expect(id).toMatch(/^booking_/);
     });
 
-    it('should contain timestamp and random string', () => {
+    it('should generate cryptographically secure IDs', () => {
       const id = generateTransactionId();
 
-      // Format: booking_{timestamp}_{random}
-      expect(id).toMatch(/^booking_\d+_[a-z0-9]+$/);
+      // Format: booking_{uuid} or booking_{timestamp}_{hex}
+      // UUID format: booking_xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      // Fallback format: booking_{timestamp}_{16-char-hex}
+      expect(id).toMatch(/^booking_([a-f0-9-]{36}|\d+_[a-f0-9]{16})$/);
     });
   });
 

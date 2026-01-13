@@ -59,6 +59,7 @@ export function BookingConfirmationTracker() {
 
     // Extract treatment data from URL params
     const treatmentName = searchParams.get('treatment');
+    const treatmentId = searchParams.get('treatmentId');
     const priceParam = searchParams.get('price');
     const category = searchParams.get('category');
     const source = searchParams.get('source') || 'form';
@@ -70,9 +71,10 @@ export function BookingConfirmationTracker() {
     const transactionId = generateTransactionId();
 
     // Build treatment data if we have a name
+    // Use actual treatmentId if available, fallback to name-based ID for backwards compatibility
     const treatmentData = treatmentName
       ? {
-          id: `treatment_${treatmentName.toLowerCase().replace(/\s+/g, '_')}`,
+          id: treatmentId || `treatment_${treatmentName.toLowerCase().replace(/\s+/g, '_')}`,
           name: treatmentName,
           category: category ?? undefined,
           price,

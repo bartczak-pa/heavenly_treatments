@@ -160,6 +160,7 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
         const selectedTreatment = treatments.find(t => t.title === treatmentName);
         const params = new URLSearchParams();
         if (treatmentName) params.set('treatment', treatmentName);
+        if (selectedTreatment?.id) params.set('treatmentId', selectedTreatment.id);
         if (selectedTreatment?.price) params.set('price', selectedTreatment.price.replace('£', ''));
         if (selectedTreatment?.category) params.set('category', selectedTreatment.category);
         params.set('source', 'form');
