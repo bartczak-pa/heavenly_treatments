@@ -3,7 +3,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import { Button } from '@/components/ui/button';
-import { BookingConfirmationTracker } from '@/components/Analytics/BookingConfirmationTracker'; 
+import { BookingConfirmationTracker } from '@/components/Analytics/BookingConfirmationTracker';
+import { AnalyticsErrorBoundary } from '@/components/Analytics/AnalyticsErrorBoundary'; 
 
 export function generateMetadata(): Metadata {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
@@ -40,9 +41,11 @@ export default function BookingConfirmationPage() {
   return (
     <MainLayout>
       {/* Track purchase conversion (reads URL params) */}
-      <Suspense fallback={null}>
-        <BookingConfirmationTracker />
-      </Suspense>
+      <AnalyticsErrorBoundary componentName="BookingConfirmationTracker">
+        <Suspense fallback={null}>
+          <BookingConfirmationTracker />
+        </Suspense>
+      </AnalyticsErrorBoundary>
 
       <div className="container mx-auto px-4 py-16 md:py-24 text-center">
         <div className="max-w-2xl mx-auto">

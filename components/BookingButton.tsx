@@ -11,7 +11,7 @@ import {
   trackBookingButtonClick,
   trackBookingRedirect,
 } from '@/lib/analytics/trackAbTest';
-import { trackBeginCheckout, parsePrice } from '@/lib/analytics/ga4';
+import { trackBeginCheckout, parsePrice, generateTreatmentId } from '@/lib/analytics/ga4';
 import type { BookingContext } from '@/lib/abTesting/getBookingUrl';
 
 interface BookingButtonProps
@@ -94,7 +94,7 @@ export const BookingButton = React.forwardRef<
       if (treatmentTitle) {
         trackBeginCheckout(
           {
-            id: treatmentId || `treatment_${treatmentTitle.toLowerCase().replace(/\s+/g, '_')}`,
+            id: treatmentId || generateTreatmentId(treatmentTitle),
             name: treatmentTitle,
             category: treatmentCategory,
             price: parsePrice(treatmentPrice),

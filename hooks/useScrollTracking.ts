@@ -75,7 +75,16 @@ export function useScrollTracking(options: ScrollTrackingOptions = {}): void {
   const pathname = usePathname();
   const trackedThresholds = useRef<Set<number>>(new Set());
 
-  // Memoized scroll handler to check thresholds
+  // Store thresholds in a ref to access current value in scroll handler
+  // without causing throttle function recreation
+  const thresholdsRef = useRef(thresholds);
+  thresholdsRef.current = thresholds;
+
+  // Store pathname in a ref for the same reason
+  const pathnameRef = useRef(pathname);
+  pathnameRef.current = pathname;
+
+  // Memoized scroll handler - uses refs to avoid dependency changes
   const checkScrollThresholds = useCallback(() => {
     const scrollHeight =
       document.documentElement.scrollHeight - window.innerHeight;
@@ -87,7 +96,7 @@ export function useScrollTracking(options: ScrollTrackingOptions = {}): void {
 
     const scrollPercent = Math.round((window.scrollY / scrollHeight) * 100);
 
-    thresholds.forEach((threshold) => {
+    thresholdsRef.current.forEach((threshold) => {
       // Check if we've passed this threshold and haven't tracked it yet
       if (
         scrollPercent >= threshold &&
@@ -99,12 +108,19 @@ export function useScrollTracking(options: ScrollTrackingOptions = {}): void {
         // Track the scroll depth event
         trackScrollDepth({
           percent_scrolled: threshold,
-          page_path: pathname,
+          page_path: pathnameRef.current,
           page_title: document.title,
         });
       }
     });
-  }, [pathname, thresholds]);
+  }, []); // No dependencies - uses refs for current values
+
+  // Store throttled handler in a ref to prevent recreation
+  // This preserves the internal lastCall state across re-renders
+  const throttledHandlerRef = useRef<(() => void) | null>(null);
+  if (!throttledHandlerRef.current) {
+    throttledHandlerRef.current = throttle(checkScrollThresholds, SCROLL_THROTTLE_MS);
+  }
 
   useEffect(() => {
     if (!enabled) {
@@ -114,8 +130,7 @@ export function useScrollTracking(options: ScrollTrackingOptions = {}): void {
     // Reset tracked thresholds on route change
     trackedThresholds.current = new Set();
 
-    // Create throttled scroll handler to limit function calls
-    const throttledHandler = throttle(checkScrollThresholds, SCROLL_THROTTLE_MS);
+    const throttledHandler = throttledHandlerRef.current!;
 
     // Add passive scroll listener for better performance
     window.addEventListener('scroll', throttledHandler, { passive: true });

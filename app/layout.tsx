@@ -10,6 +10,7 @@ import { Analytics } from "@vercel/analytics/react"
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { DynamicGoogleAnalytics } from '@/components/Dynamic/DynamicComponents';
 import { GlobalAnalytics } from '@/components/Analytics/GlobalAnalytics';
+import { AnalyticsErrorBoundary } from '@/components/Analytics/AnalyticsErrorBoundary';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -106,7 +107,9 @@ export default function RootLayout({
         <Analytics />
 
         {/* Global analytics tracking (outbound links, etc.) */}
-        <GlobalAnalytics />
+        <AnalyticsErrorBoundary componentName="GlobalAnalytics">
+          <GlobalAnalytics />
+        </AnalyticsErrorBoundary>
 
         {/* Dynamically loaded Google Analytics */}
         <DynamicGoogleAnalytics

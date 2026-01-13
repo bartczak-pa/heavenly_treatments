@@ -11,6 +11,7 @@ import { contactInfo } from '@/lib/data/contactInfo';
 import { generateServiceJsonLd, ContactInfo, generateBreadcrumbJsonLd } from '@/lib/jsonLsUtils';
 import { config } from '@/lib/config';
 import { TreatmentViewTracker } from '@/components/Analytics/TreatmentViewTracker';
+import { AnalyticsErrorBoundary } from '@/components/Analytics/AnalyticsErrorBoundary';
 
 // Revalidate this page every hour
 export const revalidate = 3600;
@@ -63,13 +64,15 @@ export default async function TreatmentDetailPage({ params }: Props) {
       />
 
       {/* Track treatment view and scroll depth for GA4 analytics */}
-      <TreatmentViewTracker
-        treatmentId={treatment.id}
-        treatmentName={treatment.title}
-        treatmentCategory={categoryName}
-        treatmentPrice={treatment.price}
-        enableScrollTracking={true}
-      />
+      <AnalyticsErrorBoundary componentName="TreatmentViewTracker">
+        <TreatmentViewTracker
+          treatmentId={treatment.id}
+          treatmentName={treatment.title}
+          treatmentCategory={categoryName}
+          treatmentPrice={treatment.price}
+          enableScrollTracking={true}
+        />
+      </AnalyticsErrorBoundary>
 
       <section className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4">

@@ -304,12 +304,41 @@ export function generateTransactionId(): string {
 /**
  * Parse price string to number (handles "£40" format)
  *
+ * Validates decimal format to prevent edge cases like "£40.50.25"
+ * from being parsed incorrectly.
+ *
  * @param priceString - Price string like "£40" or "40"
  * @returns Numeric price value or undefined
  */
 export function parsePrice(priceString?: string): number | undefined {
   if (!priceString) return undefined;
+
+  // Remove currency symbols and whitespace
   const cleaned = priceString.replace(/[^0-9.]/g, '');
+
+  // Validate format: must match valid decimal number (max one decimal point)
+  // This prevents "40.50.25" from becoming "40.5025"
+  if (!/^\d+(\.\d+)?$/.test(cleaned)) {
+    return undefined;
+  }
+
   const parsed = parseFloat(cleaned);
   return isNaN(parsed) ? undefined : parsed;
+}
+
+/**
+ * Generate a consistent treatment ID from a treatment name
+ *
+ * Used as a fallback when actual treatment IDs are not available.
+ * This centralizes the ID generation logic to ensure consistency
+ * across BookingButton and BookingConfirmationTracker.
+ *
+ * @param treatmentName - The treatment name to convert to an ID
+ * @returns A lowercase, underscore-separated ID prefixed with "treatment_"
+ *
+ * @example
+ * generateTreatmentId("Deep Tissue Massage") // => "treatment_deep_tissue_massage"
+ */
+export function generateTreatmentId(treatmentName: string): string {
+  return `treatment_${treatmentName.toLowerCase().replace(/\s+/g, '_')}`;
 }

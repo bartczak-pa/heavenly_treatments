@@ -12,12 +12,13 @@
  * @module components/Analytics/BookingConfirmationTracker
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import {
   trackPurchase,
   generateTransactionId,
   parsePrice,
+  generateTreatmentId,
 } from '@/lib/analytics/ga4';
 
 /** Session storage key for tracking deduplication */
@@ -52,23 +53,37 @@ const TRACKING_KEY_PREFIX = 'booking_tracked_';
  */
 export function BookingConfirmationTracker() {
   const searchParams = useSearchParams();
+  // In-memory guard for React 18 Strict Mode race condition
+  // This ref persists across the double-render but resets on actual re-mounts
+  const hasTrackedRef = useRef(false);
 
   useEffect(() => {
+    // First check: in-memory guard (prevents race condition in Strict Mode)
+    if (hasTrackedRef.current) {
+      return;
+    }
+
     // Create a unique key based on URL params to prevent duplicate tracking
-    // This handles React 18 Strict Mode where effects run twice in dev
     const paramsKey = searchParams.toString();
     const trackingKey = `${TRACKING_KEY_PREFIX}${paramsKey}`;
 
-    // Check if we've already tracked this specific booking
+    // Second check: sessionStorage (prevents duplicates across page refreshes)
     try {
       if (sessionStorage.getItem(trackingKey)) {
+        hasTrackedRef.current = true;
         return;
       }
-      // Mark as tracked immediately
-      sessionStorage.setItem(trackingKey, 'true');
     } catch {
       // sessionStorage not available (SSR or private browsing)
-      // Fall through to track anyway - better to double-track than not track
+      // Continue to track - in-memory guard still protects against double-render
+    }
+
+    // Mark as tracked in both guards
+    hasTrackedRef.current = true;
+    try {
+      sessionStorage.setItem(trackingKey, 'true');
+    } catch {
+      // Ignore sessionStorage errors - in-memory guard is sufficient for this session
     }
 
     // Extract treatment data from URL params
@@ -88,7 +103,7 @@ export function BookingConfirmationTracker() {
     // Use actual treatmentId if available, fallback to name-based ID for backwards compatibility
     const treatmentData = treatmentName
       ? {
-          id: treatmentId || `treatment_${treatmentName.toLowerCase().replace(/\s+/g, '_')}`,
+          id: treatmentId || generateTreatmentId(treatmentName),
           name: treatmentName,
           category: category ?? undefined,
           price,
