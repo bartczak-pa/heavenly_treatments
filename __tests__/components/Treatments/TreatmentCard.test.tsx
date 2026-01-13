@@ -24,11 +24,12 @@ describe('TreatmentCard', () => {
 
   it('renders treatment information correctly', () => {
     render(<TreatmentCard treatment={mockTreatment} />)
-    
+
     expect(screen.getByText('Relaxing Massage')).toBeInTheDocument()
     expect(screen.getByText('A soothing and relaxing massage to help you unwind and release tension.')).toBeInTheDocument()
     expect(screen.getByText('60 mins')).toBeInTheDocument()
-    expect(screen.getByText('£80')).toBeInTheDocument()
+    // Price is displayed as "80" with a PoundSterling icon (£ is shown via SVG)
+    expect(screen.getByText('80')).toBeInTheDocument()
   })
 
   it('renders image when treatment has image', () => {
@@ -62,10 +63,11 @@ describe('TreatmentCard', () => {
 
   it('displays duration and price with icons', () => {
     render(<TreatmentCard treatment={mockTreatment} />)
-    
+
     // Check that duration and price are displayed
+    // Price shows "80" with PoundSterling icon, duration shows "60 mins" with Clock icon
     expect(screen.getByText('60 mins')).toBeInTheDocument()
-    expect(screen.getByText('£80')).toBeInTheDocument()
+    expect(screen.getByText('80')).toBeInTheDocument()
   })
 
   it('has proper accessibility structure', () => {

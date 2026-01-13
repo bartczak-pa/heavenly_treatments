@@ -11,6 +11,7 @@ import {
   trackBookingButtonClick,
   trackBookingRedirect,
 } from '@/lib/analytics/trackAbTest';
+import { trackBeginCheckout, parsePrice, generateTreatmentId } from '@/lib/analytics/ga4';
 import type { BookingContext } from '@/lib/abTesting/getBookingUrl';
 
 interface BookingButtonProps
@@ -21,6 +22,12 @@ interface BookingButtonProps
   treatmentTitle?: string;
   /** Dedicated Fresha URL for this treatment */
   freshaUrl?: string;
+  /** Treatment ID for e-commerce tracking (optional) */
+  treatmentId?: string;
+  /** Treatment category for e-commerce tracking (optional) */
+  treatmentCategory?: string;
+  /** Treatment price for e-commerce tracking (optional, string format like "£40") */
+  treatmentPrice?: string;
   /** Custom onClick handler (optional, runs after tracking) */
   onClick?: () => void;
   /** Button text/children */
@@ -55,6 +62,9 @@ export const BookingButton = React.forwardRef<
       context,
       treatmentTitle,
       freshaUrl,
+      treatmentId,
+      treatmentCategory,
+      treatmentPrice,
       onClick,
       children = 'Book Now',
       variant = 'default',
@@ -70,15 +80,28 @@ export const BookingButton = React.forwardRef<
     const isFresha = bookingUrl.includes('fresha.com');
 
     const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-      // Track button click
+      // Track button click (existing A/B test tracking)
       trackBookingButtonClick(context, treatmentTitle);
 
-      // Track redirect destination
+      // Track redirect destination (existing A/B test tracking)
       trackBookingRedirect(
         isFresha ? 'fresha' : 'form',
         context,
         treatmentTitle
       );
+
+      // Track begin_checkout for e-commerce (new GA4 tracking)
+      if (treatmentTitle) {
+        trackBeginCheckout(
+          {
+            id: treatmentId || generateTreatmentId(treatmentTitle),
+            name: treatmentTitle,
+            category: treatmentCategory,
+            price: parsePrice(treatmentPrice),
+          },
+          `${isFresha ? 'fresha' : 'form'}_${context}`
+        );
+      }
 
       // Call custom onClick if provided
       if (onClick) {

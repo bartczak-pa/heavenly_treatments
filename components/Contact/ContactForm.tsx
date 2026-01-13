@@ -8,6 +8,7 @@ import Turnstile from 'react-turnstile';
 import { Treatment } from '@/lib/data/treatments';
 import { ContactFormData, contactFormSchema } from '@/lib/validations/contact';
 import { useContactFormToast } from '@/hooks/useContactFormToast';
+import { useFormTracking } from '@/hooks/useFormTracking';
 import { useRouter } from 'next/navigation';
 
 import { Button } from "@/components/ui/button";
@@ -81,6 +82,11 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
   // Use the custom hook for toast management
   const { toastState, setToastOpen, showToast } = useContactFormToast();
 
+  // Use form tracking hook for GA4 analytics
+  const { onFieldFocus, onFieldBlur, onFormSubmit } = useFormTracking({
+    formName: 'contact_form',
+  });
+
   // 1. Initialize Form with react-hook-form + Zod
   const form = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
@@ -141,11 +147,26 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
       console.log("Client: Received response from API:", result);
 
       if (response.ok) {
+        // Track form submission success for GA4 analytics
+        onFormSubmit();
+
         // Use showToast from the hook
         showToast("Success", result.message || "Your message has been sent! I will get back to you as soon as possible.", "success");
-        form.reset(); 
-        setTurnstileToken(''); 
-        router.push('/booking-confirmation');
+        form.reset();
+        setTurnstileToken('');
+
+        // Build redirect URL with treatment data for purchase tracking
+        const treatmentName = data.treatment;
+        const selectedTreatment = treatments.find(t => t.title === treatmentName);
+        const params = new URLSearchParams();
+        if (treatmentName) params.set('treatment', treatmentName);
+        if (selectedTreatment?.id) params.set('treatmentId', selectedTreatment.id);
+        if (selectedTreatment?.price) params.set('price', selectedTreatment.price.replace('£', ''));
+        if (selectedTreatment?.category) params.set('category', selectedTreatment.category);
+        params.set('source', 'form');
+
+        const queryString = params.toString();
+        router.push(`/booking-confirmation${queryString ? `?${queryString}` : ''}`);
       } else {
         // Use showToast from the hook
         showToast("Submission Error", result.message || "An error occurred. Please try again.", "error");
@@ -174,7 +195,15 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
               <FormItem>
                 <FormLabel>First Name *</FormLabel>
                 <FormControl>
-                  <Input placeholder="Your first name" {...field} />
+                  <Input
+                    placeholder="Your first name"
+                    {...field}
+                    onFocus={() => onFieldFocus('firstName')}
+                    onBlur={(e) => {
+                      field.onBlur();
+                      onFieldBlur('firstName', !!e.target.value);
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -187,7 +216,16 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
               <FormItem>
                 <FormLabel>Email *</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="your.email@example.com" {...field} />
+                  <Input
+                    type="email"
+                    placeholder="your.email@example.com"
+                    {...field}
+                    onFocus={() => onFieldFocus('email')}
+                    onBlur={(e) => {
+                      field.onBlur();
+                      onFieldBlur('email', !!e.target.value);
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -198,14 +236,23 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
         {/* Phone Field */}
         <FormField
           control={form.control}
-          name="phone" 
+          name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Phone *</FormLabel> 
+              <FormLabel>Phone *</FormLabel>
               <FormControl>
-                <Input type="tel" placeholder="07123456789" {...field} />
+                <Input
+                  type="tel"
+                  placeholder="07123456789"
+                  {...field}
+                  onFocus={() => onFieldFocus('phone')}
+                  onBlur={(e) => {
+                    field.onBlur();
+                    onFieldBlur('phone', !!e.target.value);
+                  }}
+                />
               </FormControl>
-              <FormMessage /> 
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -275,10 +322,15 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
             <FormItem>
               <FormLabel>Message *</FormLabel>
               <FormControl>
-                <Textarea 
+                <Textarea
                   placeholder="Please let me know of any allergies or medical conditions ie. pregnancy. Sorry, not currently offering treatments for male customers."
-                  className="resize-none min-h-[120px]" 
-                  {...field} 
+                  className="resize-none min-h-[120px]"
+                  {...field}
+                  onFocus={() => onFieldFocus('message')}
+                  onBlur={(e) => {
+                    field.onBlur();
+                    onFieldBlur('message', !!e.target.value);
+                  }}
                 />
               </FormControl>
               <FormMessage />
