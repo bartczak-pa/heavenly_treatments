@@ -88,13 +88,20 @@ export function useFormTracking(
 
   /**
    * Track when a field loses focus (blur)
-   * Only tracks if the field has a value (field completion)
+   *
+   * **Intentional behavior**: Only tracks blur events when the field has a value.
+   * This indicates field completion and reduces noise in analytics by not tracking
+   * users who tab through fields without entering data.
+   *
+   * Empty-field blur events are intentionally NOT tracked. To track form abandonment,
+   * compare form_start events against form_submit events in your analytics dashboard.
    */
   const onFieldBlur = useCallback(
     (fieldName: string, hasValue: boolean) => {
       if (!enabled) return;
 
       // Only track blur if field has value (indicates completion)
+      // Empty field blurs are intentionally not tracked to reduce noise
       if (hasValue) {
         trackFormInteraction({
           form_name: formName,

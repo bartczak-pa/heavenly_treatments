@@ -20,6 +20,11 @@ interface OutboundTrackingOptions {
 /**
  * Hook to automatically track outbound link clicks in GA4
  *
+ * **Subdomain behavior**: Subdomains are treated as external domains.
+ * For example, `blog.example.com` would be tracked as outbound when
+ * clicking from `example.com`. This is intentional for most use cases
+ * where subdomains represent different properties.
+ *
  * @param options - Configuration options
  *
  * @example

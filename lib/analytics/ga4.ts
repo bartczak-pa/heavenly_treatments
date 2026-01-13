@@ -284,7 +284,19 @@ export function trackFormInteraction(data: FormInteractionData): void {
 
 /**
  * Generate a unique transaction ID for booking confirmations
- * Uses crypto.randomUUID() for cryptographically secure random IDs
+ *
+ * Uses crypto.randomUUID() for cryptographically secure random IDs.
+ * Falls back to timestamp + crypto.getRandomValues for older environments.
+ *
+ * **Uniqueness guarantee**: IDs are probabilistically unique (collision probability
+ * is astronomically low ~1 in 2^122 for UUID v4). For analytics purposes, this is
+ * effectively guaranteed unique. Not suitable for database primary keys without
+ * additional collision handling.
+ *
+ * @returns Transaction ID in format "booking_{uuid}" or "booking_{timestamp}_{hex}"
+ *
+ * @example
+ * generateTransactionId() // => "booking_550e8400-e29b-41d4-a716-446655440000"
  */
 export function generateTransactionId(): string {
   // Use crypto.randomUUID() if available (browser/Node 19+), fallback for older environments
@@ -292,6 +304,7 @@ export function generateTransactionId(): string {
     return `booking_${crypto.randomUUID()}`;
   }
   // Fallback: timestamp + crypto.getRandomValues for older environments
+  // Provides ~64 bits of randomness + timestamp for uniqueness
   const timestamp = Date.now();
   const randomBytes = new Uint8Array(8);
   crypto.getRandomValues(randomBytes);
@@ -302,13 +315,29 @@ export function generateTransactionId(): string {
 }
 
 /**
- * Parse price string to number (handles "£40" format)
+ * Parse price string to number
  *
  * Validates decimal format to prevent edge cases like "£40.50.25"
  * from being parsed incorrectly.
  *
- * @param priceString - Price string like "£40" or "40"
- * @returns Numeric price value or undefined
+ * Supported formats:
+ * - "£40" → 40
+ * - "40" → 40
+ * - "£40.50" → 40.5
+ * - "40.50" → 40.5
+ *
+ * Invalid formats (returns undefined):
+ * - "£40.50.25" (multiple decimals)
+ * - "abc" (non-numeric)
+ * - "" or undefined
+ *
+ * @param priceString - Price string in format "£XX", "£XX.XX", "XX", or "XX.XX"
+ * @returns Numeric price value or undefined if invalid format
+ *
+ * @example
+ * parsePrice("£40")      // => 40
+ * parsePrice("40.50")    // => 40.5
+ * parsePrice("£40.50.25") // => undefined (invalid)
  */
 export function parsePrice(priceString?: string): number | undefined {
   if (!priceString) return undefined;
