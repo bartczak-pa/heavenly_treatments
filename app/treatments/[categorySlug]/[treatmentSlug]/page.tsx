@@ -10,6 +10,7 @@ import Script from 'next/script';
 import { contactInfo } from '@/lib/data/contactInfo';
 import { generateServiceJsonLd, ContactInfo, generateBreadcrumbJsonLd } from '@/lib/jsonLsUtils';
 import { config } from '@/lib/config';
+import { TreatmentViewTracker } from '@/components/Analytics/TreatmentViewTracker';
 
 // Revalidate this page every hour
 export const revalidate = 3600;
@@ -59,6 +60,15 @@ export default async function TreatmentDetailPage({ params }: Props) {
         type="application/ld+json"
         // Inject both schemas as an array
         dangerouslySetInnerHTML={{ __html: JSON.stringify([serviceJsonLd, breadcrumbJsonLd]) }}
+      />
+
+      {/* Track treatment view and scroll depth for GA4 analytics */}
+      <TreatmentViewTracker
+        treatmentId={treatment.id}
+        treatmentName={treatment.title}
+        treatmentCategory={categoryName}
+        treatmentPrice={treatment.price}
+        enableScrollTracking={true}
       />
 
       <section className="py-16 md:py-24 bg-background">
@@ -118,6 +128,9 @@ export default async function TreatmentDetailPage({ params }: Props) {
                   context="treatment-detail"
                   treatmentTitle={treatment.title}
                   freshaUrl={treatment.freshaUrl}
+                  treatmentId={treatment.id}
+                  treatmentCategory={categoryName}
+                  treatmentPrice={treatment.price}
                   size="lg"
                   className="w-full sm:w-auto bg-primary hover:bg-primary/90"
                 >

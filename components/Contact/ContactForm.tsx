@@ -8,6 +8,7 @@ import Turnstile from 'react-turnstile';
 import { Treatment } from '@/lib/data/treatments';
 import { ContactFormData, contactFormSchema } from '@/lib/validations/contact';
 import { useContactFormToast } from '@/hooks/useContactFormToast';
+import { useFormTracking } from '@/hooks/useFormTracking';
 import { useRouter } from 'next/navigation';
 
 import { Button } from "@/components/ui/button";
@@ -81,6 +82,11 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
   // Use the custom hook for toast management
   const { toastState, setToastOpen, showToast } = useContactFormToast();
 
+  // Use form tracking hook for GA4 analytics (only form submit tracking needed)
+  const { onFormSubmit } = useFormTracking({
+    formName: 'contact_form',
+  });
+
   // 1. Initialize Form with react-hook-form + Zod
   const form = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
@@ -141,11 +147,25 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
       console.log("Client: Received response from API:", result);
 
       if (response.ok) {
+        // Track form submission success for GA4 analytics
+        onFormSubmit();
+
         // Use showToast from the hook
         showToast("Success", result.message || "Your message has been sent! I will get back to you as soon as possible.", "success");
-        form.reset(); 
-        setTurnstileToken(''); 
-        router.push('/booking-confirmation');
+        form.reset();
+        setTurnstileToken('');
+
+        // Build redirect URL with treatment data for purchase tracking
+        const treatmentName = data.treatment;
+        const selectedTreatment = treatments.find(t => t.title === treatmentName);
+        const params = new URLSearchParams();
+        if (treatmentName) params.set('treatment', treatmentName);
+        if (selectedTreatment?.price) params.set('price', selectedTreatment.price.replace('£', ''));
+        if (selectedTreatment?.category) params.set('category', selectedTreatment.category);
+        params.set('source', 'form');
+
+        const queryString = params.toString();
+        router.push(`/booking-confirmation${queryString ? `?${queryString}` : ''}`);
       } else {
         // Use showToast from the hook
         showToast("Submission Error", result.message || "An error occurred. Please try again.", "error");
