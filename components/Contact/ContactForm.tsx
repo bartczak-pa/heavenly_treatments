@@ -82,8 +82,8 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
   // Use the custom hook for toast management
   const { toastState, setToastOpen, showToast } = useContactFormToast();
 
-  // Use form tracking hook for GA4 analytics (only form submit tracking needed)
-  const { onFormSubmit } = useFormTracking({
+  // Use form tracking hook for GA4 analytics
+  const { onFieldFocus, onFieldBlur, onFormSubmit } = useFormTracking({
     formName: 'contact_form',
   });
 
@@ -195,7 +195,15 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
               <FormItem>
                 <FormLabel>First Name *</FormLabel>
                 <FormControl>
-                  <Input placeholder="Your first name" {...field} />
+                  <Input
+                    placeholder="Your first name"
+                    {...field}
+                    onFocus={() => onFieldFocus('firstName')}
+                    onBlur={(e) => {
+                      field.onBlur();
+                      onFieldBlur('firstName', !!e.target.value);
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -208,7 +216,16 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
               <FormItem>
                 <FormLabel>Email *</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="your.email@example.com" {...field} />
+                  <Input
+                    type="email"
+                    placeholder="your.email@example.com"
+                    {...field}
+                    onFocus={() => onFieldFocus('email')}
+                    onBlur={(e) => {
+                      field.onBlur();
+                      onFieldBlur('email', !!e.target.value);
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -219,14 +236,23 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
         {/* Phone Field */}
         <FormField
           control={form.control}
-          name="phone" 
+          name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Phone *</FormLabel> 
+              <FormLabel>Phone *</FormLabel>
               <FormControl>
-                <Input type="tel" placeholder="07123456789" {...field} />
+                <Input
+                  type="tel"
+                  placeholder="07123456789"
+                  {...field}
+                  onFocus={() => onFieldFocus('phone')}
+                  onBlur={(e) => {
+                    field.onBlur();
+                    onFieldBlur('phone', !!e.target.value);
+                  }}
+                />
               </FormControl>
-              <FormMessage /> 
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -296,10 +322,15 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
             <FormItem>
               <FormLabel>Message *</FormLabel>
               <FormControl>
-                <Textarea 
+                <Textarea
                   placeholder="Please let me know of any allergies or medical conditions ie. pregnancy. Sorry, not currently offering treatments for male customers."
-                  className="resize-none min-h-[120px]" 
-                  {...field} 
+                  className="resize-none min-h-[120px]"
+                  {...field}
+                  onFocus={() => onFieldFocus('message')}
+                  onBlur={(e) => {
+                    field.onBlur();
+                    onFieldBlur('message', !!e.target.value);
+                  }}
                 />
               </FormControl>
               <FormMessage />

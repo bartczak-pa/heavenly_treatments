@@ -6,16 +6,22 @@
  * Client component that tracks purchase/conversion events on the
  * booking confirmation page. Reads treatment data from URL parameters.
  *
+ * Uses sessionStorage for deduplication to handle React 18 Strict Mode
+ * (where effects run twice in development).
+ *
  * @module components/Analytics/BookingConfirmationTracker
  */
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import {
   trackPurchase,
   generateTransactionId,
   parsePrice,
 } from '@/lib/analytics/ga4';
+
+/** Session storage key for tracking deduplication */
+const TRACKING_KEY_PREFIX = 'booking_tracked_';
 
 /**
  * Client component for tracking booking confirmations as purchases.
@@ -46,16 +52,24 @@ import {
  */
 export function BookingConfirmationTracker() {
   const searchParams = useSearchParams();
-  const hasTracked = useRef(false);
 
   useEffect(() => {
-    // Prevent duplicate tracking on re-renders
-    if (hasTracked.current) {
-      return;
-    }
+    // Create a unique key based on URL params to prevent duplicate tracking
+    // This handles React 18 Strict Mode where effects run twice in dev
+    const paramsKey = searchParams.toString();
+    const trackingKey = `${TRACKING_KEY_PREFIX}${paramsKey}`;
 
-    // Mark as tracked immediately
-    hasTracked.current = true;
+    // Check if we've already tracked this specific booking
+    try {
+      if (sessionStorage.getItem(trackingKey)) {
+        return;
+      }
+      // Mark as tracked immediately
+      sessionStorage.setItem(trackingKey, 'true');
+    } catch {
+      // sessionStorage not available (SSR or private browsing)
+      // Fall through to track anyway - better to double-track than not track
+    }
 
     // Extract treatment data from URL params
     const treatmentName = searchParams.get('treatment');

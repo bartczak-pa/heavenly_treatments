@@ -66,6 +66,13 @@ export interface FormInteractionData {
 }
 
 // ============================================================================
+// Constants
+// ============================================================================
+
+/** Maximum length for link text in outbound click tracking */
+const MAX_LINK_TEXT_LENGTH = 100;
+
+// ============================================================================
 // Configuration
 // ============================================================================
 
@@ -251,7 +258,7 @@ export function trackScrollDepth(data: ScrollEventData): void {
 export function trackOutboundClick(data: OutboundClickData): void {
   trackEvent('outbound_click', {
     link_url: data.link_url,
-    link_text: data.link_text?.slice(0, 100), // Limit text length
+    link_text: data.link_text?.slice(0, MAX_LINK_TEXT_LENGTH),
     link_domain: data.link_domain,
     outbound: true,
   });

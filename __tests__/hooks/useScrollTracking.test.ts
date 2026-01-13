@@ -15,11 +15,15 @@ vi.mock('@/lib/analytics/ga4', () => ({
 import { trackScrollDepth } from '@/lib/analytics/ga4';
 import { usePathname } from 'next/navigation';
 
+/** Throttle delay used in useScrollTracking */
+const SCROLL_THROTTLE_MS = 150;
+
 describe('useScrollTracking', () => {
   let scrollHandler: ((event: Event) => void) | null = null;
 
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.useFakeTimers();
     scrollHandler = null;
 
     // Mock window properties for scroll calculations
@@ -53,6 +57,7 @@ describe('useScrollTracking', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.useRealTimers();
   });
 
   it('should add scroll event listener on mount', () => {
@@ -109,10 +114,20 @@ describe('useScrollTracking', () => {
       scrollHandler?.(new Event('scroll'));
     });
 
+    // Advance time past throttle delay
+    act(() => {
+      vi.advanceTimersByTime(SCROLL_THROTTLE_MS);
+    });
+
     // Scroll to 50% (600px)
     Object.defineProperty(window, 'scrollY', { value: 600, writable: true });
     act(() => {
       scrollHandler?.(new Event('scroll'));
+    });
+
+    // Advance time past throttle delay
+    act(() => {
+      vi.advanceTimersByTime(SCROLL_THROTTLE_MS);
     });
 
     // Scroll to 75% (900px)

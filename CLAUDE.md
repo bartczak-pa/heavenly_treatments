@@ -4,7 +4,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Heavenly Treatments** is a Next.js-based spa studio website showcasing treatments, therapist information, and Calendly integration. The site uses modern technologies: Next.js 15, React 19, TypeScript, TailwindCSS, Radix UI, and Sanity CMS for content management. Deployed on Vercel.
+**Heavenly Treatments** is a Next.js-based spa studio website showcasing treatments,
+therapist information, and Calendly integration. The site uses modern technologies:
+Next.js 15, React 19, TypeScript, TailwindCSS, Radix UI, and Sanity CMS for content
+management. Deployed on Vercel.
 
 ### Architecture
 
@@ -18,7 +21,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Project Structure
 
-```
+```text
 app/                    # Next.js App Router pages and layouts
 ├── (routes)/           # Grouped routes for organization
 ├── api/                # API endpoints
@@ -146,6 +149,13 @@ test/                   # Vitest configuration and setup
 - Public vars prefixed with `NEXT_PUBLIC_`
 - Sanity project ID and dataset in environment
 - Type-safe env access via `lib/env.ts`
+
+#### Analytics Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `NEXT_PUBLIC_GA4_DEBUG` | Enable GA4 debug logging to console | `false` |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Google Analytics 4 Measurement ID | Required for tracking |
 
 ## Code Organization Rules
 
