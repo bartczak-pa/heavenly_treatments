@@ -26,51 +26,46 @@ const nextConfig = {
       },
     ],
   },
-  async rewrites() {
-    return [
-      {
-        source: '/treatments/:categorySlug',
-        destination: '/treatments?category=:categorySlug', 
-      },
-    ];
-  },
   redirects: async () => [
+    // Backward compatibility: redirect query param URLs to path-based URLs
+    {
+      source: '/treatments',
+      has: [
+        { type: 'query', key: 'category', value: '(?<cat>.*)' }
+      ],
+      destination: '/treatments/:cat',
+      permanent: true,
+    },
+    // Typo fix
     {
       source: '/treatments/hollistic-treatments',
       destination: '/treatments/holistic-treatments',
       permanent: true,
     },
-    {
-      source: '/treatments',
-      has: [
-        { type: 'query', key: 'category', value: 'hollistic-treatments' }
-      ],
-      destination: '/treatments?category=holistic-treatments',
-      permanent: true,
-    },
+    // Legacy URL redirects (now path-based)
     {
       source: '/facials',
-      destination: '/treatments?category=facials',
+      destination: '/treatments/facials',
       permanent: true,
     },
     {
       source: '/seasonal-treatments',
-      destination: '/treatments?category=seasonal-treatments',
+      destination: '/treatments/seasonal-treatments',
       permanent: true,
     },
     {
       source: '/reflexology',
-      destination: '/treatments?category=reflexology',
+      destination: '/treatments/reflexology',
       permanent: true,
     },
     {
       source: '/massage-kelso-scottish-borders',
-      destination: '/treatments?category=massage',
+      destination: '/treatments/massage',
       permanent: true,
     },
     {
       source: '/body-treatments',
-      destination: '/treatments?category=body-treatments',
+      destination: '/treatments/body-treatments',
       permanent: true,
     },
     {

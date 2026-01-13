@@ -71,13 +71,25 @@ export function generateServiceJsonLd(treatment: Treatment, contactInfo: Contact
 // export function generateOrganizationJsonLd(contactInfo: ContactInfo) { ... }
 
 /**
+ * Optional aggregate rating data for the business schema.
+ */
+export interface AggregateRatingData {
+  ratingValue: number;
+  reviewCount: number;
+}
+
+/**
  * Generates JSON-LD structured data for a HealthAndBeautyBusiness schema.
- * 
+ *
  * @param contactInfo - The contact information object.
+ * @param aggregateRating - Optional aggregate rating data (ratingValue, reviewCount).
  * @returns The JSON-LD object representing the business.
  */
-export function generateHealthAndBeautyBusinessJsonLd(contactInfo: ContactInfo) {
-    return {
+export function generateHealthAndBeautyBusinessJsonLd(
+    contactInfo: ContactInfo,
+    aggregateRating?: AggregateRatingData
+) {
+    const baseSchema = {
         '@context': 'https://schema.org',
         '@type': 'HealthAndBeautyBusiness',
         name: 'Heavenly Treatments with Hayleybell',
@@ -98,30 +110,54 @@ export function generateHealthAndBeautyBusinessJsonLd(contactInfo: ContactInfo) 
             longitude: config.location.COORDINATES.LONGITUDE,
         },
     };
+
+    // Add aggregateRating if provided
+    if (aggregateRating) {
+        return {
+            ...baseSchema,
+            aggregateRating: {
+                '@type': 'AggregateRating',
+                ratingValue: aggregateRating.ratingValue,
+                reviewCount: aggregateRating.reviewCount,
+                bestRating: 5,
+                worstRating: 1,
+            },
+        };
+    }
+
+    return baseSchema;
 }
 
 /**
  * Generates JSON-LD structured data for a WebSite schema.
- * 
+ *
+ * NOTE: SearchAction schema is intentionally not included because the site
+ * does not have a dedicated /search endpoint. Adding SearchAction without
+ * a functional search endpoint would violate Google's structured data guidelines
+ * and could result in manual actions or rich result removal.
+ *
+ * If a search feature is implemented in the future, add the SearchAction like so:
+ * potentialAction: {
+ *   '@type': 'SearchAction',
+ *   target: {
+ *     '@type': 'EntryPoint',
+ *     urlTemplate: `${BASE_URL}/search?q={search_term_string}`
+ *   },
+ *   'query-input': 'required name=search_term_string'
+ * }
+ *
  * @returns The JSON-LD object representing the website.
  */
 export function generateWebSiteJsonLd() {
-    const searchUrl = `${BASE_URL}/search?q={search_term_string}`;
-
     return {
         '@context': 'https://schema.org',
         '@type': 'WebSite',
-        name: 'Heavenly Treatments with Hayleybell', // Site Name
-        url: BASE_URL, // Base URL of the website
+        name: 'Heavenly Treatments with Hayleybell',
+        url: BASE_URL,
         sameAs: [
             'https://www.facebook.com/heavenlytreatmentswithhayleybell',
             'https://www.instagram.com/heavenlytreatments_hayleybell/'
         ],
-        potentialAction: { // Optional: Sitelinks Search Box
-            '@type': 'SearchAction',
-            target: `${searchUrl}`, 
-            'query-input': 'required name=search_term_string',
-        },
     };
 }
 
@@ -149,5 +185,34 @@ export function generateBreadcrumbJsonLd(items: BreadcrumbItem[]) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: itemListElement,
+  };
+}
+
+// Define the structure for an FAQ item
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+/**
+ * Generates JSON-LD structured data for a FAQPage schema.
+ *
+ * @param faqs - An array of FAQ items with question and answer
+ * @returns The JSON-LD object representing the FAQ page
+ */
+export function generateFAQJsonLd(faqs: FAQItem[]) {
+  const mainEntity = faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer,
+    },
+  }));
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: mainEntity,
   };
 }

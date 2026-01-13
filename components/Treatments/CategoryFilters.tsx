@@ -59,7 +59,7 @@ export default function CategoryFilters({ selectedCategory, categories }: Catego
     if (slug === 'all') {
       router.push('/treatments', { scroll: false });
     } else {
-      router.push(`/treatments?category=${slug}`, { scroll: false });
+      router.push(`/treatments/${slug}`, { scroll: false });
     }
   };
 

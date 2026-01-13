@@ -49,3 +49,9 @@ next-env.d.ts
 # sanity
 .sanity/
 dist/
+
+# internal docs 
+/improvements_plan/
+# Project index (generated)
+PROJECT_INDEX.json
+PROJECT_INDEX.md
