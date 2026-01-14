@@ -96,7 +96,7 @@ export default async function TreatmentDetailPage({ params }: Props) {
 
             <div className="space-y-6">
               <h1 className="font-serif text-3xl md:text-4xl font-semibold text-primary">
-                {treatment.title} | Kelso Cottage Spa Treatment
+                {treatment.title} in Kelso
               </h1>
               <p className="font-sans text-lg text-muted-foreground">
                 {treatment.description}
@@ -182,13 +182,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const canonicalUrl = `${BASE_URL}/treatments/${treatment.category}/${treatment.slug}`;
 
   return {
-    title: `${treatment.title} | My Cottage Spa Treatments`,
+    title: `${treatment.title} in Kelso | Heavenly Treatments Spa`,
     description: description,
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: `${treatment.title} | Hayleybell's Cottage Spa`,
+      title: `${treatment.title} in Kelso | Heavenly Treatments Spa`,
       description: description,
       url: canonicalUrl,
       type: 'article',
