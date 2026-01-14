@@ -4,11 +4,13 @@ import { MainLayout } from '@/components/Layout/MainLayout';
 import { getTreatmentBySlug, getAllTreatmentSlugs, getCategories } from '@/lib/cms/treatments';
 import { notFound } from 'next/navigation';
 import { BookingButton } from '@/components/BookingButton';
+import { FAQAccordion } from '@/components/Shared/FAQAccordion';
 import { Clock, PoundSterling, CheckCircle } from 'lucide-react';
 import { Metadata } from 'next';
 import Script from 'next/script';
 import { contactInfo } from '@/lib/data/contactInfo';
-import { generateServiceJsonLd, ContactInfo, generateBreadcrumbJsonLd } from '@/lib/jsonLsUtils';
+import { treatmentFAQs } from '@/lib/data/seoContent';
+import { generateServiceJsonLd, ContactInfo, generateBreadcrumbJsonLd, generateFAQJsonLd } from '@/lib/jsonLsUtils';
 import { config } from '@/lib/config';
 
 // Revalidate this page every hour
@@ -52,13 +54,24 @@ export default async function TreatmentDetailPage({ params }: Props) {
   const serviceJsonLd = generateServiceJsonLd(treatment, contactInfo as ContactInfo);
   // -----------------------------
 
+  // --- Prepare FAQ JSON-LD (if FAQs exist for this treatment) ---
+  const treatmentFAQ = treatmentFAQs[treatmentSlug] || null;
+  const faqJsonLd = treatmentFAQ?.faqs ? generateFAQJsonLd(treatmentFAQ.faqs) : null;
+
+  // Build JSON-LD schemas array (using spread to avoid type inference issues)
+  const jsonLdSchemas = [
+    serviceJsonLd,
+    breadcrumbJsonLd,
+    ...(faqJsonLd ? [faqJsonLd] : []),
+  ];
+  // -----------------------------
+
   return (
     <MainLayout>
       <Script 
         id={`treatment-jsonld-${treatment.slug}`}
         type="application/ld+json"
-        // Inject both schemas as an array
-        dangerouslySetInnerHTML={{ __html: JSON.stringify([serviceJsonLd, breadcrumbJsonLd]) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdSchemas) }}
       />
 
       <section className="py-16 md:py-24 bg-background">
@@ -126,6 +139,17 @@ export default async function TreatmentDetailPage({ params }: Props) {
               </div>
             </div>
           </div>
+
+          {/* FAQ Section */}
+          {treatmentFAQ?.faqs && treatmentFAQ.faqs.length > 0 && (
+            <div className="mt-16">
+              <FAQAccordion
+                title={`${treatment.title} - Frequently Asked Questions`}
+                faqs={treatmentFAQ.faqs}
+                className="bg-primary/5 rounded-lg p-6"
+              />
+            </div>
+          )}
         </div>
       </section>
     </MainLayout>
