@@ -42,9 +42,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
   const siteName = 'Heavenly Treatments with Hayleybell';
-  const pageTitle = `${categoryData.name} Treatments | ${siteName}`;
+  const pageTitle = `${categoryData.name} in Kelso | Professional ${categoryData.name} Treatments`;
   const pageDescription = categoryData.description || categoryData.shortDescription ||
-    `Explore our ${categoryData.name.toLowerCase()} treatments. Book your relaxation session today.`;
+    `Professional ${categoryData.name.toLowerCase()} treatments in Kelso, Scottish Borders. Book your ${categoryData.name.toLowerCase()} session at Heavenly Treatments today.`;
   const canonicalUrl = `${BASE_URL}/treatments/${categorySlug}`;
   const ogImageUrl = categoryData.image ? `${BASE_URL}${categoryData.image}` : `${BASE_URL}/images/logo.png`;
 
@@ -118,7 +118,7 @@ export default async function CategoryPage({ params }: Props) {
       <section className="py-16 md:py-24 bg-primary/10">
         <div className="container mx-auto px-4">
           <h1 className="font-serif text-3xl md:text-4xl font-semibold text-primary text-center mb-8">
-            Book {categoryData.name} in Kelso
+            {categoryData.name} Treatments in Kelso
           </h1>
 
           <div className="flex justify-center mb-2 lg:mb-12">

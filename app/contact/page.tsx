@@ -14,8 +14,8 @@ import { getTreatments } from '@/lib/cms/treatments';
 
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
-  const pageTitle = 'Book Your Visit | Contact Hayleybell in Kelso';
-  const pageDescription = 'Contact Heavenly Treatments to book an appointment or ask a question. Find our location, opening hours, and use our contact form.';
+  const pageTitle = 'Book Massage in Kelso | Contact Heavenly Treatments';
+  const pageDescription = 'Book your spa treatment at Heavenly Treatments in Kelso, Scottish Borders. Contact us for massage, facials, reflexology appointments. Easy online booking.';
   const imageUrl = `${BASE_URL}/images/logo.png`;
   const siteName = 'Heavenly Treatments with Hayleybell';
   const canonicalUrl = `${BASE_URL}/contact`;

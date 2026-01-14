@@ -20,8 +20,8 @@ export const revalidate = 3600;
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
   const siteName = 'Heavenly Treatments with Hayleybell';
-  const pageTitle = "My Treatment Menu | Hayleybell's Cottage Spa";
-  const pageDescription = 'Explore my full menu of massage therapies, facials, reflexology, and body treatments. Find the perfect service for your relaxation and wellness needs.';
+  const pageTitle = "Spa Treatments in Kelso | Massage, Facials & Reflexology Menu";
+  const pageDescription = "Browse our full menu of massage, facial, and reflexology treatments in Kelso, Scottish Borders. Professional spa services. Book online today.";
   const canonicalUrl = `${BASE_URL}/treatments`;
 
   return {

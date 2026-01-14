@@ -34,8 +34,8 @@ const CTASection = dynamic(() => import('@/components/Sections/Cta'));
 
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
-  const pageTitle = 'Meet Hayley | My Massage & Beauty Journey';
-  const pageDescription = 'Learn about Hayley, the qualified therapist behind Heavenly Treatments. Discover her qualifications, philosophy, and the tranquil studio environment.';
+  const pageTitle = 'About Hayley | Your Kelso Spa Therapist';
+  const pageDescription = 'Meet Hayley, your qualified spa therapist in Kelso, Scottish Borders. Years of 5-star experience, now offering professional massage, facials, and reflexology.';
   const imageUrl = `${BASE_URL}/images/logo.png`;
   const siteName = 'Heavenly Treatments with Hayleybell';
   const canonicalUrl = `${BASE_URL}/about`;
