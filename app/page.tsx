@@ -25,7 +25,7 @@ import { getCategories } from '@/lib/cms/treatments';
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
   const pageTitle = 'Massage & Beauty Treatments in Kelso | Heavenly Treatments Spa';
-  const pageDescription = 'Professional massage, facials, and reflexology in Kelso, Scottish Borders. Book your relaxing spa treatment with Hayley today. 5-star experience in a cosy cottage setting.';
+  const pageDescription = 'Professional massage, facials & reflexology in Kelso, Scottish Borders. Book your spa treatment with Hayley. 5-star cottage spa experience.';
   const imageUrl = `${BASE_URL}/images/logo.png`;
   const siteName = 'Heavenly Treatments with Hayleybell';
 

@@ -83,7 +83,7 @@ export default async function TreatmentDetailPage({ params }: Props) {
 
             <div className="space-y-6">
               <h1 className="font-serif text-3xl md:text-4xl font-semibold text-primary">
-                {treatment.title} | Kelso Cottage Spa Treatment
+                {treatment.title} in Kelso
               </h1>
               <p className="font-sans text-lg text-muted-foreground">
                 {treatment.description}
