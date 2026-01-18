@@ -27,22 +27,59 @@ const nextConfig = {
     ],
   },
   redirects: async () => [
-    // Backward compatibility: redirect query param URLs to path-based URLs
+    // ===========================================
+    // SPECIFIC QUERY PARAM REDIRECTS (must be first)
+    // Handle legacy query params that don't match current category slugs
+    // ===========================================
     {
       source: '/treatments',
-      has: [
-        { type: 'query', key: 'category', value: '(?<cat>.*)' }
-      ],
+      has: [{ type: 'query', key: 'category', value: 'massage' }],
+      destination: '/treatments/massages',
+      permanent: true,
+    },
+    {
+      source: '/treatments',
+      has: [{ type: 'query', key: 'category', value: 'seasonal-treatments' }],
+      destination: '/treatments/holistic-treatments',
+      permanent: true,
+    },
+    // Generic query param redirect (catches all other categories)
+    {
+      source: '/treatments',
+      has: [{ type: 'query', key: 'category', value: '(?<cat>.*)' }],
       destination: '/treatments/:cat',
       permanent: true,
     },
-    // Typo fix
+
+    // ===========================================
+    // SLUG MISMATCH REDIRECTS
+    // Old/incorrect slugs → correct current slugs
+    // ===========================================
+    {
+      source: '/treatments/massage',
+      destination: '/treatments/massages',
+      permanent: true,
+    },
+    {
+      source: '/treatments/seasonal-treatments',
+      destination: '/treatments/holistic-treatments',
+      permanent: true,
+    },
     {
       source: '/treatments/hollistic-treatments',
       destination: '/treatments/holistic-treatments',
       permanent: true,
     },
-    // Legacy URL redirects (now path-based)
+
+    // ===========================================
+    // LEGACY ROOT-LEVEL URL REDIRECTS
+    // Old site structure → new path-based URLs
+    // ===========================================
+    {
+      source: '/homepage',
+      destination: '/',
+      permanent: true,
+    },
     {
       source: '/facials',
       destination: '/treatments/facials',
@@ -50,7 +87,7 @@ const nextConfig = {
     },
     {
       source: '/seasonal-treatments',
-      destination: '/treatments/seasonal-treatments',
+      destination: '/treatments/holistic-treatments',
       permanent: true,
     },
     {
@@ -60,7 +97,7 @@ const nextConfig = {
     },
     {
       source: '/massage-kelso-scottish-borders',
-      destination: '/treatments/massage',
+      destination: '/treatments/massages',
       permanent: true,
     },
     {
