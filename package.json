@@ -36,6 +36,7 @@
     "@react-email/render": "^1.0.6",
     "@sanity/client": "^7.12.1",
     "@sanity/image-url": "^1.2.0",
+    "@sanity/webhook": "^4.0.4",
     "@types/js-cookie": "^3.0.6",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
