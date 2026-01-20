@@ -47,6 +47,9 @@ importers:
       '@sanity/image-url':
         specifier: ^1.2.0
         version: 1.2.0
+      '@sanity/webhook':
+        specifier: ^4.0.4
+        version: 4.0.4
       '@types/js-cookie':
         specifier: ^3.0.6
         version: 3.0.6
@@ -3129,6 +3132,10 @@ packages:
         optional: true
       svelte:
         optional: true
+
+  '@sanity/webhook@4.0.4':
+    resolution: {integrity: sha512-c8LmzR5Wx93zJ10ohhp0XlmPrTNSFyvPcLbNY/sN45Wj5VOngz4FbBMbX9j64sSQLt+676U6OhiVfjs1yw3YCw==}
+    engines: {node: '>=20.0.0'}
 
   '@sec-ant/readable-stream@0.4.1':
     resolution: {integrity: sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==}
@@ -11455,6 +11462,8 @@ snapshots:
       - debug
       - sanity
       - typescript
+
+  '@sanity/webhook@4.0.4': {}
 
   '@sec-ant/readable-stream@0.4.1': {}
 

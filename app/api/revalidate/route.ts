@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath, revalidateTag } from 'next/cache';
-import crypto from 'crypto';
+import {
+  isValidSignature,
+  SIGNATURE_HEADER_NAME,
+} from '@sanity/webhook';
 
 /**
  * Sanity webhook for ISR (Incremental Static Regeneration)
  *
  * This endpoint receives webhooks from Sanity when content is published/updated.
- * It verifies the webhook signature and revalidates affected pages.
+ * It verifies the webhook signature using @sanity/webhook and revalidates affected pages.
  *
  * @see https://www.sanity.io/docs/webhooks
  * @see https://nextjs.org/docs/app/building-your-application/data-fetching/incremental-static-regeneration
@@ -14,35 +17,6 @@ import crypto from 'crypto';
 
 // Get webhook secret from environment
 const WEBHOOK_SECRET = process.env.SANITY_WEBHOOK_SECRET;
-
-/**
- * Verify webhook signature to ensure request is from Sanity
- */
-function verifyWebhookSignature(
-  body: string,
-  signature: string | null
-): boolean {
-  if (!WEBHOOK_SECRET || !signature) {
-    return false;
-  }
-
-  try {
-    // Create HMAC-SHA256 hash of the body
-    const hash = crypto
-      .createHmac('sha256', WEBHOOK_SECRET)
-      .update(body, 'utf8')
-      .digest('base64');
-
-    // Compare with the signature from header
-    return crypto.timingSafeEqual(
-      Buffer.from(hash),
-      Buffer.from(signature)
-    );
-  } catch (error) {
-    console.error('Webhook signature verification error:', error);
-    return false;
-  }
-}
 
 export async function POST(request: NextRequest) {
   console.log('[Webhook] Received request at /api/revalidate');
@@ -59,10 +33,16 @@ export async function POST(request: NextRequest) {
   try {
     // Get the request body as text for signature verification
     const bodyText = await request.text();
-    const signature = request.headers.get('sanity-webhook-signature');
+    const signature = request.headers.get(SIGNATURE_HEADER_NAME);
 
-    // Verify the webhook signature
-    if (!verifyWebhookSignature(bodyText, signature)) {
+    // Verify the webhook signature using Sanity's official library
+    const isValid = await isValidSignature(
+      bodyText,
+      signature || '',
+      WEBHOOK_SECRET
+    );
+
+    if (!isValid) {
       console.error('[Webhook] Invalid signature');
       return NextResponse.json(
         { success: false, message: 'Invalid webhook signature' },
@@ -120,7 +100,7 @@ export async function POST(request: NextRequest) {
  * Handler for GET requests (optional, for testing)
  * In production, you might want to remove this or restrict it further
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   // Only allow from localhost in development
   if (process.env.NODE_ENV === 'production') {
     return NextResponse.json(
