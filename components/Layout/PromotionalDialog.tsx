@@ -23,6 +23,7 @@ function getStorageKey(offerId: string): string {
 }
 
 function isDismissed(offerId: string, dismissDurationDays: number): boolean {
+  if (typeof window === 'undefined') return false;
   try {
     const stored = localStorage.getItem(getStorageKey(offerId));
     if (!stored) return false;
@@ -36,6 +37,7 @@ function isDismissed(offerId: string, dismissDurationDays: number): boolean {
 }
 
 function recordDismissal(offerId: string): void {
+  if (typeof window === 'undefined') return;
   localStorage.setItem(
     getStorageKey(offerId),
     JSON.stringify({ timestamp: Date.now() })
@@ -58,9 +60,6 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
     setOpen(false);
   }, [offer.id, offer.title]);
 
-  // Only `offer.id`, `dismissDurationDays`, and `displayDelaySeconds` drive the
-  // timer/dismissal logic. Other offer props (title, description, image, CTA) are
-  // read at render time and don't need to re-trigger the effect.
   useEffect(() => {
     if (isDismissed(offer.id, offer.dismissDurationDays)) return;
 
@@ -73,62 +72,57 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
     }, offer.displayDelaySeconds * 1000);
 
     return () => clearTimeout(timer);
-  }, [offer.id, offer.dismissDurationDays, offer.displayDelaySeconds]);
+  }, [offer.id, offer.title, offer.dismissDurationDays, offer.displayDelaySeconds]);
 
   const external = isExternalLink(offer.ctaLink);
 
-  try {
-    return (
-      <Dialog open={open} onOpenChange={(isOpen) => {
-        if (!isOpen) handleDismiss();
-      }}>
-        <DialogContent className="max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{offer.title}</DialogTitle>
-            <DialogDescription className="whitespace-pre-line">{offer.description}</DialogDescription>
-          </DialogHeader>
+  return (
+    <Dialog open={open} onOpenChange={(isOpen) => {
+      if (!isOpen) handleDismiss();
+    }}>
+      <DialogContent className="max-h-[85vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>{offer.title}</DialogTitle>
+          <DialogDescription className="whitespace-pre-line">{offer.description}</DialogDescription>
+        </DialogHeader>
 
-          {offer.image && (
-            <div className="relative aspect-video w-full overflow-hidden rounded-md">
-              <Image
-                src={offer.image}
-                alt={offer.imageAlt ?? ''}
-                fill
-                className="object-cover"
-                sizes="(max-width: 640px) 100vw, 32rem"
-              />
-            </div>
-          )}
+        {offer.image && (
+          <div className="relative aspect-video w-full overflow-hidden rounded-md">
+            <Image
+              src={offer.image}
+              alt={offer.imageAlt ?? ''}
+              fill
+              className="object-cover"
+              sizes="(max-width: 640px) 100vw, 32rem"
+            />
+          </div>
+        )}
 
-          <DialogFooter className="flex-col gap-2 sm:flex-row">
-            <Button asChild>
-              <a
-                href={offer.ctaLink}
-                onClick={() => {
-                  trackEvent('promo_dialog_cta_click', {
-                    offer_id: offer.id,
-                    offer_title: offer.title,
-                    cta_text: offer.ctaText,
-                    cta_link: offer.ctaLink,
-                  });
-                  recordDismissal(offer.id);
-                }}
-                {...(external
-                  ? { target: '_blank', rel: 'noopener noreferrer' }
-                  : {})}
-              >
-                {offer.ctaText}
-              </a>
-            </Button>
-            <Button variant="ghost" onClick={handleDismiss}>
-              No thanks
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    );
-  } catch (error) {
-    console.error('[PromotionalDialog] Render error:', error);
-    return null;
-  }
+        <DialogFooter className="flex-col gap-2 sm:flex-row">
+          <Button asChild>
+            <a
+              href={offer.ctaLink}
+              onClick={() => {
+                trackEvent('promo_dialog_cta_click', {
+                  offer_id: offer.id,
+                  offer_title: offer.title,
+                  cta_text: offer.ctaText,
+                  cta_link: offer.ctaLink,
+                });
+                recordDismissal(offer.id);
+              }}
+              {...(external
+                ? { target: '_blank', rel: 'noopener noreferrer' }
+                : {})}
+            >
+              {offer.ctaText}
+            </a>
+          </Button>
+          <Button variant="ghost" onClick={handleDismiss} aria-label="Dismiss promotional offer">
+            No thanks
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
 }

@@ -24,7 +24,7 @@ const mockSanityOffer: SanityPromotionalOffer = {
   _id: 'promo-1',
   title: 'Spring Special',
   description: 'Get 20% off all facials this spring!',
-  image: { asset: { _ref: 'image-abc123' }, alt: 'Spring flowers' } as SanityPromotionalOffer['image'],
+  image: { asset: { _ref: 'image-abc123' }, alt: 'Spring flowers' } satisfies SanityPromotionalOffer['image'],
   ctaText: 'Book Now',
   ctaLink: '/contact',
   isActive: true,

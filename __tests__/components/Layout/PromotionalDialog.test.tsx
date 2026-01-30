@@ -96,7 +96,7 @@ describe('PromotionalDialog', () => {
 
       expect(screen.getByText('Spring Special')).toBeInTheDocument();
 
-      await user.click(screen.getByRole('button', { name: /no thanks/i }));
+      await user.click(screen.getByRole('button', { name: /dismiss promotional offer/i }));
 
       expect(screen.queryByText('Spring Special')).not.toBeInTheDocument();
     });
@@ -109,7 +109,7 @@ describe('PromotionalDialog', () => {
         vi.advanceTimersByTime(3000);
       });
 
-      await user.click(screen.getByRole('button', { name: /no thanks/i }));
+      await user.click(screen.getByRole('button', { name: /dismiss promotional offer/i }));
 
       const stored = localStorage.getItem('promo_dismissed_promo-1');
       expect(stored).not.toBeNull();
@@ -270,7 +270,7 @@ describe('PromotionalDialog', () => {
       });
 
       mockTrackEvent.mockClear();
-      await user.click(screen.getByRole('button', { name: /no thanks/i }));
+      await user.click(screen.getByRole('button', { name: /dismiss promotional offer/i }));
 
       expect(mockTrackEvent).toHaveBeenCalledWith('promo_dialog_dismiss', {
         offer_id: 'promo-1',
