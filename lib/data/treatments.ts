@@ -40,7 +40,7 @@ export interface Treatment {
   
   // Define slugs for type safety
   export type TreatmentCategorySlug =
-    | 'holistic-treatments'
+    | 'seasonal-treatments'
     | 'massages'
     | 'facials'
     | 'body-treatments'
@@ -50,10 +50,10 @@ export interface Treatment {
   export const treatmentCategories: TreatmentCategory[] = [
     {
       id: 'cat-1',
-      slug: 'holistic-treatments',
-      name: 'Holistic Treatments',
-      description: 'Relax and rejuvenate with my range of holistic treatments.',
-      shortDescription: 'Relax and rejuvenate with my range of holistic treatments.',
+      slug: 'seasonal-treatments',
+      name: 'Seasonal Treatments',
+      description: 'Relax and rejuvenate with my range of seasonal treatments.',
+      shortDescription: 'Relax and rejuvenate with my range of seasonal treatments.',
       image: '/images/categories/products_used_for_seasonal_treatments.jpg',
       iconName: 'Sun',
     },
@@ -98,7 +98,7 @@ export interface Treatment {
 
   export const allTreatments: Treatment[] = [
 
-    // Hollistic Treatments
+    // Seasonal Treatments
     {
       id: 'holistic-1',
       title: 'Scrub & Soothe',
@@ -119,7 +119,7 @@ export interface Treatment {
         'Scrub on hands',
         'Hand massage',
       ],
-      category: 'holistic-treatments',
+      category: 'seasonal-treatments',
     },
     {
       id: 'holistic-2',
@@ -141,7 +141,7 @@ export interface Treatment {
         'Scalp massage',
         'Botanical facial oil',
       ],
-      category: 'holistic-treatments',
+      category: 'seasonal-treatments',
     },
     
 
