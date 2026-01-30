@@ -39,8 +39,8 @@ const nextConfig = {
     },
     {
       source: '/treatments',
-      has: [{ type: 'query', key: 'category', value: 'seasonal-treatments' }],
-      destination: '/treatments/holistic-treatments',
+      has: [{ type: 'query', key: 'category', value: 'holistic-treatments' }],
+      destination: '/treatments/seasonal-treatments',
       permanent: true,
     },
     // Generic query param redirect (catches all other categories)
@@ -61,13 +61,13 @@ const nextConfig = {
       permanent: true,
     },
     {
-      source: '/treatments/seasonal-treatments',
-      destination: '/treatments/holistic-treatments',
+      source: '/treatments/holistic-treatments',
+      destination: '/treatments/seasonal-treatments',
       permanent: true,
     },
     {
       source: '/treatments/hollistic-treatments',
-      destination: '/treatments/holistic-treatments',
+      destination: '/treatments/seasonal-treatments',
       permanent: true,
     },
 
@@ -87,7 +87,7 @@ const nextConfig = {
     },
     {
       source: '/seasonal-treatments',
-      destination: '/treatments/holistic-treatments',
+      destination: '/treatments/seasonal-treatments',
       permanent: true,
     },
     {
