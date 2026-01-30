@@ -56,10 +56,17 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Webhook] Verified webhook for type: ${_type}`);
 
-    // Revalidate all treatment pages (listing, category, and detail pages)
-    // Using 'layout' type revalidates /treatments and all nested routes beneath it
-    console.log(`[Webhook] Revalidating /treatments and all sub-pages for type: ${_type}`);
-    revalidatePath('/treatments', 'layout');
+    // Revalidate based on content type
+    if (_type === 'promotionalOffer') {
+      // Promotional offers appear in MainLayout (all pages), so revalidate the root layout
+      console.log(`[Webhook] Revalidating all pages for promotionalOffer update`);
+      revalidatePath('/', 'layout');
+    } else {
+      // Revalidate all treatment pages (listing, category, and detail pages)
+      // Using 'layout' type revalidates /treatments and all nested routes beneath it
+      console.log(`[Webhook] Revalidating /treatments and all sub-pages for type: ${_type}`);
+      revalidatePath('/treatments', 'layout');
+    }
 
     console.log('[Webhook] Revalidation completed successfully');
 
