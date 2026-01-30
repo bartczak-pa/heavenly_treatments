@@ -6,12 +6,16 @@ import { TreatmentCategorySlug, TreatmentCategory } from '@/lib/data/treatments'
 import { MainLayout } from '@/components/Layout/MainLayout';
 import CategoryFilters from '@/components/Treatments/CategoryFilters';
 import FilteredTreatmentsDisplay from '@/components/Treatments/FilteredTreatmentsDisplay';
+import { CategoryIntroduction } from '@/components/Treatments/CategoryIntroduction';
+import { FAQAccordion } from '@/components/Shared/FAQAccordion';
 import { contactInfo } from '@/lib/data/contactInfo';
+import { categorySEOContent } from '@/lib/data/seoContent';
 import Script from 'next/script';
 import {
   generateHealthAndBeautyBusinessJsonLd,
   ContactInfo,
-  generateBreadcrumbJsonLd
+  generateBreadcrumbJsonLd,
+  generateFAQJsonLd,
 } from '@/lib/jsonLsUtils';
 import { config } from '@/lib/config';
 
@@ -95,6 +99,9 @@ export default async function CategoryPage({ params }: Props) {
   // Fetch treatments for this category
   const treatments = await getTreatmentsByCategory(categorySlug as TreatmentCategorySlug);
 
+  // Get category SEO content (introduction paragraphs and FAQs)
+  const seoContent = categorySEOContent[categorySlug] || null;
+
   // Generate JSON-LD structured data (server-generated, trusted content)
   const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfo);
   const breadcrumbItems = [
@@ -104,9 +111,15 @@ export default async function CategoryPage({ params }: Props) {
   ];
   const breadcrumbJsonLd = generateBreadcrumbJsonLd(breadcrumbItems);
 
-  // JSON-LD uses dangerouslySetInnerHTML as per Next.js docs for structured data
-  // Content is server-generated from trusted functions, not user input
-  const jsonLdContent = JSON.stringify([businessJsonLd, breadcrumbJsonLd]);
+  // Generate FAQ JSON-LD if FAQs exist for this category
+  const faqJsonLd = seoContent?.faqs ? generateFAQJsonLd(seoContent.faqs) : null;
+
+  // Build JSON-LD array with all schemas (using spread to avoid type inference issues)
+  const jsonLdContent = JSON.stringify([
+    businessJsonLd,
+    breadcrumbJsonLd,
+    ...(faqJsonLd ? [faqJsonLd] : []),
+  ]);
 
   return (
     <MainLayout>
@@ -115,29 +128,40 @@ export default async function CategoryPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdContent }}
       />
-      <section className="py-16 md:py-24 bg-primary/10">
+      <section className="py-8 md:py-12 bg-primary/10">
         <div className="container mx-auto px-4">
           <h1 className="font-serif text-3xl md:text-4xl font-semibold text-primary text-center mb-8">
-            {categoryData.name} in Kelso
+            {categoryData.name}  in Kelso
           </h1>
 
-          <div className="flex justify-center mb-2 lg:mb-12">
+          <div className="flex justify-center mb-2 lg:mb-8">
             <CategoryFilters
               selectedCategory={categorySlug as TreatmentCategorySlug}
               categories={categories}
             />
           </div>
 
-          <div className="text-center mb-6 lg:mb-12">
-            <p className="font-sans text-lg text-muted-foreground max-w-xl mx-auto">
-              {categoryData.shortDescription || categoryData.description}
-            </p>
-          </div>
+          {/* Category Introduction Section */}
+          {seoContent && (
+            <CategoryIntroduction
+              paragraphs={seoContent.introParagraphs}
+              className="mb-8"
+            />
+          )}
 
           <FilteredTreatmentsDisplay
             filteredTreatments={treatments}
             currentSelection={categorySlug as TreatmentCategorySlug}
           />
+
+          {/* FAQ Section */}
+          {seoContent?.faqs && seoContent.faqs.length > 0 && (
+            <FAQAccordion
+              title={`${categoryData.name} Questions Answered`}
+              faqs={seoContent.faqs}
+              className="mt-12 bg-background rounded-lg p-6"
+            />
+          )}
         </div>
       </section>
     </MainLayout>

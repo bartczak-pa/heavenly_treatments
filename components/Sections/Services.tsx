@@ -33,7 +33,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ categories, showAllBu
                     {categories.map((category, index) => (
                         <Link
                             key={category.id}
-                            href={`/treatments?category=${category.slug}`}
+                            href={`/treatments/${category.slug}`}
                             className={cn(
                                 'group block transition-all duration-300 ease-in-out hover:-translate-y-1',
                                 showAllButton && index >= initialVisibleCount && !showAll ? 'hidden' : 'block',
