@@ -10,6 +10,9 @@ vi.mock('@/lib/sanity/client', () => ({
   },
 }));
 
+// Type the mock once here so individual tests don't need `as never` casts
+const mockFetch = sanityClient.fetch as unknown as ReturnType<typeof vi.fn>;
+
 // Mock the image utility
 vi.mock('@/lib/sanity/image', () => ({
   getImageUrl: vi.fn(
@@ -35,7 +38,7 @@ describe('getActivePromotionalOffer', () => {
   });
 
   it('returns a transformed PromotionalOffer when Sanity returns an active offer', async () => {
-    vi.mocked(sanityClient.fetch).mockResolvedValue(mockSanityOffer as never);
+    mockFetch.mockResolvedValue(mockSanityOffer);
 
     const result = await getActivePromotionalOffer();
 
@@ -53,7 +56,7 @@ describe('getActivePromotionalOffer', () => {
   });
 
   it('returns null when Sanity returns no offer', async () => {
-    vi.mocked(sanityClient.fetch).mockResolvedValue(null as never);
+    mockFetch.mockResolvedValue(null);
 
     const result = await getActivePromotionalOffer();
 
@@ -61,7 +64,7 @@ describe('getActivePromotionalOffer', () => {
   });
 
   it('returns null when Sanity fetch throws an error', async () => {
-    vi.mocked(sanityClient.fetch).mockRejectedValue(new Error('Network error'));
+    mockFetch.mockRejectedValue(new Error('Network error'));
 
     const result = await getActivePromotionalOffer();
 
@@ -70,7 +73,7 @@ describe('getActivePromotionalOffer', () => {
 
   it('returns offer without image when image is not provided', async () => {
     const offerWithoutImage = { ...mockSanityOffer, image: undefined };
-    vi.mocked(sanityClient.fetch).mockResolvedValue(offerWithoutImage as never);
+    mockFetch.mockResolvedValue(offerWithoutImage);
 
     const result = await getActivePromotionalOffer();
 

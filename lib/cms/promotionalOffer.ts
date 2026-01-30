@@ -4,6 +4,9 @@ import { getImageUrl } from '@/lib/sanity/image';
 import { SanityPromotionalOffer } from '@/lib/sanity/types';
 import { PromotionalOffer } from '@/lib/data/promotionalOffer';
 
+/** Max width for promotional dialog images (mobile: 100vw, desktop: 32rem) */
+const PROMO_IMAGE_WIDTH = 600;
+
 /**
  * Transform Sanity promotional offer to app format
  */
@@ -15,7 +18,7 @@ function transformPromotionalOffer(
     title: sanityOffer.title,
     description: sanityOffer.description,
     image: sanityOffer.image
-      ? getImageUrl(sanityOffer.image, 600, undefined, 90)
+      ? getImageUrl(sanityOffer.image, PROMO_IMAGE_WIDTH, undefined, 90)
       : undefined,
     imageAlt: sanityOffer.image?.alt ?? undefined,
     ctaText: sanityOffer.ctaText,

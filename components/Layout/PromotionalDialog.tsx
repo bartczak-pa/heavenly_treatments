@@ -58,6 +58,9 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
     setOpen(false);
   }, [offer.id, offer.title]);
 
+  // Only `offer.id`, `dismissDurationDays`, and `displayDelaySeconds` drive the
+  // timer/dismissal logic. Other offer props (title, description, image, CTA) are
+  // read at render time and don't need to re-trigger the effect.
   useEffect(() => {
     if (isDismissed(offer.id, offer.dismissDurationDays)) return;
 
@@ -74,53 +77,58 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
 
   const external = isExternalLink(offer.ctaLink);
 
-  return (
-    <Dialog open={open} onOpenChange={(isOpen) => {
-      if (!isOpen) handleDismiss();
-    }}>
-      <DialogContent className="max-h-[85vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>{offer.title}</DialogTitle>
-          <DialogDescription className="whitespace-pre-line">{offer.description}</DialogDescription>
-        </DialogHeader>
+  try {
+    return (
+      <Dialog open={open} onOpenChange={(isOpen) => {
+        if (!isOpen) handleDismiss();
+      }}>
+        <DialogContent className="max-h-[85vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{offer.title}</DialogTitle>
+            <DialogDescription className="whitespace-pre-line">{offer.description}</DialogDescription>
+          </DialogHeader>
 
-        {offer.image && (
-          <div className="relative aspect-video w-full overflow-hidden rounded-md">
-            <Image
-              src={offer.image}
-              alt={offer.imageAlt ?? ''}
-              fill
-              className="object-cover"
-              sizes="(max-width: 640px) 100vw, 32rem"
-            />
-          </div>
-        )}
+          {offer.image && (
+            <div className="relative aspect-video w-full overflow-hidden rounded-md">
+              <Image
+                src={offer.image}
+                alt={offer.imageAlt ?? ''}
+                fill
+                className="object-cover"
+                sizes="(max-width: 640px) 100vw, 32rem"
+              />
+            </div>
+          )}
 
-        <DialogFooter className="flex-col gap-2 sm:flex-row">
-          <Button asChild>
-            <a
-              href={offer.ctaLink}
-              onClick={() => {
-                trackEvent('promo_dialog_cta_click', {
-                  offer_id: offer.id,
-                  offer_title: offer.title,
-                  cta_text: offer.ctaText,
-                  cta_link: offer.ctaLink,
-                });
-                recordDismissal(offer.id);
-              }}
-              {...(external
-                ? { target: '_blank', rel: 'noopener noreferrer' }
-                : {})}
-            >
-              {offer.ctaText}
-            </a>
-          </Button>
-          <Button variant="ghost" onClick={handleDismiss}>
-            No thanks
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
+          <DialogFooter className="flex-col gap-2 sm:flex-row">
+            <Button asChild>
+              <a
+                href={offer.ctaLink}
+                onClick={() => {
+                  trackEvent('promo_dialog_cta_click', {
+                    offer_id: offer.id,
+                    offer_title: offer.title,
+                    cta_text: offer.ctaText,
+                    cta_link: offer.ctaLink,
+                  });
+                  recordDismissal(offer.id);
+                }}
+                {...(external
+                  ? { target: '_blank', rel: 'noopener noreferrer' }
+                  : {})}
+              >
+                {offer.ctaText}
+              </a>
+            </Button>
+            <Button variant="ghost" onClick={handleDismiss}>
+              No thanks
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  } catch (error) {
+    console.error('[PromotionalDialog] Render error:', error);
+    return null;
+  }
 }
