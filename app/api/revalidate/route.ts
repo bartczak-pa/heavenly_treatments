@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 import {
   isValidSignature,
   SIGNATURE_HEADER_NAME,
@@ -52,30 +52,14 @@ export async function POST(request: NextRequest) {
 
     // Parse the webhook payload
     const payload = JSON.parse(bodyText);
-    const { _type, slug } = payload;
+    const { _type } = payload;
 
     console.log(`[Webhook] Verified webhook for type: ${_type}`);
 
-    // Revalidate paths based on document type
-    if (_type === 'treatment') {
-      // Revalidate the treatment detail pages
-      if (slug?.current) {
-        console.log(`[Webhook] Revalidating treatment: ${slug.current}`);
-        // Revalidate all treatment detail routes (we don't know the category from webhook)
-        revalidatePath('/treatments');
-        revalidateTag('treatment');
-      }
-    } else if (_type === 'treatmentCategory') {
-      // Revalidate category pages
-      if (slug?.current) {
-        console.log(`[Webhook] Revalidating category: ${slug.current}`);
-        revalidatePath('/treatments');
-        revalidateTag('treatmentCategory');
-      }
-    }
-
-    // Always revalidate the main treatments page
-    revalidatePath('/treatments');
+    // Revalidate all treatment pages (listing, category, and detail pages)
+    // Using 'layout' type revalidates /treatments and all nested routes beneath it
+    console.log(`[Webhook] Revalidating /treatments and all sub-pages for type: ${_type}`);
+    revalidatePath('/treatments', 'layout');
 
     console.log('[Webhook] Revalidation completed successfully');
 
