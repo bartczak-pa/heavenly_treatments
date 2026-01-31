@@ -3,6 +3,7 @@ import Navbar from '@/components/Layout/Navbar';
 import Footer from '@/components/Layout/Footer';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import CookieConsentWrapper from '@/components/Layout/CookieConsentWrapper';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { getCategories } from '@/lib/cms/treatments';
 import { getActivePromotionalOffer } from '@/lib/cms/promotionalOffer';
 import { PromotionalDialog } from '@/components/Layout/PromotionalDialog';
@@ -23,7 +24,11 @@ export const MainLayout: React.FC<MainLayoutProps> = async ({ children }) => {
       <main className="flex-grow">{children}</main>
       <Footer />
       <CookieConsentWrapper />
-      {promotionalOffer && <PromotionalDialog offer={promotionalOffer} />}
+      {promotionalOffer && (
+        <ErrorBoundary fallback={null}>
+          <PromotionalDialog offer={promotionalOffer} />
+        </ErrorBoundary>
+      )}
       <SpeedInsights />
     </div>
   );

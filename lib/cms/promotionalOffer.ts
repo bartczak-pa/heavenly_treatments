@@ -4,8 +4,8 @@ import { getImageUrl } from '@/lib/sanity/image';
 import { SanityPromotionalOffer } from '@/lib/sanity/types';
 import { PromotionalOffer } from '@/lib/data/promotionalOffer';
 
-/** Max width for promotional dialog images (mobile: 100vw, desktop: 32rem) */
-const PROMO_IMAGE_WIDTH = 600;
+/** Max width for promotional dialog images (matches sizes prop: 640px mobile breakpoint) */
+const PROMO_IMAGE_WIDTH = 640;
 
 /**
  * Transform Sanity promotional offer to app format
@@ -38,7 +38,7 @@ export async function getActivePromotionalOffer(): Promise<PromotionalOffer | nu
       await sanityClient.fetch<SanityPromotionalOffer | null>(
         activePromotionalOfferQuery,
         {},
-        { next: { revalidate: 3600 } }
+        { next: { revalidate: 3600, tags: ['promotional-offer'] } }
       );
     return offer ? transformPromotionalOffer(offer) : null;
   } catch (error) {

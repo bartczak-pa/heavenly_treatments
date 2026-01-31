@@ -39,6 +39,7 @@ function isDismissed(offerId: string, dismissDurationDays: number): boolean {
     if (process.env.NODE_ENV === 'development') {
       console.warn('[PromotionalDialog] Failed to parse dismissal data:', error);
     }
+    localStorage.removeItem(getStorageKey(offerId));
     return false;
   }
 }
@@ -61,19 +62,24 @@ function isExternalLink(url: string): boolean {
   return url.startsWith('http://') || url.startsWith('https://');
 }
 
-/** Block dangerous URL schemes that could enable XSS via CMS injection */
-function isSafeUrl(url: string): boolean {
-  const trimmed = url.trim().toLowerCase();
-  return !(
-    trimmed.startsWith('javascript:') ||
-    trimmed.startsWith('data:') ||
-    trimmed.startsWith('vbscript:')
-  );
+/** Sanitize URL by trimming whitespace and blocking dangerous schemes (XSS via CMS injection) */
+function getSafeUrl(url: string): string {
+  const trimmed = url.trim();
+  const lower = trimmed.toLowerCase();
+  if (
+    lower.startsWith('javascript:') ||
+    lower.startsWith('data:') ||
+    lower.startsWith('vbscript:')
+  ) {
+    return '#';
+  }
+  return trimmed;
 }
 
 export function PromotionalDialog({ offer }: PromotionalDialogProps) {
   const [open, setOpen] = useState(false);
   const hasShown = useRef(false);
+  const closedByCta = useRef(false);
 
   const baseEventData: PromoDialogEventData = useMemo(() => ({
     offer_id: offer.id,
@@ -81,6 +87,11 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
   }), [offer.id, offer.title]);
 
   const handleDismiss = useCallback(() => {
+    if (closedByCta.current) {
+      closedByCta.current = false;
+      setOpen(false);
+      return;
+    }
     trackEvent('promo_dialog_dismiss', baseEventData);
     recordDismissal(offer.id);
     setOpen(false);
@@ -99,7 +110,7 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
     return () => clearTimeout(timer);
   }, [offer.id, offer.dismissDurationDays, offer.displayDelaySeconds, baseEventData]);
 
-  const safeCtaLink = isSafeUrl(offer.ctaLink) ? offer.ctaLink : '#';
+  const safeCtaLink = getSafeUrl(offer.ctaLink);
   const external = isExternalLink(safeCtaLink);
 
   return (
@@ -119,7 +130,6 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
               alt={offer.imageAlt ?? ''}
               fill
               className="object-cover"
-              loading="lazy"
               sizes="(max-width: 640px) 100vw, 32rem"
             />
           </div>
@@ -130,6 +140,7 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
             <a
               href={safeCtaLink}
               onClick={() => {
+                closedByCta.current = true;
                 const ctaData: PromoDialogCTAClickData = {
                   ...baseEventData,
                   cta_text: offer.ctaText,

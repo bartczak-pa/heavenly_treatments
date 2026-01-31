@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import {
   isValidSignature,
   SIGNATURE_HEADER_NAME,
@@ -58,9 +58,9 @@ export async function POST(request: NextRequest) {
 
     // Revalidate based on content type
     if (_type === 'promotionalOffer') {
-      // Promotional offers appear in MainLayout (all pages), so revalidate the root layout
-      console.log(`[Webhook] Revalidating all pages for promotionalOffer update`);
-      revalidatePath('/', 'layout');
+      // Use cache tag for targeted revalidation instead of full site
+      console.log(`[Webhook] Revalidating promotional-offer cache tag`);
+      revalidateTag('promotional-offer');
     } else {
       // Revalidate all treatment pages (listing, category, and detail pages)
       // Using 'layout' type revalidates /treatments and all nested routes beneath it

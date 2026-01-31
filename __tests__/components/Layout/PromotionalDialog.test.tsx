@@ -261,6 +261,23 @@ describe('PromotionalDialog', () => {
       });
     });
 
+    it('does not fire promo_dialog_dismiss when CTA click closes dialog', async () => {
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      render(<PromotionalDialog offer={mockOffer} />);
+
+      await act(async () => {
+        vi.advanceTimersByTime(3000);
+      });
+
+      mockTrackEvent.mockClear();
+      await user.click(screen.getByRole('link', { name: 'Book Now' }));
+
+      expect(mockTrackEvent).not.toHaveBeenCalledWith(
+        'promo_dialog_dismiss',
+        expect.anything()
+      );
+    });
+
     it('fires promo_dialog_dismiss when "No thanks" is clicked', async () => {
       const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
       render(<PromotionalDialog offer={mockOffer} />);
