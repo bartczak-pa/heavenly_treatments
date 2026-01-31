@@ -131,6 +131,19 @@ describe('PromotionalDialog', () => {
       expect(screen.queryByText('Spring Special')).not.toBeInTheDocument();
     });
 
+    it('shows dialog and cleans up when localStorage has malformed JSON', async () => {
+      localStorage.setItem('promo_dismissed_promo-1', '{not valid json');
+
+      render(<PromotionalDialog offer={mockOffer} />);
+
+      await act(async () => {
+        vi.advanceTimersByTime(3000);
+      });
+
+      expect(screen.getByText('Spring Special')).toBeInTheDocument();
+      expect(localStorage.getItem('promo_dismissed_promo-1')).toBeNull();
+    });
+
     it('shows dialog when localStorage dismissal has expired', async () => {
       // Set an expired dismissal (8 days ago, dismissDurationDays is 7)
       const eightDaysAgo = Date.now() - 8 * 24 * 60 * 60 * 1000;

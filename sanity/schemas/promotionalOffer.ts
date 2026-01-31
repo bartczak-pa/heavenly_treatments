@@ -79,6 +79,14 @@ export default defineType({
       title: 'End Date',
       type: 'datetime',
       description: 'Optional: scheduled expiry',
+      validation: (Rule) =>
+        Rule.custom((endDate, context) => {
+          const { startDate } = context.document as { startDate?: string };
+          if (startDate && endDate && new Date(endDate) <= new Date(startDate)) {
+            return 'End date must be after start date';
+          }
+          return true;
+        }),
     }),
     defineField({
       name: 'dismissDurationDays',

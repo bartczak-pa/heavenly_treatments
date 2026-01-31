@@ -59,6 +59,9 @@ function recordDismissal(offerId: string): void {
 }
 
 function isExternalLink(url: string): boolean {
+  if (url.startsWith('/') || url.startsWith('./') || url.startsWith('../')) {
+    return false;
+  }
   return url.startsWith('http://') || url.startsWith('https://');
 }
 
