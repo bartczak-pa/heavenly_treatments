@@ -115,3 +115,26 @@ export const allCategorySlugsQuery = groq`
     "slug": slug.current
   }
 `;
+
+/**
+ * GROQ query to fetch the active promotional offer.
+ * Filters by isActive, and optionally by startDate/endDate using now().
+ * If multiple offers are active simultaneously, returns the most recently
+ * created one (ordered by _createdAt desc, taking [0]).
+ */
+export const activePromotionalOfferQuery = groq`
+  *[_type == "promotionalOffer"
+    && isActive == true
+    && (!defined(startDate) || startDate <= now())
+    && (!defined(endDate) || endDate >= now())
+  ] | order(_createdAt desc) [0] {
+    _id,
+    title,
+    description,
+    image { asset, alt },
+    ctaText,
+    ctaLink,
+    dismissDurationDays,
+    displayDelaySeconds
+  }
+`;
