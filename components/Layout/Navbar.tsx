@@ -242,12 +242,12 @@ export default function Navbar({ categories }: NavbarProps) {
   return (
     <header className="w-full border-b bg-secondary/15 backdrop-blur supports-[backdrop-filter]:bg-secondary/15 z-40">
       {/* Desktop Layout - Flexbox with proper spacing */}
-      <div className="hidden lg:flex items-center justify-between h-16 w-full px-4 sm:px-6 lg:px-8">
+      <div className="hidden xl:flex items-center justify-between h-16 w-full px-4 sm:px-6 lg:px-8">
         {/* Left Navigation - Fixed width container */}
-        <div className="flex items-center w-80">
+        <div className="flex items-center lg:w-64 xl:w-80">
           <nav aria-label="Primary">
             <NavigationMenu className="relative z-50">
-              <NavigationMenuList className="flex items-center space-x-2">
+              <NavigationMenuList className="flex items-center lg:space-x-0 xl:space-x-2">
                 <DesktopNavigationLinks />
                 <NavigationMenuItem>
                   <NavigationMenuTrigger className="bg-transparent">Treatments</NavigationMenuTrigger>
@@ -261,14 +261,14 @@ export default function Navbar({ categories }: NavbarProps) {
         </div>
 
         {/* Centered Logo - Flex grow with center alignment */}
-        <div className="flex-1 flex items-center justify-center px-8">
+        <div className="flex-1 flex items-center justify-center lg:px-4 xl:px-8">
           <Link href="/" className="flex items-center space-x-2 transition-all duration-300 ease-out hover:scale-105 hover:drop-shadow-md">
             <span className="text-xl font-bold font-serif text-primary truncate">Heavenly Treatments with Hayleybell</span>
           </Link>
         </div>
 
-        {/* Right Navigation - Fixed width container */}
-        <div className="flex items-center justify-end w-32">
+        {/* Right Navigation - Fixed width container (matches left for centering) */}
+        <div className="flex items-center justify-end lg:w-64 xl:w-80">
           <BookingButton context="navbar" variant="default" size="lg">
             Book Now
           </BookingButton>
@@ -276,7 +276,7 @@ export default function Navbar({ categories }: NavbarProps) {
       </div>
 
       {/* Mobile/Tablet Layout - True Full Width */}
-      <div className="flex lg:hidden items-center justify-between h-16 w-full px-4 sm:px-6">
+      <div className="flex xl:hidden items-center justify-between h-16 w-full px-4 sm:px-6">
         {/* Centered Logo */}
         <div className="flex-1 flex justify-center">
           <Link href="/" className="flex items-center space-x-2 transition-all duration-300 ease-out hover:scale-105 hover:drop-shadow-md">
