@@ -117,8 +117,10 @@ export const allCategorySlugsQuery = groq`
 `;
 
 /**
- * GROQ query to fetch the active promotional offer
- * Filters by isActive, and optionally by startDate/endDate using now()
+ * GROQ query to fetch the active promotional offer.
+ * Filters by isActive, and optionally by startDate/endDate using now().
+ * If multiple offers are active simultaneously, returns the most recently
+ * created one (ordered by _createdAt desc, taking [0]).
  */
 export const activePromotionalOfferQuery = groq`
   *[_type == "promotionalOffer"

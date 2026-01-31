@@ -65,6 +65,22 @@ export interface FormInteractionData {
   error_message?: string;
 }
 
+/**
+ * Promotional dialog view/dismiss event data
+ */
+export interface PromoDialogEventData extends Record<string, unknown> {
+  offer_id: string;
+  offer_title: string;
+}
+
+/**
+ * Promotional dialog CTA click event data
+ */
+export interface PromoDialogCTAClickData extends PromoDialogEventData {
+  cta_text: string;
+  cta_link: string;
+}
+
 // ============================================================================
 // Constants
 // ============================================================================

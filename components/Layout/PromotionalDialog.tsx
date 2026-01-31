@@ -12,7 +12,11 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { PromotionalOffer } from '@/lib/data/promotionalOffer';
-import { trackEvent } from '@/lib/analytics/ga4';
+import {
+  trackEvent,
+  type PromoDialogEventData,
+  type PromoDialogCTAClickData,
+} from '@/lib/analytics/ga4';
 
 interface PromotionalDialogProps {
   offer: PromotionalOffer;
@@ -51,11 +55,13 @@ function isExternalLink(url: string): boolean {
 export function PromotionalDialog({ offer }: PromotionalDialogProps) {
   const [open, setOpen] = useState(false);
 
+  const baseEventData: PromoDialogEventData = {
+    offer_id: offer.id,
+    offer_title: offer.title,
+  };
+
   const handleDismiss = useCallback(() => {
-    trackEvent('promo_dialog_dismiss', {
-      offer_id: offer.id,
-      offer_title: offer.title,
-    });
+    trackEvent('promo_dialog_dismiss', baseEventData);
     recordDismissal(offer.id);
     setOpen(false);
   }, [offer.id, offer.title]);
@@ -65,10 +71,7 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
 
     const timer = setTimeout(() => {
       setOpen(true);
-      trackEvent('promo_dialog_view', {
-        offer_id: offer.id,
-        offer_title: offer.title,
-      });
+      trackEvent('promo_dialog_view', baseEventData);
     }, offer.displayDelaySeconds * 1000);
 
     return () => clearTimeout(timer);
@@ -103,12 +106,12 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
             <a
               href={offer.ctaLink}
               onClick={() => {
-                trackEvent('promo_dialog_cta_click', {
-                  offer_id: offer.id,
-                  offer_title: offer.title,
+                const ctaData: PromoDialogCTAClickData = {
+                  ...baseEventData,
                   cta_text: offer.ctaText,
                   cta_link: offer.ctaLink,
-                });
+                };
+                trackEvent('promo_dialog_cta_click', ctaData);
                 recordDismissal(offer.id);
               }}
               {...(external

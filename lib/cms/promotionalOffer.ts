@@ -36,7 +36,9 @@ export async function getActivePromotionalOffer(): Promise<PromotionalOffer | nu
   try {
     const offer =
       await sanityClient.fetch<SanityPromotionalOffer | null>(
-        activePromotionalOfferQuery
+        activePromotionalOfferQuery,
+        {},
+        { next: { revalidate: 3600 } }
       );
     return offer ? transformPromotionalOffer(offer) : null;
   } catch (error) {
