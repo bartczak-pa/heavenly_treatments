@@ -53,9 +53,15 @@ function createHeart(width: number, height: number, startFromTop?: boolean): Hea
 
 // Bootstrap heart-fill SVG path (16×16 viewBox)
 // Source: https://icons.getbootstrap.com/icons/heart-fill/
-const HEART_PATH = new Path2D(
-  'M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314'
-);
+const HEART_PATH_D =
+  'M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314';
+
+// Lazily created in the browser — Path2D is not available during SSR/prerendering
+let heartPath: Path2D | null = null;
+function getHeartPath(): Path2D {
+  if (!heartPath) heartPath = new Path2D(HEART_PATH_D);
+  return heartPath;
+}
 
 function drawHeart(ctx: CanvasRenderingContext2D, heart: Heart, time: number) {
   const { x, y, size, rotation, color, opacity } = heart;
@@ -71,7 +77,7 @@ function drawHeart(ctx: CanvasRenderingContext2D, heart: Heart, time: number) {
   ctx.translate(-8, -8);
   ctx.globalAlpha = opacity;
   ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
-  ctx.fill(HEART_PATH);
+  ctx.fill(getHeartPath());
   ctx.restore();
 }
 
