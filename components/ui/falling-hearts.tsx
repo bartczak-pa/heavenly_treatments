@@ -7,7 +7,11 @@ interface FallingHeartsProps {
   className?: string;
 }
 
-const HEART_COUNT = 300;
+const HEART_COUNT_DESKTOP = 300;
+const HEART_COUNT_MOBILE = 150;
+const MOBILE_BREAKPOINT = 768;
+const WOBBLE_AMPLITUDE = 0.8;
+
 const COLORS = [
   [236, 72, 153],  // pink-500
   [244, 114, 182], // pink-400
@@ -65,7 +69,7 @@ function getHeartPath(): Path2D {
 
 function drawHeart(ctx: CanvasRenderingContext2D, heart: Heart, time: number) {
   const { x, y, size, rotation, color, opacity } = heart;
-  const wobbleX = Math.sin(time * heart.wobbleSpeed + heart.wobbleOffset) * 0.8;
+  const wobbleX = Math.sin(time * heart.wobbleSpeed + heart.wobbleOffset) * WOBBLE_AMPLITUDE;
   // Scale factor: SVG path is 16×16, scale to desired heart size
   const scale = size / 16;
 
@@ -85,6 +89,10 @@ export function FallingHearts({ className }: FallingHeartsProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -97,25 +105,27 @@ export function FallingHearts({ className }: FallingHeartsProps) {
     let width = parent.clientWidth;
     let height = parent.clientHeight;
     const dpr = window.devicePixelRatio || 1;
+    const heartCount = window.innerWidth < MOBILE_BREAKPOINT
+      ? HEART_COUNT_MOBILE
+      : HEART_COUNT_DESKTOP;
 
     function resize() {
-      if (!parent || !canvas) return;
+      if (!parent || !canvas || !ctx) return;
       width = parent.clientWidth;
       height = parent.clientHeight;
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
-      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
     resize();
 
     // Initialize hearts scattered across the canvas
-    const hearts: Heart[] = Array.from({ length: HEART_COUNT }, () =>
+    const hearts: Heart[] = Array.from({ length: heartCount }, () =>
       createHeart(width, height, false)
     );
 
-    let frame = 0;
     let animId: number;
     let time = 0;
 
@@ -137,7 +147,6 @@ export function FallingHearts({ className }: FallingHeartsProps) {
         drawHeart(ctx, heart, time);
       }
 
-      frame++;
       animId = requestAnimationFrame(animate);
     }
 
@@ -149,12 +158,14 @@ export function FallingHearts({ className }: FallingHeartsProps) {
     return () => {
       cancelAnimationFrame(animId);
       ro.disconnect();
+      ctx.clearRect(0, 0, width, height);
     };
   }, []);
 
   return (
     <canvas
       ref={canvasRef}
+      role="presentation"
       aria-hidden="true"
       className={cn('pointer-events-none', className)}
     />

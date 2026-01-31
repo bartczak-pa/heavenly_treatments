@@ -9,6 +9,10 @@ vi.mock('@/lib/analytics/ga4', () => ({
   trackEvent: vi.fn(),
 }));
 
+vi.mock('@/components/ui/falling-hearts', () => ({
+  FallingHearts: () => null,
+}));
+
 const mockTrackEvent = vi.mocked(trackEvent);
 
 const mockOffer: PromotionalOffer = {
