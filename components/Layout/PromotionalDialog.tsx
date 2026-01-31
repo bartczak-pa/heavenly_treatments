@@ -11,6 +11,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { FallingHearts } from '@/components/ui/falling-hearts';
 import { PromotionalOffer } from '@/lib/data/promotionalOffer';
 import {
   trackEvent,
@@ -126,6 +127,8 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
   const external = isExternalLink(safeCtaLink);
 
   return (
+    <>
+    {open && <FallingHearts className="fixed inset-0 z-[60]" />}
     <Dialog open={open} onOpenChange={(isOpen) => {
       if (!isOpen) handleDismiss();
     }}>
@@ -177,5 +180,6 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
         </DialogFooter>
       </DialogContent>
     </Dialog>
+    </>
   );
 }
