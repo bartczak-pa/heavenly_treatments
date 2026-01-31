@@ -24,6 +24,9 @@ interface PromotionalDialogProps {
 
 const STORAGE_KEY_PREFIX = 'promo_dismissed_';
 
+/** Upper bound for displayDelaySeconds (matches Sanity schema max validation) */
+const MAX_DISPLAY_DELAY_SECONDS = 30;
+
 function getStorageKey(offerId: string): string {
   return `${STORAGE_KEY_PREFIX}${offerId}`;
 }
@@ -64,7 +67,7 @@ function isExternalLink(url: string): boolean {
   if (url.startsWith('/') || url.startsWith('./') || url.startsWith('../')) {
     return false;
   }
-  return url.startsWith('http://') || url.startsWith('https://');
+  return url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//');
 }
 
 /** Sanitize URL by trimming whitespace and blocking dangerous schemes (XSS via CMS injection) */
@@ -114,7 +117,7 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
         offer_id: offer.id,
         offer_title: offer.title,
       });
-    }, Math.max(0, Math.min(30, offer.displayDelaySeconds)) * 1000);
+    }, Math.max(0, Math.min(MAX_DISPLAY_DELAY_SECONDS, offer.displayDelaySeconds)) * 1000);
 
     return () => clearTimeout(timer);
   }, [offer.id, offer.title, offer.dismissDurationDays, offer.displayDelaySeconds]);

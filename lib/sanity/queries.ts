@@ -131,7 +131,7 @@ export const activePromotionalOfferQuery = groq`
     _id,
     title,
     description,
-    image,
+    image { asset, alt },
     ctaText,
     ctaLink,
     dismissDurationDays,

@@ -34,7 +34,7 @@ export default defineType({
           title: 'Alternative Text',
           validation: (Rule) =>
             Rule.custom((alt, context) => {
-              const parent = context.parent as { asset?: unknown };
+              const parent = context.parent as { asset?: { _ref: string } };
               if (parent?.asset && !alt) {
                 return 'Alt text is required when an image is provided';
               }
