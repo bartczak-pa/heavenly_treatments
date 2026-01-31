@@ -48,6 +48,7 @@ describe('getActivePromotionalOffer', () => {
       description: 'Get 20% off all facials this spring!',
       image: 'https://cdn.sanity.io/images/test/production/mock-image.jpg',
       imageAlt: 'Spring flowers',
+      imageBlurDataURL: 'https://cdn.sanity.io/images/test/production/mock-image.jpg',
       ctaText: 'Book Now',
       ctaLink: '/contact',
       dismissDurationDays: 7,
@@ -80,5 +81,6 @@ describe('getActivePromotionalOffer', () => {
     expect(result).not.toBeNull();
     expect(result!.image).toBeUndefined();
     expect(result!.imageAlt).toBeUndefined();
+    expect(result!.imageBlurDataURL).toBeUndefined();
   });
 });

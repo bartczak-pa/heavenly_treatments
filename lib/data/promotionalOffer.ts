@@ -7,6 +7,7 @@ export interface PromotionalOffer {
   description: string;
   image?: string;
   imageAlt?: string;
+  imageBlurDataURL?: string;
   ctaText: string;
   ctaLink: string;
   dismissDurationDays: number;

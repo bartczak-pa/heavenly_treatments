@@ -67,6 +67,15 @@ export default defineType({
       type: 'boolean',
       description: 'Enable or disable this promotional offer',
       initialValue: false,
+      validation: (Rule) =>
+        Rule.custom((isActive, context) => {
+          if (!isActive) return true;
+          const { endDate } = context.document as { endDate?: string };
+          if (endDate && new Date(endDate) < new Date()) {
+            return 'Warning: This offer is active but the end date is in the past';
+          }
+          return true;
+        }),
     }),
     defineField({
       name: 'startDate',

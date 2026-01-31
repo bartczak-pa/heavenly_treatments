@@ -7,6 +7,9 @@ import { PromotionalOffer } from '@/lib/data/promotionalOffer';
 /** Max width for promotional dialog images (matches sizes prop: 640px mobile breakpoint) */
 const PROMO_IMAGE_WIDTH = 640;
 
+/** Tiny image width for blur placeholder */
+const PROMO_BLUR_WIDTH = 20;
+
 /**
  * Transform Sanity promotional offer to app format
  */
@@ -21,6 +24,9 @@ function transformPromotionalOffer(
       ? getImageUrl(sanityOffer.image, PROMO_IMAGE_WIDTH, undefined, 90)
       : undefined,
     imageAlt: sanityOffer.image?.alt ?? undefined,
+    imageBlurDataURL: sanityOffer.image
+      ? getImageUrl(sanityOffer.image, PROMO_BLUR_WIDTH, undefined, 30)
+      : undefined,
     ctaText: sanityOffer.ctaText,
     ctaLink: sanityOffer.ctaLink,
     dismissDurationDays: sanityOffer.dismissDurationDays,

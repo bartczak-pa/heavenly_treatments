@@ -105,6 +105,7 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
     if (isDismissed(offer.id, offer.dismissDurationDays)) return;
 
     const timer = setTimeout(() => {
+      if (isDismissed(offer.id, offer.dismissDurationDays)) return;
       hasShown.current = true;
       setOpen(true);
       trackEvent('promo_dialog_view', baseEventData);
@@ -134,6 +135,9 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
               fill
               className="object-cover"
               sizes="(max-width: 640px) 100vw, 32rem"
+              {...(offer.imageBlurDataURL
+                ? { placeholder: 'blur' as const, blurDataURL: offer.imageBlurDataURL }
+                : {})}
             />
           </div>
         )}
