@@ -25,12 +25,7 @@ export const MainLayout: React.FC<MainLayoutProps> = async ({ children }) => {
       <Footer />
       <CookieConsentWrapper />
       {promotionalOffer && (
-        <ErrorBoundary
-          fallback={null}
-          onError={(error) => {
-            console.error('[PromotionalDialog] Render error:', error.message);
-          }}
-        >
+        <ErrorBoundary fallback={null}>
           <PromotionalDialog offer={promotionalOffer} />
         </ErrorBoundary>
       )}
