@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import Image from 'next/image';
 import {
   Dialog,
@@ -45,18 +45,35 @@ function isDismissed(offerId: string, dismissDurationDays: number): boolean {
 
 function recordDismissal(offerId: string): void {
   if (typeof window === 'undefined') return;
-  localStorage.setItem(
-    getStorageKey(offerId),
-    JSON.stringify({ timestamp: Date.now() })
-  );
+  try {
+    localStorage.setItem(
+      getStorageKey(offerId),
+      JSON.stringify({ timestamp: Date.now() })
+    );
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('[PromotionalDialog] Failed to write dismissal data:', error);
+    }
+  }
 }
 
 function isExternalLink(url: string): boolean {
   return url.startsWith('http://') || url.startsWith('https://');
 }
 
+/** Block dangerous URL schemes that could enable XSS via CMS injection */
+function isSafeUrl(url: string): boolean {
+  const trimmed = url.trim().toLowerCase();
+  return !(
+    trimmed.startsWith('javascript:') ||
+    trimmed.startsWith('data:') ||
+    trimmed.startsWith('vbscript:')
+  );
+}
+
 export function PromotionalDialog({ offer }: PromotionalDialogProps) {
   const [open, setOpen] = useState(false);
+  const hasShown = useRef(false);
 
   const baseEventData: PromoDialogEventData = useMemo(() => ({
     offer_id: offer.id,
@@ -70,9 +87,11 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
   }, [offer.id, baseEventData]);
 
   useEffect(() => {
+    if (hasShown.current) return;
     if (isDismissed(offer.id, offer.dismissDurationDays)) return;
 
     const timer = setTimeout(() => {
+      hasShown.current = true;
       setOpen(true);
       trackEvent('promo_dialog_view', baseEventData);
     }, offer.displayDelaySeconds * 1000);
@@ -80,7 +99,8 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
     return () => clearTimeout(timer);
   }, [offer.id, offer.dismissDurationDays, offer.displayDelaySeconds, baseEventData]);
 
-  const external = isExternalLink(offer.ctaLink);
+  const safeCtaLink = isSafeUrl(offer.ctaLink) ? offer.ctaLink : '#';
+  const external = isExternalLink(safeCtaLink);
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => {
@@ -108,12 +128,12 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
         <DialogFooter className="flex-col gap-2 sm:flex-row">
           <Button asChild>
             <a
-              href={offer.ctaLink}
+              href={safeCtaLink}
               onClick={() => {
                 const ctaData: PromoDialogCTAClickData = {
                   ...baseEventData,
                   cta_text: offer.ctaText,
-                  cta_link: offer.ctaLink,
+                  cta_link: safeCtaLink,
                 };
                 trackEvent('promo_dialog_cta_click', ctaData);
                 recordDismissal(offer.id);
