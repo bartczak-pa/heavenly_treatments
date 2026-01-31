@@ -48,7 +48,8 @@ export async function getActivePromotionalOffer(): Promise<PromotionalOffer | nu
       );
     return offer ? transformPromotionalOffer(offer) : null;
   } catch (error) {
-    console.error('Error fetching promotional offer from Sanity:', error);
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`[Sanity] Failed to fetch promotional offer: ${message}`);
     return null;
   }
 }

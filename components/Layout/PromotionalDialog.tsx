@@ -22,8 +22,10 @@ interface PromotionalDialogProps {
   offer: PromotionalOffer;
 }
 
+const STORAGE_KEY_PREFIX = 'promo_dismissed_';
+
 function getStorageKey(offerId: string): string {
-  return `promo_dismissed_${offerId}`;
+  return `${STORAGE_KEY_PREFIX}${offerId}`;
 }
 
 function isDismissed(offerId: string, dismissDurationDays: number): boolean {
@@ -82,7 +84,7 @@ function getSafeUrl(url: string): string {
 export function PromotionalDialog({ offer }: PromotionalDialogProps) {
   const [open, setOpen] = useState(false);
   const hasShown = useRef(false);
-  const closedByCta = useRef(false);
+  const isDismissedViaCta = useRef(false);
 
   const baseEventData: PromoDialogEventData = useMemo(() => ({
     offer_id: offer.id,
@@ -90,8 +92,8 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
   }), [offer.id, offer.title]);
 
   const handleDismiss = useCallback(() => {
-    if (closedByCta.current) {
-      closedByCta.current = false;
+    if (isDismissedViaCta.current) {
+      isDismissedViaCta.current = false;
       setOpen(false);
       return;
     }
@@ -108,11 +110,14 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
       if (isDismissed(offer.id, offer.dismissDurationDays)) return;
       hasShown.current = true;
       setOpen(true);
-      trackEvent('promo_dialog_view', baseEventData);
-    }, offer.displayDelaySeconds * 1000);
+      trackEvent('promo_dialog_view', {
+        offer_id: offer.id,
+        offer_title: offer.title,
+      });
+    }, Math.max(0, Math.min(30, offer.displayDelaySeconds)) * 1000);
 
     return () => clearTimeout(timer);
-  }, [offer.id, offer.dismissDurationDays, offer.displayDelaySeconds, baseEventData]);
+  }, [offer.id, offer.title, offer.dismissDurationDays, offer.displayDelaySeconds]);
 
   const safeCtaLink = getSafeUrl(offer.ctaLink);
   const external = isExternalLink(safeCtaLink);
@@ -147,7 +152,7 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
             <a
               href={safeCtaLink}
               onClick={() => {
-                closedByCta.current = true;
+                isDismissedViaCta.current = true;
                 const ctaData: PromoDialogCTAClickData = {
                   ...baseEventData,
                   cta_text: offer.ctaText,
