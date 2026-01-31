@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import Image from 'next/image';
 import {
   Dialog,
@@ -35,7 +35,10 @@ function isDismissed(offerId: string, dismissDurationDays: number): boolean {
     const { timestamp } = JSON.parse(stored);
     const dismissDurationMs = dismissDurationDays * 24 * 60 * 60 * 1000;
     return Date.now() - timestamp < dismissDurationMs;
-  } catch {
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('[PromotionalDialog] Failed to parse dismissal data:', error);
+    }
     return false;
   }
 }
@@ -55,16 +58,16 @@ function isExternalLink(url: string): boolean {
 export function PromotionalDialog({ offer }: PromotionalDialogProps) {
   const [open, setOpen] = useState(false);
 
-  const baseEventData: PromoDialogEventData = {
+  const baseEventData: PromoDialogEventData = useMemo(() => ({
     offer_id: offer.id,
     offer_title: offer.title,
-  };
+  }), [offer.id, offer.title]);
 
   const handleDismiss = useCallback(() => {
     trackEvent('promo_dialog_dismiss', baseEventData);
     recordDismissal(offer.id);
     setOpen(false);
-  }, [offer.id, offer.title]);
+  }, [offer.id, baseEventData]);
 
   useEffect(() => {
     if (isDismissed(offer.id, offer.dismissDurationDays)) return;
@@ -75,7 +78,7 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
     }, offer.displayDelaySeconds * 1000);
 
     return () => clearTimeout(timer);
-  }, [offer.id, offer.title, offer.dismissDurationDays, offer.displayDelaySeconds]);
+  }, [offer.id, offer.dismissDurationDays, offer.displayDelaySeconds, baseEventData]);
 
   const external = isExternalLink(offer.ctaLink);
 
@@ -96,6 +99,7 @@ export function PromotionalDialog({ offer }: PromotionalDialogProps) {
               alt={offer.imageAlt ?? ''}
               fill
               className="object-cover"
+              loading="lazy"
               sizes="(max-width: 640px) 100vw, 32rem"
             />
           </div>
