@@ -26,6 +26,21 @@ export interface Treatment {
   }
   
   /**
+   * Lightweight, accordion-row-shaped treatment used by the lazy-loaded
+   * `/treatments` menu. Derived from {@link Treatment} but carries only the
+   * fields a menu row renders, plus a ready-to-use detail-page `href`.
+   */
+  export interface TreatmentMenuItem {
+    id: string;
+    name: string;
+    slug: string;
+    shortDescription: string;
+    durationLabel: string;
+    price: string;
+    href: string;
+  }
+
+  /**
    * Represents the different categories of treatments.
    */
   export interface TreatmentCategory {

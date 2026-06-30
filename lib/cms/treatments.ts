@@ -4,6 +4,7 @@ import {
   allTreatmentsQuery,
   treatmentBySlugQuery,
   treatmentsByCategoryQuery,
+  treatmentsMenuByCategoryQuery,
   allTreatmentSlugsQuery,
   categoryBySlugQuery,
 } from '@/lib/sanity/queries';
@@ -11,11 +12,13 @@ import { getImageUrl } from '@/lib/sanity/image';
 import {
   SanityTreatment,
   SanityTreatmentCategory,
+  SanityTreatmentMenuItem,
 } from '@/lib/sanity/types';
 import {
   Treatment,
   TreatmentCategory,
   TreatmentCategorySlug,
+  TreatmentMenuItem,
 } from '@/lib/data/treatments';
 
 /**
@@ -133,6 +136,50 @@ export async function getTreatmentsByCategory(
     return treatments.map(transformTreatment);
   } catch (error) {
     console.error('Error fetching treatments by category from Sanity:', error);
+    return [];
+  }
+}
+
+/**
+ * Transform a lean Sanity menu row into the accordion-row shape
+ */
+function transformTreatmentMenuItem(
+  row: SanityTreatmentMenuItem
+): TreatmentMenuItem {
+  return {
+    id: row._id,
+    name: row.title,
+    slug: row.slug,
+    shortDescription: row.description,
+    durationLabel: row.duration,
+    price: row.price,
+    href: `/treatments/${row.categorySlug}/${row.slug}`,
+  };
+}
+
+/**
+ * Fetch a lean, accordion-row-shaped list of treatments for a single category.
+ *
+ * Backs the lazy-loaded `/treatments` accordion: category headers render
+ * immediately and each panel resolves its rows on expand. Uses the
+ * parameterized `treatmentsMenuByCategoryQuery` (server-side GROQ filtering by
+ * slug — never fetch-all-then-filter) and returns `[]` for unknown/empty
+ * categories or on error, so the UI never crashes.
+ */
+export async function getTreatmentMenuByCategory(
+  categorySlug: string
+): Promise<TreatmentMenuItem[]> {
+  try {
+    const rows = await sanityClient.fetch<SanityTreatmentMenuItem[]>(
+      treatmentsMenuByCategoryQuery,
+      { categorySlug }
+    );
+    return (rows ?? []).map(transformTreatmentMenuItem);
+  } catch (error) {
+    console.error(
+      'Error fetching treatment menu by category from Sanity:',
+      error
+    );
     return [];
   }
 }
