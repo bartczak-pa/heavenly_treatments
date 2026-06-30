@@ -98,6 +98,24 @@ export const treatmentsByCategoryQuery = groq`
 `;
 
 /**
+ * GROQ query to fetch a lean, accordion-row-shaped list of treatments for a
+ * single category. Parameterized by `$categorySlug` so filtering happens
+ * server-side (no fetch-all-then-filter), and projects only the fields the
+ * lazy-loaded accordion menu renders (no image asset).
+ */
+export const treatmentsMenuByCategoryQuery = groq`
+  *[_type == "treatment" && category->slug.current == $categorySlug] {
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+    duration,
+    price,
+    "categorySlug": category->slug.current
+  }
+`;
+
+/**
  * GROQ query to fetch all treatment slugs for static generation
  */
 export const allTreatmentSlugsQuery = groq`
