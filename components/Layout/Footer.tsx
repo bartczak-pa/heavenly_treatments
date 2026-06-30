@@ -1,9 +1,15 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { contactInfo } from '@/lib/data/contactInfo';
 
-const quickLinks = [
+const exploreLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About Me' },
+  { href: '/treatments', label: 'Treatments' },
+  { href: '/contact', label: 'Contact' },
+] as const;
+
+const mobileNavLinks = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
   { href: '/treatments', label: 'Treatments' },
@@ -20,139 +26,128 @@ const socialLinks = [
   {
     href: 'https://www.facebook.com/heavenlytreatmentswithhayleybell',
     label: 'Facebook',
-    icon: '/icons/facebook.svg',
   },
   {
     href: 'https://www.instagram.com/heavenlytreatments_hayleybell/',
     label: 'Instagram',
-    icon: '/icons/instagram.svg',
   },
 ] as const;
 
-/**
- * Site footer for the Sanctuary redesign — an Espresso "dark section" with the
- * wordmark, quick links, contact details, and legal links. Contact data is
- * sourced from {@link contactInfo}.
- */
+const { phone, email } = contactInfo;
+const telHref = `tel:${phone.replace(/\s+/g, '')}`;
+
 export default function Footer() {
-  const { address, phone, email } = contactInfo;
-  const telHref = `tel:${phone.replace(/\s+/g, '')}`;
+  const year = new Date().getFullYear();
 
   return (
     <footer className="bg-espresso text-cream/80">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
-          {/* Brand */}
-          <div className="space-y-4">
-            <h3 className="font-serif text-xl font-medium leading-tight text-cream">
-              Heavenly Treatments
-            </h3>
-            <p className="text-sm uppercase tracking-[0.18em] text-cream/60">
-              with Hayleybell · Kelso
-            </p>
-            <p className="max-w-xs text-sm leading-relaxed text-cream/70">
-              Your journey to wellness and self-care begins here — a blend of
-              relaxation and rejuvenation in the Scottish Borders.
-            </p>
-          </div>
+      {/* ── Mobile footer — centered brand + nav row + copyright ── */}
+      {/* aria-hidden: desktop section (always in DOM) is the accessible footer;
+          mobile users navigate via the hamburger overlay */}
+      <div aria-hidden="true" className="flex flex-col items-center gap-5 px-6 py-12 text-center md:hidden">
+        <h3 className="font-serif text-[25px] font-semibold text-cream">
+          Heavenly Treatments
+        </h3>
+        <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+          {mobileNavLinks.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="text-[15px] text-cream/70 transition-colors hover:text-clay"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+        <p className="text-[12.5px] text-cream/40">
+          © {year} Heavenly Treatments
+        </p>
+      </div>
 
-          {/* Quick links */}
-          <nav aria-label="Footer">
-            <h3 className="mb-5 font-serif text-lg font-medium leading-tight text-cream">
-              Explore
-            </h3>
-            <ul className="space-y-3">
-              {quickLinks.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="inline-flex min-h-[48px] items-center text-sm text-cream/70 transition-colors hover:text-clay"
+      {/* ── Desktop footer — 3-column grid ── */}
+      <div className="hidden md:block">
+        <div className="mx-auto max-w-7xl px-6 pt-[70px] pb-9 lg:px-8">
+          <div className="grid grid-cols-[1.5fr_1fr_1fr] gap-[48px] border-b border-white/[12%] pb-[50px]">
+            {/* Brand */}
+            <div className="space-y-[14px]">
+              <h3 className="font-serif text-[25px] font-semibold leading-tight text-cream">
+                Heavenly Treatments
+              </h3>
+              <p className="max-w-[320px] text-[14.5px] leading-[1.7] text-cream/55">
+                Your journey to wellness and self-care begins here. The perfect
+                blend of relaxation and rejuvenation, in the Scottish Borders.
+              </p>
+            </div>
+
+            {/* Explore */}
+            <nav aria-label="Footer">
+              <h3 className="mb-[18px] font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-sage">
+                Explore
+              </h3>
+              <ul className="flex flex-col gap-3">
+                {exploreLinks.map((item) => (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      className="text-[14.5px] text-cream/70 transition-colors hover:text-clay"
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            {/* Connect */}
+            <div>
+              <h3 className="mb-[18px] font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-sage">
+                Connect
+              </h3>
+              <ul className="flex flex-col gap-3 text-[14.5px] text-cream/70">
+                <li>
+                  <a
+                    href={telHref}
+                    className="inline-flex min-h-[48px] items-center transition-colors hover:text-clay"
                   >
-                    {item.label}
-                  </Link>
+                    {phone}
+                  </a>
                 </li>
-              ))}
-            </ul>
-          </nav>
-
-          {/* Contact */}
-          <div>
-            <h3 className="mb-5 font-serif text-lg font-medium leading-tight text-cream">
-              Contact
-            </h3>
-            <ul className="space-y-3 text-sm text-cream/70">
-              <li>
-                <address className="not-italic leading-relaxed">
-                  {address.streetAddress}
-                  <br />
-                  {address.postalCode} {address.addressLocality}
-                </address>
-              </li>
-              <li>
-                <span className="text-cream/60">Phone: </span>
-                <a
-                  href={telHref}
-                  className="transition-colors hover:text-clay"
-                >
-                  {phone}
-                </a>
-              </li>
-              <li>
-                <span className="text-cream/60">Email: </span>
-                <a
-                  href={`mailto:${email}`}
-                  className="break-all transition-colors hover:text-clay"
-                >
-                  {email}
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Social */}
-          <div>
-            <h3 className="mb-5 font-serif text-lg font-medium leading-tight text-cream">
-              Follow
-            </h3>
-            <div className="flex flex-col gap-4">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Visit Heavenly Treatments on ${social.label}`}
-                  className="group inline-flex w-fit items-center gap-3 transition-colors"
-                >
-                  <span className="rounded-lg bg-white/10 p-2 transition-colors group-hover:bg-white/20">
-                    <Image
-                      src={social.icon}
-                      alt=""
-                      width={24}
-                      height={24}
-                      className="transition-transform group-hover:scale-110"
-                    />
-                  </span>
-                  <span className="text-sm text-cream/70 transition-colors group-hover:text-clay">
-                    {social.label}
-                  </span>
-                </a>
-              ))}
+                <li>
+                  <a
+                    href={`mailto:${email}`}
+                    className="inline-flex min-h-[48px] items-center break-all transition-colors hover:text-clay"
+                  >
+                    {email}
+                  </a>
+                </li>
+                <li className="flex gap-3 pt-1">
+                  {socialLinks.map((social) => (
+                    <a
+                      key={social.label}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Heavenly Treatments on ${social.label}`}
+                      className="text-[13px] font-semibold text-clay transition-colors hover:text-cream"
+                    >
+                      {social.label}
+                    </a>
+                  ))}
+                </li>
+              </ul>
             </div>
           </div>
-        </div>
 
-        <div className="mt-16 border-t border-white/10 pt-8">
-          <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-            <p className="text-xs uppercase tracking-wide text-cream/50">
-              © {new Date().getFullYear()} Heavenly Treatments. All rights reserved.
+          <div className="flex flex-col items-center justify-between gap-3 pt-6 sm:flex-row">
+            <p className="text-[12.5px] text-cream/40">
+              © {year} Heavenly Treatments. All rights reserved.
             </p>
             <div className="flex flex-wrap justify-center gap-6">
               {legalLinks.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="text-xs uppercase tracking-wide text-cream/60 transition-colors hover:text-clay"
+                  className="text-[12.5px] text-cream/60 transition-colors hover:text-clay"
                 >
                   {item.label}
                 </Link>

@@ -1,5 +1,4 @@
 import React from 'react';
-import { MapPin, Phone, Mail } from 'lucide-react';
 import { BookingButton } from '@/components/BookingButton';
 import { contactInfo } from '@/lib/data/contactInfo';
 import { cn } from '@/lib/utils';
@@ -8,83 +7,95 @@ interface BookingCtaBandProps {
   className?: string;
 }
 
-/**
- * Reusable Sage booking call-to-action band.
- *
- * Pairs the "Your journey to relaxation starts here" CTA with a contact card
- * (address, phone, email sourced from {@link contactInfo}). Rendered site-wide
- * above the footer via MainLayout, but standalone so individual pages can
- * compose it where needed.
- *
- * @component
- */
-export default function BookingCtaBand({ className }: BookingCtaBandProps) {
-  const { address, phone, email } = contactInfo;
-  const fullAddress = `${address.streetAddress}, ${address.addressLocality} ${address.postalCode}`;
-  // Strip spaces for the tel: href while keeping the display value readable.
-  const telHref = `tel:${phone.replace(/\s+/g, '')}`;
+const { address, phone, email } = contactInfo;
+const fullAddress = `${address.streetAddress}, ${address.addressLocality} ${address.postalCode}`;
+const telHref = `tel:${phone.replace(/\s+/g, '')}`;
 
+export default function BookingCtaBand({ className }: BookingCtaBandProps) {
   return (
     <section
       aria-labelledby="booking-cta-heading"
       className={cn('bg-sage text-warm-white', className)}
     >
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-16 lg:px-8 lg:py-20">
+      <div className="mx-auto max-w-7xl px-[30px] py-12 text-center lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-[60px] lg:px-8 lg:py-[92px] lg:text-left">
         {/* CTA copy */}
         <div>
-          <p className="mb-3 font-sans text-sm uppercase tracking-[0.18em] text-warm-white/80">
-            ✦ Book your visit
-          </p>
           <h2
             id="booking-cta-heading"
-            className="font-serif text-4xl font-medium leading-tight text-warm-white md:text-5xl"
+            className="font-serif text-[38px] font-medium leading-[1.08] text-warm-white lg:text-[54px]"
           >
             Your journey to relaxation starts here
           </h2>
-          <p className="mt-4 max-w-md text-warm-white/90">
-            Treat yourself to a moment of calm. Book your treatment today and let
-            the everyday melt away.
+          <p className="mx-auto mt-[14px] max-w-[440px] text-[15px] leading-[1.7] text-warm-white/88 lg:mx-0 lg:mt-[22px] lg:text-[17px] lg:leading-[1.75]">
+            Appointments Monday to Sunday, 10am–5pm, with some evenings
+            available. Send a message and I&apos;ll get back to you with my
+            availability.
           </p>
           <BookingButton
             context="location-section"
             size="lg"
-            className="mt-8 h-12 rounded-full bg-warm-white px-8 text-sage shadow-sm hover:bg-cream hover:text-sage-hover"
+            className="mt-6 h-auto rounded-full bg-warm-white py-[15px] px-[34px] text-[14px] font-bold text-espresso hover:bg-white lg:mt-9 lg:py-[17px] lg:px-[38px] lg:text-[15px]"
           >
-            Book Now
+            Contact me &amp; book
           </BookingButton>
         </div>
 
-        {/* Contact card */}
-        <div className="rounded-2xl bg-warm-white p-8 text-cocoa shadow-md">
-          <h3 className="font-serif text-2xl font-medium text-espresso">
-            Get in touch
-          </h3>
-          <ul className="mt-6 space-y-5">
-            <li className="flex items-start gap-4">
-              <MapPin className="mt-0.5 size-5 flex-shrink-0 text-sage" aria-hidden="true" />
-              <address className="not-italic leading-relaxed text-taupe">
+        {/* Frosted-glass contact card — desktop only */}
+        <div className="hidden flex-col gap-[22px] rounded-[18px] border border-warm-white/[22%] bg-warm-white/10 p-9 lg:flex">
+          {/* Address */}
+          <div className="flex items-start gap-[14px]">
+            <span className="w-[22px] flex-shrink-0 font-serif text-[18px] leading-none text-warm-white">
+              ✦
+            </span>
+            <div>
+              <p className="mb-1 text-[11px] uppercase tracking-[0.16em] text-warm-white/65">
+                Find me
+              </p>
+              <address className="not-italic text-[15px] leading-[1.5] text-warm-white">
                 {fullAddress}
               </address>
-            </li>
-            <li className="flex items-center gap-4">
-              <Phone className="size-5 flex-shrink-0 text-sage" aria-hidden="true" />
+            </div>
+          </div>
+
+          <hr className="border-warm-white/[18%]" />
+
+          {/* Phone */}
+          <div className="flex items-start gap-[14px]">
+            <span className="w-[22px] flex-shrink-0 font-serif text-[18px] leading-none text-warm-white">
+              ✦
+            </span>
+            <div>
+              <p className="mb-1 text-[11px] uppercase tracking-[0.16em] text-warm-white/65">
+                Call or message
+              </p>
               <a
                 href={telHref}
-                className="inline-flex min-h-[48px] items-center text-taupe transition-colors hover:text-sage"
+                className="text-[15px] leading-[1.5] text-warm-white transition-colors hover:text-cream"
               >
                 {phone}
               </a>
-            </li>
-            <li className="flex items-center gap-4">
-              <Mail className="size-5 flex-shrink-0 text-sage" aria-hidden="true" />
+            </div>
+          </div>
+
+          <hr className="border-warm-white/[18%]" />
+
+          {/* Email */}
+          <div className="flex items-start gap-[14px]">
+            <span className="w-[22px] flex-shrink-0 font-serif text-[18px] leading-none text-warm-white">
+              ✦
+            </span>
+            <div>
+              <p className="mb-1 text-[11px] uppercase tracking-[0.16em] text-warm-white/65">
+                Email
+              </p>
               <a
                 href={`mailto:${email}`}
-                className="inline-flex min-h-[48px] items-center break-all text-taupe transition-colors hover:text-sage"
+                className="break-all text-[15px] leading-[1.5] text-warm-white transition-colors hover:text-cream"
               >
                 {email}
               </a>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
       </div>
     </section>
