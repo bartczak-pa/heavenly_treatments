@@ -82,7 +82,7 @@ export default function Footer() {
                     alt=""
                     width={24}
                     height={24}
-                    className="filter dark:invert text-primary group-hover:scale-110 transition-transform duration-200"
+                    className="text-primary group-hover:scale-110 transition-transform duration-200"
                   />
                 </div>
                 <span className="text-sm font-medium text-muted-foreground/85 group-hover:text-primary transition-colors duration-200">Facebook</span>
@@ -101,7 +101,7 @@ export default function Footer() {
                     alt=""
                     width={24}
                     height={24}
-                    className="filter dark:invert text-primary group-hover:scale-110 transition-transform duration-200"
+                    className="text-primary group-hover:scale-110 transition-transform duration-200"
                   />
                 </div>
                 <span className="text-sm font-medium text-muted-foreground/85 group-hover:text-primary transition-colors duration-200">Instagram</span>

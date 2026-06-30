@@ -430,11 +430,11 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
       <Toast.Root 
         open={toastState.open} 
         onOpenChange={setToastOpen}
-        className={`p-4 rounded-md shadow-lg ${toastState.variant === 'error' ? 'bg-red-100 dark:bg-red-900' : 'bg-green-100 dark:bg-green-900'}`}
+        className={`p-4 rounded-md shadow-lg ${toastState.variant === 'error' ? 'bg-red-100' : 'bg-green-100'}`}
       >
-        <Toast.Title className={`font-medium ${toastState.variant === 'error' ? 'text-red-800 dark:text-red-100' : 'text-green-800 dark:text-green-100'}`}>{toastState.title}</Toast.Title>
-        <Toast.Description className={`mt-1 text-sm ${toastState.variant === 'error' ? 'text-red-700 dark:text-red-200' : 'text-green-700 dark:text-green-200'}`}>{toastState.description}</Toast.Description>
-        <Toast.Close className="absolute top-1 right-1 p-1 rounded-full text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700">
+        <Toast.Title className={`font-medium ${toastState.variant === 'error' ? 'text-red-800' : 'text-green-800'}`}>{toastState.title}</Toast.Title>
+        <Toast.Description className={`mt-1 text-sm ${toastState.variant === 'error' ? 'text-red-700' : 'text-green-700'}`}>{toastState.description}</Toast.Description>
+        <Toast.Close className="absolute top-1 right-1 p-1 rounded-full text-gray-500 hover:bg-gray-200">
            <Cross2Icon className="h-4 w-4" />
         </Toast.Close>
       </Toast.Root>
