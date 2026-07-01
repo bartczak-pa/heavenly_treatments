@@ -23,7 +23,7 @@ const MainHeader: React.FC = () => {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="pt-8 pb-16 md:pt-12 md:pb-20 lg:py-24 bg-cream overflow-hidden"
+      className="pt-8 pb-16 md:pt-12 md:pb-20 lg:py-24 bg-cream overflow-hidden md:overflow-visible"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/*
@@ -33,7 +33,7 @@ const MainHeader: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-center gap-10 md:gap-16">
 
           {/* ── Left column: content ─────────────────────────────────── */}
-          <div className="flex-1 flex flex-col gap-6 text-left">
+          <div className="flex-1 md:flex-[1.2] flex flex-col gap-6 text-left">
 
             {/* Eyebrow */}
             <div className="flex items-center gap-3" aria-hidden="true">
@@ -54,9 +54,8 @@ const MainHeader: React.FC = () => {
 
             {/* Lead paragraph */}
             <p className="font-sans text-base md:text-[17px] text-taupe max-w-[520px] leading-relaxed mb-0">
-              A five-star cottage spa experience, hidden in the Scottish
-              countryside. Massage, facials &amp; reflexology —
-              thoughtfully crafted by Hayley.
+              <span className="md:hidden">A five-star cottage spa experience, hidden in the Scottish countryside. Crafted by Hayley.</span>
+              <span className="hidden md:inline">A five-star cottage spa experience, hidden in the Scottish countryside. Massage, facials &amp; reflexology — thoughtfully crafted by Hayley.</span>
             </p>
 
             {/* CTA row */}
@@ -82,7 +81,7 @@ const MainHeader: React.FC = () => {
           </div>
 
           {/* ── Right column: arched image ───────────────────────────── */}
-          <div className="flex-1 flex justify-center relative">
+          <div className="flex-1 md:flex-[0.8] flex justify-center relative md:mr-[24px]">
 
             {/* Decorative circle — tablet/desktop only */}
             <div
@@ -90,7 +89,7 @@ const MainHeader: React.FC = () => {
               aria-hidden="true"
             />
 
-            <div className="relative w-full max-w-[440px] mx-auto">
+            <div className="relative w-full max-w-[300px] sm:max-w-[440px] mx-auto">
               <div className="relative w-full aspect-square md:aspect-[4/5] rounded-t-full overflow-hidden border border-clay/20">
                 <Image
                   src="/images/mainPage/young-woman-having-face-massage-relaxing-spa-salon.jpg"
