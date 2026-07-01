@@ -16,7 +16,6 @@ import {
   ContactInfo as ContactInfoType
 } from '@/lib/jsonLsUtils';
 import { config } from '@/lib/config';
-import { getCategories } from '@/lib/cms/treatments';
 
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
@@ -75,8 +74,6 @@ async function HomePage() {
   // Business schema without aggregateRating (will be added when real review data is integrated)
   const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfoType);
   const faqJsonLd = generateFAQJsonLd(homepageFAQs);
-  const categories = await getCategories();
-
   // Combine all JSON-LD schemas (server-generated from trusted utility functions)
   const jsonLdContent = JSON.stringify([webSiteJsonLd, businessJsonLd, faqJsonLd]);
 
@@ -98,7 +95,7 @@ async function HomePage() {
       <IntroductionSection />
 
       {/* Numbered treatment category cards */}
-      <ServicesSection categories={categories} />
+      <ServicesSection />
 
       {/* Client testimonials */}
       <DynamicTestimonials />
