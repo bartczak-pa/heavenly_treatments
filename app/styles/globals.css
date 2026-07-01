@@ -160,3 +160,19 @@
     @apply font-serif text-lg font-medium italic border-l-4 border-clay pl-4 py-2 my-6 leading-relaxed text-cocoa;
   }
 }
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee-scroll 35s linear infinite;
+  will-change: transform;
+  display: flex;
+  width: max-content;
+}

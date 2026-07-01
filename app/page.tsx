@@ -1,13 +1,11 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { MainLayout } from '@/components/Layout/MainLayout';
-import {
-  DynamicTestimonials,
-  DynamicExperienceSection,
-  DynamicServicesSection
-} from '@/components/Dynamic/DynamicComponents';
+import { DynamicTestimonials } from '@/components/Dynamic/DynamicComponents';
 
 import MainHeader from '@/components/Sections/MainHeader';
+import MarqueeStrip from '@/components/Sections/MarqueeStrip';
+import IntroductionSection from '@/components/Sections/Introduction';
 import ServicesSection from '@/components/Sections/Services';
 import Script from 'next/script';
 import { contactInfo } from '@/lib/data/contactInfo';
@@ -18,9 +16,6 @@ import {
   ContactInfo as ContactInfoType
 } from '@/lib/jsonLsUtils';
 import { config } from '@/lib/config';
-import LocationAndBookingSection from '@/components/Sections/LocationAndBooking';
-import IntroductionSection from '@/components/Sections/Introduction';
-import { getCategories } from '@/lib/cms/treatments';
 
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
@@ -79,8 +74,6 @@ async function HomePage() {
   // Business schema without aggregateRating (will be added when real review data is integrated)
   const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfoType);
   const faqJsonLd = generateFAQJsonLd(homepageFAQs);
-  const categories = await getCategories();
-
   // Combine all JSON-LD schemas (server-generated from trusted utility functions)
   const jsonLdContent = JSON.stringify([webSiteJsonLd, businessJsonLd, faqJsonLd]);
 
@@ -91,16 +84,20 @@ async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdContent }}
       />
+
+      {/* Hero — two-column Sanctuary layout */}
       <MainHeader />
 
+      {/* Scrolling service categories marquee */}
+      <MarqueeStrip />
+
+      {/* Welcome / Meet Hayley */}
       <IntroductionSection />
-      <ServicesSection categories={categories} showAllButton={false} />
 
+      {/* Numbered treatment category cards */}
+      <ServicesSection />
 
-      <DynamicExperienceSection />
-
-      <LocationAndBookingSection />
-
+      {/* Client testimonials */}
       <DynamicTestimonials />
     </MainLayout>
   );

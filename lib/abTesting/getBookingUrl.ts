@@ -9,6 +9,7 @@ import {
 
 export type BookingContext =
   | 'navbar'
+  | 'hero'
   | 'treatment-card'
   | 'treatment-detail'
   | 'location-section';

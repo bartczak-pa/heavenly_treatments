@@ -1,123 +1,118 @@
 'use client';
 
-import React, { useId } from 'react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import OptimizedImage from '@/components/OptimizedImage';
+import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
+import { BookingButton } from '@/components/BookingButton';
 
-// Component configuration constants
-const HERO_CONFIG = {
-  heights: {
-    mobile: 'h-[60svh]',
-    desktop: 'md:h-[70svh]'
-  },
-  image: {
-    src: 'young-woman-having-face-massage-relaxing-spa-salon',
-    alt: 'Young woman having face massage relaxing in a spa salon',
-    decorative: true,
-    fallback: '/images/mainPage/young-woman-having-face-massage-relaxing-spa-salon.jpg'
-  },
-  content: {
-    title: 'Professional Massage, Facials, Reflexology and Beauty Treatments in Kelso',
-    subtitle: 'Revitalize Your Mind, Body, and Soul at Heavenly Treatments – Kelso\'s Hidden Gem for Relaxation and Wellness.',
-    ctaText: 'Explore Treatments',
-    ctaLink: '/treatments'
-  }
-} as const;
+const TrustRowContent: React.FC = () => (
+  <>
+    <div className="flex flex-col items-start gap-1">
+      <span className="text-xl text-sage leading-none" aria-label="Five star rating">★★★★★</span>
+      <span className="font-sans text-xs text-taupe">Loved by local clients</span>
+    </div>
+    <span className="w-px h-8 bg-clay/40" aria-hidden="true" />
+    <div className="flex flex-col gap-0.5">
+      <span className="font-sans text-xs text-taupe">Organic &amp; natural products</span>
+      <span className="font-sans text-xs text-taupe">100% vegan &amp; cruelty-free</span>
+    </div>
+  </>
+);
 
-// CSS class combinations for better readability
-const styles = {
-  hero: `relative ${HERO_CONFIG.heights.mobile} ${HERO_CONFIG.heights.desktop} w-full 
-         flex items-center justify-center text-center overflow-hidden`,
-  
-  imageContainer: 'absolute inset-0 z-0',
-  
-  overlay: 'absolute inset-0 bg-black/50 z-10',
-  
-  contentWrapper: `relative z-20 container mx-auto px-4 
-                   flex flex-col items-center`,
-  
-  title: `font-serif text-4xl sm:text-5xl md:text-6xl font-bold 
-          leading-tight mb-4 drop-shadow-md text-primary`,
-  
-  subtitle: `font-sans text-lg md:text-xl mb-8 max-w-2xl 
-             text-primary-foreground`,
-  
-  ctaButton: `bg-gradient-to-r from-primary to-primary/80 
-              hover:from-primary/80 hover:to-primary 
-              text-primary-foreground shadow-lg
-              focus-visible:outline-none focus-visible:ring-2 
-              focus-visible:ring-offset-2 focus-visible:ring-primary`
-} as const;
+const MainHeader: React.FC = () => {
+  return (
+    <section
+      aria-labelledby="hero-heading"
+      className="pt-8 pb-16 md:pt-12 md:pb-20 lg:py-24 bg-cream overflow-hidden"
+    >
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/*
+          Mobile:  flex-col  → content first, image second, trust row third
+          Desktop: flex-row  → left column (content+trust) | right column (image)
+        */}
+        <div className="flex flex-col md:flex-row md:items-center gap-10 md:gap-16">
 
-type MainHeaderProps = {
-  id?: string;
-  className?: string;
-}
+          {/* ── Left column: content ─────────────────────────────────── */}
+          <div className="flex-1 flex flex-col gap-6 text-left">
 
-/**
- * MainHeader - Hero section component for the homepage
- * 
- * Displays a full-width hero section with background image, 
- * headline, subtitle, and call-to-action button.
- * 
- * Features:
- * - Responsive design with mobile-first approach
- * - Optimized image loading with fallback
- * - Accessible markup with proper semantic structure
- * - Customizable through HERO_CONFIG constant
- */
-const MainHeader: React.FC<MainHeaderProps> = ({ id, className }) => {
-    const reactId = useId();
-    const sectionId = id ?? `main-hero-${reactId}`;
-    const headingId = `${sectionId}-heading`;
-    
-    return (
-        <section 
-          id={sectionId}
-          className={cn(styles.hero, className)}
-          aria-labelledby={headingId}
-        >
-            {/* Background image with overlay */}
-            <div className={styles.imageContainer}>
-                <div className="relative w-full h-full">
-                    <OptimizedImage
-                        src={HERO_CONFIG.image.src}
-                        alt={HERO_CONFIG.image.decorative ? "" : HERO_CONFIG.image.alt}
-                        fill
-                        skipAutoAspectRatio
-                        sizes="100vw"
-                        style={{ objectFit: 'cover' }}
-                        priority
-                        fallback={HERO_CONFIG.image.fallback}
-                    />
-                </div>
-                <div className={styles.overlay} aria-hidden="true" />
+            {/* Eyebrow */}
+            <div className="flex items-center gap-3" aria-hidden="true">
+              <div className="w-8 h-px bg-clay" />
+              <span className="font-sans text-[11px] uppercase tracking-[0.24em] text-taupe">
+                Kelso · Scottish Borders
+              </span>
             </div>
 
-            {/* Main content */}
-            <div className={styles.contentWrapper}>
-                <h1 id={headingId} className={styles.title}>
-                    {HERO_CONFIG.content.title}
-                </h1>
-                
-                <p className={styles.subtitle}>
-                    {HERO_CONFIG.content.subtitle}
-                </p>
-                
-                <Button 
-                  size="lg" 
-                  asChild 
-                  className={styles.ctaButton}
-                >
-                    <Link href={HERO_CONFIG.content.ctaLink}>
-                        {HERO_CONFIG.content.ctaText}
-                    </Link>
-                </Button>
+            {/* H1 */}
+            <h1
+              id="hero-heading"
+              className="font-serif text-4xl sm:text-5xl lg:text-[68px] xl:text-[76px] font-normal leading-[1.1] text-espresso mb-0"
+            >
+              Revitalise your mind, body &amp;{' '}
+              <em className="italic text-sage">soul.</em>
+            </h1>
+
+            {/* Lead paragraph */}
+            <p className="font-sans text-base md:text-[17px] text-taupe max-w-[520px] leading-relaxed mb-0">
+              A five-star cottage spa experience, hidden in the Scottish
+              countryside. Massage, facials &amp; reflexology —
+              thoughtfully crafted by Hayley.
+            </p>
+
+            {/* CTA row */}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+              <BookingButton
+                context="hero"
+                className="rounded-full px-8 py-3 h-auto font-sans font-semibold text-sm transition-colors w-full sm:w-auto"
+              >
+                Book a treatment
+              </BookingButton>
+              <Link
+                href="/treatments"
+                className="hidden md:inline-block font-sans text-sm text-cocoa underline underline-offset-2 hover:text-espresso transition-colors"
+              >
+                Explore the menu →
+              </Link>
             </div>
-        </section>
-    )
-}
+
+            {/* Trust row — tablet/desktop only (mobile renders after image below) */}
+            <div className="hidden md:flex flex-wrap items-center gap-5">
+              <TrustRowContent />
+            </div>
+          </div>
+
+          {/* ── Right column: arched image ───────────────────────────── */}
+          <div className="flex-1 flex justify-center relative">
+
+            {/* Decorative circle — tablet/desktop only */}
+            <div
+              className="absolute top-[-20px] right-[-10px] w-[150px] h-[150px] lg:w-[190px] lg:h-[190px] rounded-full border border-clay/25 hidden md:block"
+              aria-hidden="true"
+            />
+
+            <div className="relative w-full max-w-[440px] mx-auto">
+              <div className="relative w-full aspect-square md:aspect-[4/5] rounded-t-full overflow-hidden border border-clay/20">
+                <Image
+                  src="/images/mainPage/young-woman-having-face-massage-relaxing-spa-salon.jpg"
+                  alt="Young woman receiving a relaxing face massage at Heavenly Treatments spa"
+                  fill
+                  sizes="(max-width: 768px) 90vw, 45vw"
+                  priority
+                  className="object-cover"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Trust row — mobile only, 3rd flex item so it renders after image */}
+          <div className="md:hidden flex flex-wrap items-center gap-5">
+            <TrustRowContent />
+          </div>
+
+        </div>
+      </div>
+    </section>
+  );
+};
 
 export default MainHeader;
