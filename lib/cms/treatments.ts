@@ -151,7 +151,7 @@ function transformTreatmentMenuItem(
     name: row.title,
     slug: row.slug,
     shortDescription: row.description,
-    durationLabel: row.duration,
+    durationLabel: row.duration && !/min/i.test(row.duration) ? `${row.duration} min` : row.duration,
     price: row.price,
     href: `/treatments/${row.categorySlug}/${row.slug}`,
   };
