@@ -1,52 +1,75 @@
-'use client';
+import Image from 'next/image';
+import Link from 'next/link';
 
-import { useId } from 'react';
-import { cn } from '@/lib/utils';
-
-type IntroductionSectionProps = {
-  id?: string;
-  className?: string;
-};
-
-const PARAGRAPH_CLASS = "font-sans text-lg text-muted-foreground leading-relaxed";
-
-const CONTENT = {
-  heading: "Welcome to Heavenly Treatments",
-  paragraphs: [
-    { id: "experience", text: "I'm Hayley, a qualified Spa Therapist with years of experience working in 5-star establishments." },
-    { id: "treatment-room", text: "I'm bringing that experience to my home treatment room for you to enjoy." },
-    { id: "passion", text: "I have always had a passion for wellness and skincare and have carefully curated a treatment menu of all my favourite treatments." }
-  ]
-} as const satisfies {
-  heading: string;
-  paragraphs: readonly { id: string; text: string }[];
-};
-
-export default function IntroductionSection({ id, className }: IntroductionSectionProps) {
-  const reactId = useId();
-  const sectionId = id ?? `introduction-${reactId}`;
-  const headingId = `${sectionId}-heading`;
-  
+/**
+ * IntroductionSection — Meet Hayley / Welcome block (Issue #129)
+ *
+ * Two-column layout on tablet/desktop: arched owner photo left,
+ * bio copy right. Stacks single-column on mobile with image on top.
+ * Server component — no interactivity required.
+ */
+export default function IntroductionSection() {
   return (
     <section
-      id={sectionId}
-      aria-labelledby={headingId}
-      className={cn("py-16 md:py-24 bg-background", className)}
+      aria-labelledby="about-heading"
+      className="py-16 md:py-24 bg-cream"
     >
-      <div className="container mx-auto px-4">
-        <div className="max-w-3xl mx-auto text-center space-y-8">
-          <header>
-            <h2 id={headingId} className="font-serif text-3xl md:text-4xl font-semibold text-primary">
-              {CONTENT.heading}
-            </h2>
-          </header>
-          <div className="space-y-6">
-            {CONTENT.paragraphs.map((paragraph) => (
-              <p key={paragraph.id} className={PARAGRAPH_CLASS}>
-                {paragraph.text}
-              </p>
-            ))}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row items-center gap-12">
+
+          {/* ── Left column: framed image ────────────────────────────── */}
+          <div className="flex-1 w-full max-w-[480px] mx-auto md:mx-0">
+            {/* Arched image with overlaid badge */}
+            <div className="relative rounded-t-[200px] overflow-hidden aspect-[3/4]">
+              <Image
+                src="/images/about/owner-of-heavenly-treatments.jpg"
+                alt="Hayley, owner and lead therapist at Heavenly Treatments in Kelso"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                style={{ objectFit: 'cover' }}
+              />
+              {/* Badge — overlaid inside the image container */}
+              <div className="absolute bottom-6 left-4 z-10">
+                <span className="bg-sage text-warm-white rounded-full px-5 py-2 font-sans text-xs font-semibold tracking-widest uppercase">
+                  ✦ 5★ Spa Trained
+                </span>
+              </div>
+            </div>
           </div>
+
+          {/* ── Right column: bio text ───────────────────────────────── */}
+          <div className="flex-1 flex flex-col justify-center gap-6 text-center md:text-left">
+            <span className="font-sans text-[11px] uppercase tracking-widest text-taupe">
+              A little about me
+            </span>
+
+            <h2
+              id="about-heading"
+              className="font-serif text-espresso mb-0"
+            >
+              Meet Hayley, your personal spa therapist
+            </h2>
+
+            <div className="flex flex-col gap-4">
+              <p className="font-sans text-base text-cocoa leading-relaxed mb-0">
+                I&apos;m a qualified spa therapist with years of experience
+                working in 5-star establishments — now bringing that same level
+                of care and expertise to my home treatment room in Kelso.
+              </p>
+              <p className="font-sans text-base text-cocoa leading-relaxed mb-0">
+                I&apos;ve curated a menu of treatments I love, using organic and
+                vegan-friendly products to nurture your mind, body, and soul.
+              </p>
+            </div>
+
+            <Link
+              href="/about"
+              className="font-sans text-sm text-sage hover:underline w-fit mx-auto md:mx-0"
+            >
+              More about me →
+            </Link>
+          </div>
+
         </div>
       </div>
     </section>
