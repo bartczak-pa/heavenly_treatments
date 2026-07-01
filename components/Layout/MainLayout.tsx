@@ -4,12 +4,17 @@ import Footer from '@/components/Layout/Footer';
 import BookingCtaBand from '@/components/Layout/BookingCtaBand';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import CookieConsentWrapper from '@/components/Layout/CookieConsentWrapper';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { getActivePromotionalOffer } from '@/lib/cms/promotionalOffer';
+import { PromotionalDialog } from '@/components/Layout/PromotionalDialog';
 
 interface MainLayoutProps {
   children: ReactNode;
 }
 
-export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+export const MainLayout: React.FC<MainLayoutProps> = async ({ children }) => {
+  const promotionalOffer = await getActivePromotionalOffer();
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
@@ -17,6 +22,11 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <BookingCtaBand />
       <Footer />
       <CookieConsentWrapper />
+      {promotionalOffer && (
+        <ErrorBoundary fallback={null}>
+          <PromotionalDialog offer={promotionalOffer} />
+        </ErrorBoundary>
+      )}
       <SpeedInsights />
     </div>
   );

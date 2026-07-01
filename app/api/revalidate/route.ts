@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import {
   isValidSignature,
   SIGNATURE_HEADER_NAME,
@@ -56,10 +56,17 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Webhook] Verified webhook for type: ${_type}`);
 
-    // Revalidate all treatment pages (listing, category, and detail pages)
-    // Using 'layout' type revalidates /treatments and all nested routes beneath it
-    console.log(`[Webhook] Revalidating /treatments and all sub-pages for type: ${_type}`);
-    revalidatePath('/treatments', 'layout');
+    // Revalidate based on content type
+    if (_type === 'promotionalOffer') {
+      // Use cache tag for targeted revalidation instead of full site
+      console.log(`[Webhook] Revalidating promotional-offer cache tag`);
+      revalidateTag('promotional-offer');
+    } else {
+      // Revalidate all treatment pages (listing, category, and detail pages)
+      // Using 'layout' type revalidates /treatments and all nested routes beneath it
+      console.log(`[Webhook] Revalidating /treatments and all sub-pages for type: ${_type}`);
+      revalidatePath('/treatments', 'layout');
+    }
 
     console.log('[Webhook] Revalidation completed successfully');
 
