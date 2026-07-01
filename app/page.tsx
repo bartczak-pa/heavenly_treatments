@@ -78,7 +78,7 @@ async function HomePage() {
   const jsonLdContent = JSON.stringify([webSiteJsonLd, businessJsonLd, faqJsonLd]);
 
   return (
-    <MainLayout>
+    <MainLayout showCtaBand>
       <Script
         id="homepage-jsonld"
         type="application/ld+json"

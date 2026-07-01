@@ -10,16 +10,17 @@ import { PromotionalDialog } from '@/components/Layout/PromotionalDialog';
 
 interface MainLayoutProps {
   children: ReactNode;
+  showCtaBand?: boolean;
 }
 
-export const MainLayout: React.FC<MainLayoutProps> = async ({ children }) => {
+export const MainLayout: React.FC<MainLayoutProps> = async ({ children, showCtaBand = false }) => {
   const promotionalOffer = await getActivePromotionalOffer();
 
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
       <main className="grow">{children}</main>
-      <BookingCtaBand />
+      {showCtaBand && <BookingCtaBand />}
       <Footer />
       <CookieConsentWrapper />
       {promotionalOffer && (
