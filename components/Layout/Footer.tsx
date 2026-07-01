@@ -103,24 +103,20 @@ export default function Footer() {
               <h3 className="mb-[18px] font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-sage">
                 Connect
               </h3>
-              <ul className="flex flex-col gap-3 text-[14.5px] text-cream/70">
-                <li>
-                  <a
-                    href={telHref}
-                    className="inline-flex min-h-[48px] items-center transition-colors hover:text-clay"
-                  >
-                    {phone}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href={`mailto:${email}`}
-                    className="inline-flex min-h-[48px] items-center break-all transition-colors hover:text-clay"
-                  >
-                    {email}
-                  </a>
-                </li>
-                <li className="flex gap-3 pt-1">
+              <div className="flex flex-col gap-3 text-[14.5px] text-cream/70">
+                <a
+                  href={telHref}
+                  className="transition-colors hover:text-clay"
+                >
+                  {phone}
+                </a>
+                <a
+                  href={`mailto:${email}`}
+                  className="break-all transition-colors hover:text-clay"
+                >
+                  {email}
+                </a>
+                <div className="mt-[6px] flex gap-3">
                   {socialLinks.map((social) => (
                     <a
                       key={social.label}
@@ -133,8 +129,8 @@ export default function Footer() {
                       {social.label}
                     </a>
                   ))}
-                </li>
-              </ul>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -142,15 +138,19 @@ export default function Footer() {
             <p className="text-[12.5px] text-cream/40">
               © {year} Heavenly Treatments. All rights reserved.
             </p>
-            <div className="flex flex-wrap justify-center gap-6">
-              {legalLinks.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="text-[12.5px] text-cream/60 transition-colors hover:text-clay"
-                >
-                  {item.label}
-                </Link>
+            <div className="flex flex-wrap items-center justify-center gap-x-[6px] gap-y-1">
+              {legalLinks.map((item, i) => (
+                <React.Fragment key={item.href}>
+                  {i > 0 && (
+                    <span className="text-[12.5px] text-cream/30" aria-hidden="true">·</span>
+                  )}
+                  <Link
+                    href={item.href}
+                    className="text-[12.5px] text-cream/60 transition-colors hover:text-clay"
+                  >
+                    {item.label}
+                  </Link>
+                </React.Fragment>
               ))}
             </div>
           </div>
