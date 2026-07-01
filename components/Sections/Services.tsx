@@ -69,7 +69,7 @@ export default function ServicesSection() {
           </p>
           <h2
             id="services-heading"
-            className="font-serif text-espresso mb-0 text-4xl md:text-5xl lg:text-[56px] leading-[1.1]"
+            className="font-serif text-espresso mb-0 text-4xl md:text-[44px] lg:text-[52px] leading-[1.1]"
           >
             <span className="lg:hidden">Treatments to soothe &amp; restore</span>
             <span className="hidden lg:inline">
@@ -84,11 +84,11 @@ export default function ServicesSection() {
             <Link
               key={s.slug}
               href={`/treatments/${s.slug}`}
-              className="group bg-warm-white rounded-2xl px-5 py-5 flex items-center gap-4"
+              className="group bg-warm-white rounded-2xl px-5 py-5 flex items-center gap-4 transition-all duration-300 ease-out active:scale-[0.98]"
             >
               <span className="font-sans text-sm text-clay w-6 shrink-0">{s.num}</span>
               <div className="flex-1">
-                <p className="font-serif text-xl text-espresso mb-0 leading-snug">{s.name}</p>
+                <p className="font-serif text-2xl text-espresso mb-0 leading-snug">{s.name}</p>
                 <p className="font-sans text-sm text-taupe mb-0">{s.subtitle}</p>
               </div>
               <span className="text-sage text-base">&#8594;</span>
@@ -107,8 +107,8 @@ export default function ServicesSection() {
           <div className="grid grid-cols-2 gap-4">
             {TABLET_SERVICES.map((s) => (
               <Link key={s.slug} href={`/treatments/${s.slug}`} className="group">
-                <article className="bg-warm-white rounded-2xl p-6 h-full flex flex-col gap-3">
-                  <span className="font-sans text-xs text-clay">{s.tabletNum}</span>
+                <article className="bg-warm-white rounded-2xl p-6 h-full flex flex-col gap-3 transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-xl">
+                  <span className="font-sans text-sm text-clay">{s.tabletNum}</span>
                   <h3 className="font-serif text-2xl text-espresso mb-0 leading-snug">{s.name}</h3>
                   <p className="font-sans text-sm text-taupe leading-relaxed flex-1 mb-0">
                     {s.descTablet}
@@ -118,8 +118,8 @@ export default function ServicesSection() {
             ))}
           </div>
           <Link href={CTA_CONTENT.href} className="group">
-            <article className="bg-sage rounded-2xl p-8 flex flex-col gap-3">
-              <h3 className="font-serif text-2xl text-warm-white mb-0">{CTA_CONTENT.heading}</h3>
+            <article className="bg-sage rounded-2xl p-8 flex flex-col gap-3 transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-xl">
+              <h3 className="font-serif italic text-2xl text-warm-white mb-0">{CTA_CONTENT.heading}</h3>
               <p className="font-sans text-sm text-warm-white/80 mb-0">{CTA_CONTENT.body}</p>
               <span className="font-sans text-sm font-bold text-warm-white">{CTA_CONTENT.link}</span>
             </article>
@@ -130,19 +130,19 @@ export default function ServicesSection() {
         <div className="hidden lg:grid grid-cols-3 gap-6">
           {SERVICES.map((s) => (
             <Link key={s.slug} href={`/treatments/${s.slug}`} className="group">
-              <article className="bg-warm-white rounded-2xl p-6 xl:p-8 h-full flex flex-col gap-3">
-                <span className="font-sans text-xs text-clay">{s.num}</span>
+              <article className="bg-warm-white rounded-2xl p-6 xl:p-8 h-full flex flex-col gap-3 transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-xl">
+                <span className="font-sans text-sm text-clay">{s.num}</span>
                 <h3 className="font-serif text-2xl text-espresso mb-0 leading-snug">{s.name}</h3>
                 <p className="font-sans text-sm text-taupe leading-relaxed flex-1 mb-0">
                   {s.descDesktop}
                 </p>
-                <span className="font-sans text-sm text-clay group-hover:underline">Discover &#8594;</span>
+                <span className="font-sans text-sm font-semibold text-sage group-hover:underline">Discover &#8594;</span>
               </article>
             </Link>
           ))}
           <Link href={CTA_CONTENT.href} className="group">
-            <article className="bg-sage rounded-2xl p-6 xl:p-8 h-full flex flex-col gap-4">
-              <h3 className="font-serif text-2xl text-warm-white mb-0">{CTA_CONTENT.heading}</h3>
+            <article className="bg-sage rounded-2xl p-6 xl:p-8 h-full flex flex-col gap-4 transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-xl">
+              <h3 className="font-serif italic text-2xl text-warm-white mb-0">{CTA_CONTENT.heading}</h3>
               <p className="font-sans text-sm text-warm-white/80 flex-1 mb-0">{CTA_CONTENT.body}</p>
               <span className="font-sans text-sm font-bold text-warm-white">{CTA_CONTENT.link}</span>
             </article>
