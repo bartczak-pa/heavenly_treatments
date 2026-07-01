@@ -45,6 +45,18 @@ export interface SanityTreatmentMenuItem {
   categorySlug: string;
 }
 
+/**
+ * Sanity testimonial document type
+ */
+export interface SanityTestimonial {
+  _id: string;
+  name: string;
+  quote: string;
+  customerType?: string;
+  rating?: number;
+  displayOrder?: number;
+}
+
 export interface SanityTreatment {
   _id: string;
   title: string;

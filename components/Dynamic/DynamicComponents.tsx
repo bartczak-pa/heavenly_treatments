@@ -161,17 +161,6 @@ export const DynamicCookieConsentWrapper = createDynamicComponent(
   }
 );
 
-// Testimonials - Can be loaded after initial page render for better performance
-export const DynamicTestimonials = createDynamicComponent(
-  () => import(/* webpackChunkName: "testimonials" */ '@/components/Sections/Testimonials'),
-  {
-    className: 'h-48',
-    ariaLabel: 'Loading testimonials',
-    priority: 'normal',
-    withErrorBoundary: true,
-  }
-);
-
 // Experience Section - Nice to have but not critical for above-the-fold
 export const DynamicExperienceSection = createDynamicComponent(
   () => import(/* webpackChunkName: "experience-section" */ '@/components/Sections/Experience'),

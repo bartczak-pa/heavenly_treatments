@@ -1,12 +1,14 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { MainLayout } from '@/components/Layout/MainLayout';
-import { DynamicTestimonials } from '@/components/Dynamic/DynamicComponents';
 
 import MainHeader from '@/components/Sections/MainHeader';
 import MarqueeStrip from '@/components/Sections/MarqueeStrip';
 import IntroductionSection from '@/components/Sections/Introduction';
 import ServicesSection from '@/components/Sections/Services';
+import MenuTeaserSection from '@/components/Sections/MenuTeaserSection';
+import TreatmentRoomSection from '@/components/Sections/TreatmentRoomSection';
+import TestimonialsSection from '@/components/Sections/Testimonials';
 import Script from 'next/script';
 import { contactInfo } from '@/lib/data/contactInfo';
 import {
@@ -71,10 +73,8 @@ const homepageFAQs = [
 
 async function HomePage() {
   const webSiteJsonLd = generateWebSiteJsonLd();
-  // Business schema without aggregateRating (will be added when real review data is integrated)
   const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfoType);
   const faqJsonLd = generateFAQJsonLd(homepageFAQs);
-  // Combine all JSON-LD schemas (server-generated from trusted utility functions)
   const jsonLdContent = JSON.stringify([webSiteJsonLd, businessJsonLd, faqJsonLd]);
 
   return (
@@ -91,15 +91,24 @@ async function HomePage() {
       {/* Scrolling service categories marquee */}
       <MarqueeStrip />
 
-      {/* Welcome / Meet Hayley */}
-      <IntroductionSection />
+      {/* Welcome / Meet Hayley — hidden on tablet only */}
+      <div className="block md:hidden lg:block">
+        <IntroductionSection />
+      </div>
 
       {/* Numbered treatment category cards */}
       <ServicesSection />
 
+      {/* Treatment menu preview — 5 representative treatments */}
+      <MenuTeaserSection />
+
+      {/* Full-bleed treatment room image with overlay */}
+      <TreatmentRoomSection />
+
       {/* Client testimonials */}
-      <DynamicTestimonials />
-    </MainLayout>
+      <TestimonialsSection />
+
+    </MainLayout>   
   );
 }
 

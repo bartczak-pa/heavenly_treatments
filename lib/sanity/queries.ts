@@ -135,6 +135,20 @@ export const allCategorySlugsQuery = groq`
 `;
 
 /**
+ * GROQ query to fetch all testimonials ordered by displayOrder
+ */
+export const allTestimonialsQuery = groq`
+  *[_type == "testimonial"] | order(displayOrder asc) {
+    _id,
+    name,
+    quote,
+    customerType,
+    rating,
+    displayOrder
+  }
+`;
+
+/**
  * GROQ query to fetch the active promotional offer.
  * Filters by isActive, and optionally by startDate/endDate using now().
  * If multiple offers are active simultaneously, returns the most recently
