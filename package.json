@@ -13,8 +13,6 @@
     "typecheck": "tsc --noEmit",
     "optimize-images": "node scripts/optimize-images.js",
     "analyze": "ANALYZE=true next build",
-    "analyze:server": "npm run analyze && npx webpack-bundle-analyzer .next/server/chunks/*.js -p 8888 -O",
-    "build:analyze": "npm run build && npm run analyze",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -92,8 +90,7 @@
     "typescript": "^5",
     "typescript-eslint": "^8.29.0",
     "vite": "^5.4.19",
-    "vitest": "^3.2.4",
-    "webpack-bundle-analyzer": "^4.10.2"
+    "vitest": "^3.2.4"
   },
   "lint-staged": {
     "*.js": "eslint --fix",
