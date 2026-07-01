@@ -41,10 +41,10 @@ export default function Footer() {
 
   return (
     <footer className="bg-espresso text-cream/80">
-      {/* ── Mobile footer — centered brand + nav row + copyright ── */}
+      {/* ── Mobile footer (<640px) — centered brand + nav row + copyright ── */}
       {/* aria-hidden: desktop section (always in DOM) is the accessible footer;
           mobile users navigate via the hamburger overlay */}
-      <div aria-hidden="true" className="flex flex-col items-center gap-5 px-6 py-12 text-center md:hidden">
+      <div aria-hidden="true" className="flex flex-col items-center gap-5 px-6 py-12 text-center sm:hidden">
         <h3 className="font-serif text-[25px] font-semibold text-cream">
           Heavenly Treatments
         </h3>
@@ -64,8 +64,61 @@ export default function Footer() {
         </p>
       </div>
 
-      {/* ── Desktop footer — 3-column grid ── */}
-      <div className="hidden md:block">
+      {/* ── Tablet footer (640–1023px) — 2-column brand + connect ── */}
+      <div aria-hidden="true" className="hidden sm:block lg:hidden">
+        <div className="mx-auto max-w-7xl px-[30px] pt-10 pb-7">
+          <div className="grid grid-cols-[1.4fr_1fr] gap-[30px] border-b border-white/[12%] pb-7">
+            {/* Brand */}
+            <div>
+              <h3 className="mb-[10px] font-serif text-[22px] font-semibold text-cream">
+                Heavenly Treatments
+              </h3>
+              <p className="text-[13px] leading-[1.7] text-cream/55">
+                Your journey to wellness and self-care begins here, in the Scottish Borders.
+              </p>
+            </div>
+
+            {/* Connect — phone + email only, no socials */}
+            <div>
+              <h3 className="mb-[14px] font-sans text-[10.5px] font-semibold uppercase tracking-[0.18em] text-sage">
+                Connect
+              </h3>
+              <div className="flex flex-col gap-[9px] text-[13.5px] text-cream/70">
+                <a href={telHref} className="transition-colors hover:text-clay">
+                  {phone}
+                </a>
+                <a href={`mailto:${email}`} className="break-all transition-colors hover:text-clay">
+                  {email}
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-[18px]">
+            <p className="text-[11.5px] text-cream/40">
+              © {year} Heavenly Treatments. All rights reserved.
+            </p>
+            <div className="flex flex-wrap items-center gap-x-[6px] gap-y-1">
+              {legalLinks.map((item, i) => (
+                <React.Fragment key={item.href}>
+                  {i > 0 && (
+                    <span className="text-[11.5px] text-cream/30" aria-hidden="true">·</span>
+                  )}
+                  <Link
+                    href={item.href}
+                    className="text-[11.5px] text-cream/60 transition-colors hover:text-clay"
+                  >
+                    {item.label}
+                  </Link>
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Desktop footer (≥1024px) — 3-column grid ── */}
+      <div className="hidden lg:block">
         <div className="mx-auto max-w-7xl px-6 pt-[70px] pb-9 lg:px-8">
           <div className="grid grid-cols-[1.5fr_1fr_1fr] gap-[48px] border-b border-white/[12%] pb-[50px]">
             {/* Brand */}
