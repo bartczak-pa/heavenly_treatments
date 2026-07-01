@@ -90,7 +90,7 @@ const MainHeader: React.FC = () => {
               aria-hidden="true"
             />
 
-            <div className="relative w-full max-w-[560px] mx-auto">
+            <div className="relative w-full max-w-[440px] mx-auto">
               <div className="relative w-full aspect-square md:aspect-[4/5] rounded-t-full overflow-hidden border border-clay/20">
                 <Image
                   src="/images/mainPage/young-woman-having-face-massage-relaxing-spa-salon.jpg"
