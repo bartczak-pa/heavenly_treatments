@@ -7,6 +7,7 @@ import {
   treatmentsMenuByCategoryQuery,
   allTreatmentSlugsQuery,
   categoryBySlugQuery,
+  treatmentCountsByCategoryQuery,
 } from '@/lib/sanity/queries';
 import { getImageUrl } from '@/lib/sanity/image';
 import {
@@ -50,6 +51,10 @@ function transformTreatment(sanityTreatment: SanityTreatment): Treatment {
     duration: sanityTreatment.duration,
     price: sanityTreatment.price,
     keyFeatures: sanityTreatment.keyFeatures,
+    benefits: sanityTreatment.benefits,
+    whatToExpect: sanityTreatment.whatToExpect,
+    whatIsIncluded: sanityTreatment.whatIsIncluded,
+    goodFor: sanityTreatment.goodFor,
     image: getImageUrl(sanityTreatment.image, 1000, undefined, 90),
     imageWidth: 1000,
     imageHeight: 667,
@@ -195,6 +200,21 @@ export async function getAllTreatmentSlugs(): Promise<
   } catch (error) {
     console.error('Error fetching treatment slugs from Sanity:', error);
     return [];
+  }
+}
+
+/**
+ * Fetch treatment counts per category from Sanity (no treatment payload)
+ */
+export async function getTreatmentCountsByCategory(): Promise<Record<string, number>> {
+  try {
+    const rows = await sanityClient.fetch<{ slug: string; count: number }[]>(
+      treatmentCountsByCategoryQuery
+    );
+    return Object.fromEntries(rows.map(({ slug, count }) => [slug, count]));
+  } catch (error) {
+    console.error('Error fetching treatment counts from Sanity:', error);
+    return {};
   }
 }
 

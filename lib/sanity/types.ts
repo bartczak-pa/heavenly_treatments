@@ -65,6 +65,10 @@ export interface SanityTreatment {
   duration: string;
   price: string;
   keyFeatures?: string[];
+  benefits?: string[];
+  whatToExpect?: Array<{ title: string; description: string }>;
+  whatIsIncluded?: string[];
+  goodFor?: string;
   image: SanityImageSource;
   category: {
     _id: string;
