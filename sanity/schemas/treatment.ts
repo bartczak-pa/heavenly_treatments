@@ -57,6 +57,41 @@ export default defineType({
       description: 'Key features or steps of the treatment',
     }),
     defineField({
+      name: 'benefits',
+      title: 'Benefits',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'Benefits of this treatment (shown in "The benefits" section). Falls back to Key Features if empty.',
+    }),
+    defineField({
+      name: 'whatToExpect',
+      title: 'What to Expect (Steps)',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({ name: 'title', title: 'Step Title', type: 'string' }),
+            defineField({ name: 'description', title: 'Step Description', type: 'text' }),
+          ],
+        },
+      ],
+      description: 'Step-by-step walkthrough of the treatment. Falls back to generic steps if empty.',
+    }),
+    defineField({
+      name: 'whatIsIncluded',
+      title: 'What\'s Included',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'List of what is included in this treatment (shown in the booking aside). Falls back to Key Features if empty.',
+    }),
+    defineField({
+      name: 'goodFor',
+      title: 'Good For',
+      type: 'text',
+      description: 'Who or what this treatment is good for (shown in the booking aside). Falls back to first sentence of description if empty.',
+    }),
+    defineField({
       name: 'image',
       title: 'Image',
       type: 'image',

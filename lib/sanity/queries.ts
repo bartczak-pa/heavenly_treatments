@@ -1,6 +1,16 @@
 import { groq } from 'next-sanity';
 
 /**
+ * GROQ query: treatment count per category slug, no treatment payload fetched
+ */
+export const treatmentCountsByCategoryQuery = groq`
+  *[_type == "treatmentCategory"] {
+    "slug": slug.current,
+    "count": count(*[_type == "treatment" && references(^._id)])
+  }
+`;
+
+/**
  * GROQ query to fetch all treatment categories with their details
  */
 export const allCategoriesQuery = groq`
@@ -65,6 +75,10 @@ export const treatmentBySlugQuery = groq`
     duration,
     price,
     keyFeatures,
+    benefits,
+    whatToExpect,
+    whatIsIncluded,
+    goodFor,
     image,
     freshaUrl,
     category->{

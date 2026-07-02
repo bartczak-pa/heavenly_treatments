@@ -1,8 +1,8 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getCategories } from '@/lib/cms/treatments';
-import { allTreatments, type TreatmentCategory } from '@/lib/data/treatments';
+import { getCategories, getTreatmentCountsByCategory } from '@/lib/cms/treatments';
+import { type TreatmentCategory } from '@/lib/data/treatments';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import TreatmentsAccordion from '@/components/Sections/TreatmentsAccordion';
 import { contactInfo } from '@/lib/data/contactInfo';
@@ -61,13 +61,10 @@ export default async function TreatmentsPage() {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
 
   // Categories are fetched server-side; treatments load lazily per accordion panel
-  const categories: TreatmentCategory[] = await getCategories();
-
-  // Pre-compute treatment counts in a single pass so accordion headers show counts immediately
-  const initialCounts = allTreatments.reduce<Record<string, number>>((acc, t) => {
-    acc[t.category] = (acc[t.category] ?? 0) + 1;
-    return acc;
-  }, {});
+  const [categories, initialCounts] = await Promise.all([
+    getCategories() as Promise<TreatmentCategory[]>,
+    getTreatmentCountsByCategory(),
+  ]);
 
   // Generate JSON-LD structured data (server-generated, trusted content)
   const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfo);
