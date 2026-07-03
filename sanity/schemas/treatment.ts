@@ -116,6 +116,13 @@ export default defineType({
         scheme: ['http', 'https'],
       }),
     }),
+    defineField({
+      name: 'devOnly',
+      title: 'Dev Only',
+      type: 'boolean',
+      description: '⚠️ When enabled, this treatment is hidden from the live site and only visible in development. Use this while building out new treatments before they are ready to go live.',
+      initialValue: false,
+    }),
   ],
   preview: {
     select: {
@@ -123,11 +130,12 @@ export default defineType({
       subtitle: 'price',
       media: 'image',
       category: 'category.name',
+      devOnly: 'devOnly',
     },
     prepare(selection) {
-      const { title, subtitle, media, category } = selection;
+      const { title, subtitle, media, category, devOnly } = selection;
       return {
-        title,
+        title: devOnly ? `[DEV] ${title}` : title,
         subtitle: `${category} - ${subtitle}`,
         media,
       };

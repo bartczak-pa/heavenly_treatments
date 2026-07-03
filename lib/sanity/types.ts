@@ -76,4 +76,5 @@ export interface SanityTreatment {
     slug: string;
   };
   freshaUrl?: string;
+  devOnly?: boolean;
 }
