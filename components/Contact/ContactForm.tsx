@@ -2,7 +2,7 @@
 
 
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Turnstile from 'react-turnstile';
 import { Treatment } from '@/lib/data/treatments';
@@ -103,6 +103,8 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
     },
   });
 
+  const cancellationPolicyValue = useWatch({ control: form.control, name: 'cancellationPolicy' });
+
   // Handle Form Submission
   const onSubmit = async (data: ContactFormData) => {
     /**
@@ -144,7 +146,7 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
       });
 
       const result = await response.json();
-      console.log("Client: Received response from API:", result);
+      if (process.env.NODE_ENV === 'development') console.log("Client: Received response from API:", result);
 
       if (response.ok) {
         // Track form submission success for GA4 analytics
@@ -187,16 +189,17 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         
         {/* First Name and Email Fields */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <FormField
             control={form.control}
             name="firstName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>First Name *</FormLabel>
+                <FormLabel className="font-sans text-[12px] tracking-widest uppercase text-taupe font-semibold">First Name *</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Your first name"
+                    className="bg-cream border-cocoa/16 rounded-[10px] px-[16px] py-[14px] font-sans text-[15px] text-espresso focus:border-sage focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                     {...field}
                     onFocus={() => onFieldFocus('firstName')}
                     onBlur={(e) => {
@@ -214,11 +217,12 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email *</FormLabel>
+                <FormLabel className="font-sans text-[12px] tracking-widest uppercase text-taupe font-semibold">Email *</FormLabel>
                 <FormControl>
                   <Input
                     type="email"
                     placeholder="your.email@example.com"
+                    className="bg-cream border-cocoa/16 rounded-[10px] px-[16px] py-[14px] font-sans text-[15px] text-espresso focus:border-sage focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                     {...field}
                     onFocus={() => onFieldFocus('email')}
                     onBlur={(e) => {
@@ -239,11 +243,12 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Phone *</FormLabel>
+              <FormLabel className="font-sans text-[12px] tracking-widest uppercase text-taupe font-semibold">Phone *</FormLabel>
               <FormControl>
                 <Input
                   type="tel"
                   placeholder="07123456789"
+                  className="bg-cream border-cocoa/16 rounded-[10px] px-[16px] py-[14px] font-sans text-[15px] text-espresso focus:border-sage focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                   {...field}
                   onFocus={() => onFieldFocus('phone')}
                   onBlur={(e) => {
@@ -263,11 +268,11 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
           name="treatment"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Treatment (Optional)</FormLabel>
+              <FormLabel className="font-sans text-[12px] tracking-widest uppercase text-taupe font-semibold">Treatment (Optional)</FormLabel>
               {/* Use Select component with react-hook-form integration */}
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-cream border-cocoa/16 rounded-[10px] px-[16px] py-[14px] font-sans text-[15px] text-espresso focus:border-sage focus:ring-0 h-auto">
                     <SelectValue placeholder="Select a treatment" />
                   </SelectTrigger>
                 </FormControl>
@@ -285,15 +290,15 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
         />
 
         {/* Preferred Date/Time Fields */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <FormField
               control={form.control}
               name="preferredDate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Preferred Date (Optional)</FormLabel>
+                  <FormLabel className="font-sans text-[12px] tracking-widest uppercase text-taupe font-semibold">Preferred Date (Optional)</FormLabel>
                   <FormControl>
-                    <Input type="date" {...field} />
+                    <Input type="date" className="bg-cream border-cocoa/16 rounded-[10px] px-[16px] py-[14px] font-sans text-[15px] text-espresso focus:border-sage focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -304,9 +309,9 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
               name="preferredTime"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Preferred Time (Optional)</FormLabel>
+                  <FormLabel className="font-sans text-[12px] tracking-widest uppercase text-taupe font-semibold">Preferred Time (Optional)</FormLabel>
                   <FormControl>
-                    <Input type="time" {...field} />
+                    <Input type="time" className="bg-cream border-cocoa/16 rounded-[10px] px-[16px] py-[14px] font-sans text-[15px] text-espresso focus:border-sage focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -320,11 +325,11 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
           name="message"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Message *</FormLabel>
+                <FormLabel className="font-sans text-[12px] tracking-widest uppercase text-taupe font-semibold">Message *</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Please let me know of any allergies or medical conditions ie. pregnancy. Sorry, not currently offering treatments for male customers."
-                  className="resize-none min-h-[120px]"
+                  className="bg-cream border-cocoa/16 rounded-[10px] px-[16px] py-[14px] font-sans text-[15px] text-espresso min-h-[120px] resize-vertical focus:border-sage focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                   {...field}
                   onFocus={() => onFieldFocus('message')}
                   onBlur={(e) => {
@@ -343,19 +348,38 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
           control={form.control}
           name="cancellationPolicy"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>
-                  I accept that cancelling a confirmed booking with less than 24 hours notice will result in a 50% charge.*
-                </FormLabel>
+            <FormItem>
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={() => field.onChange(!field.value)}
+                onKeyDown={(e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); field.onChange(!field.value); }}}
+                className="flex gap-[13px] items-start cursor-pointer bg-cream border border-cocoa/12 rounded-xl px-[18px] py-[16px]"
+              >
+                <span
+                  className={`min-w-[22px] h-[22px] rounded-[6px] mt-px flex items-center justify-center text-[14px] leading-none shrink-0 ${
+                    field.value
+                      ? 'bg-sage text-warm-white'
+                      : 'bg-warm-white border border-cocoa/28'
+                  }`} 
+                >
+                  {field.value && '✓'}
+                </span>
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    className="sr-only"
+                    aria-hidden="true"
+                    tabIndex={-1}
+                  />
+                </FormControl>
+                <span className="font-sans text-[13.5px] leading-normal text-taupe">
+                  I accept that cancelling a confirmed booking with less than 24 hours&apos; notice will result in a 50% charge.{' '}
+                  <span className="font-bold text-sage">✦</span>
+                </span>
               </div>
-               <FormMessage />
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -376,7 +400,7 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
         />
 
         {/* 5. Bot Protection with Turnstile Widget */}
-        <div className="flex flex-col items-center space-y-2 my-4">
+        <div className="flex flex-col items-center my-4 space-y-2">
           <Turnstile
             sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'}
             theme="light"
@@ -411,18 +435,31 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
         <Button
           type="submit"
           size="lg"
-          className="w-full"
-          disabled={isSubmitting || !turnstileToken}
+          disabled={isSubmitting || !turnstileToken || !cancellationPolicyValue}
+          className={`w-full py-[17px] rounded-full font-sans text-[15px] font-bold tracking-[0.02em] border-none transition-colors ${
+            cancellationPolicyValue && turnstileToken && !isSubmitting
+              ? 'bg-sage hover:bg-sage-hover text-warm-white cursor-pointer'
+              : 'bg-[#C7CBBE] text-warm-white cursor-not-allowed'
+          }`}
         >
           {isSubmitting ? (
             <>
-              <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+              <ReloadIcon className="mr-2 w-4 h-4 animate-spin" />
               Sending...
             </>
           ) : (
-            "Send Message"
+            'Send my message'
           )}
         </Button>
+        {!cancellationPolicyValue && (
+          <p className="font-sans text-[12.5px] text-[#A89C8C] text-center mt-[10px]">
+            Please accept the cancellation policy to send.
+          </p>
+        )}
+        <p className="font-sans text-[13px] text-[#8C8276] text-center mt-4">
+          Prefer to talk? Call or text me on{' '}
+          <a href="tel:07960315337" className="font-semibold transition-colors text-cocoa hover:text-sage">07960 315 337</a>
+        </p>
 
       </form>
 
@@ -434,8 +471,8 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
       >
         <Toast.Title className={`font-medium ${toastState.variant === 'error' ? 'text-red-800' : 'text-green-800'}`}>{toastState.title}</Toast.Title>
         <Toast.Description className={`mt-1 text-sm ${toastState.variant === 'error' ? 'text-red-700' : 'text-green-700'}`}>{toastState.description}</Toast.Description>
-        <Toast.Close className="absolute top-1 right-1 p-1 rounded-full text-gray-500 hover:bg-gray-200">
-           <Cross2Icon className="h-4 w-4" />
+        <Toast.Close className="absolute top-1 right-1 p-1 text-gray-500 rounded-full hover:bg-gray-200">
+           <Cross2Icon className="w-4 h-4" />
         </Toast.Close>
       </Toast.Root>
 
