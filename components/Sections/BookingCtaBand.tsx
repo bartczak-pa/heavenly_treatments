@@ -51,7 +51,7 @@ export default function BookingCtaBand() {
                 >
                   Find me
                 </p>
-                <p className="font-sans text-[15px] text-warm-white leading-[1.5] mb-0">
+                <p className="font-sans text-[15px] text-warm-white leading-normal mb-0">
                   6 Easter Softlaw Farm Cottage, Kelso TD5 8BJ
                 </p>
               </div>
@@ -76,7 +76,7 @@ export default function BookingCtaBand() {
                 >
                   Call or message
                 </p>
-                <p className="font-sans text-[15px] text-warm-white leading-[1.5] mb-0">
+                <p className="font-sans text-[15px] text-warm-white leading-normal mb-0">
                   07960 315 337
                 </p>
               </div>
@@ -101,7 +101,7 @@ export default function BookingCtaBand() {
                 >
                   Email
                 </p>
-                <p className="font-sans text-[15px] text-warm-white leading-[1.5] mb-0">
+                <p className="font-sans text-[15px] text-warm-white leading-normal mb-0">
                   hayley@heavenly-treatments.co.uk
                 </p>
               </div>

@@ -4,7 +4,7 @@ export default function AboutPullQuote() {
       <div className="max-w-[900px] mx-auto px-8 text-center">
 
         <div
-          className="font-serif text-[60px] text-clay leading-[0] inline-block h-[30px] mb-6"
+          className="font-serif text-[60px] text-clay leading-0 inline-block h-[30px] mb-6"
           aria-hidden="true"
         >
           &ldquo;

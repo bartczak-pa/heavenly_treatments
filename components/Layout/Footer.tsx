@@ -44,11 +44,11 @@ export default function Footer() {
       {/* ── Mobile footer (<640px) — centered brand + nav row + copyright ── */}
       {/* aria-hidden: desktop section (always in DOM) is the accessible footer;
           mobile users navigate via the hamburger overlay */}
-      <div aria-hidden="true" className="flex flex-col items-center gap-5 px-6 py-12 text-center sm:hidden">
+      <div aria-hidden="true" className="flex flex-col gap-5 items-center px-6 py-12 text-center sm:hidden">
         <h3 className="font-serif text-[25px] font-semibold text-cream">
           Heavenly Treatments
         </h3>
-        <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+        <div className="flex flex-wrap gap-y-2 gap-x-6 justify-center">
           {mobileNavLinks.map((item) => (
             <Link
               key={item.href}
@@ -67,7 +67,7 @@ export default function Footer() {
       {/* ── Tablet footer (640–1023px) — 2-column brand + connect ── */}
       <div aria-hidden="true" className="hidden sm:block lg:hidden">
         <div className="mx-auto max-w-7xl px-[30px] pt-10 pb-7">
-          <div className="grid grid-cols-[1.4fr_1fr] gap-[30px] border-b border-white/[12%] pb-7">
+          <div className="grid grid-cols-[1.4fr_1fr] gap-[30px] border-b border-white/12 pb-7">
             {/* Brand */}
             <div>
               <h3 className="mb-[10px] font-serif text-[22px] font-semibold text-cream">
@@ -120,7 +120,7 @@ export default function Footer() {
       {/* ── Desktop footer (≥1024px) — 3-column grid ── */}
       <div className="hidden lg:block">
         <div className="mx-auto max-w-7xl px-6 pt-[70px] pb-9 lg:px-8">
-          <div className="grid grid-cols-[1.5fr_1fr_1fr] gap-[48px] border-b border-white/[12%] pb-[50px]">
+          <div className="grid grid-cols-[1.5fr_1fr_1fr] gap-[48px] border-b border-white/12 pb-[50px]">
             {/* Brand */}
             <div className="space-y-[14px]">
               <h3 className="font-serif text-[25px] font-semibold leading-tight text-cream">
@@ -187,7 +187,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="flex flex-col items-center justify-between gap-3 pt-6 sm:flex-row">
+          <div className="flex flex-col gap-3 justify-between items-center pt-6 sm:flex-row">
             <p className="text-[12.5px] text-cream/40">
               © {year} Heavenly Treatments. All rights reserved.
             </p>

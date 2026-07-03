@@ -7,23 +7,22 @@ import type { TreatmentCategory, TreatmentMenuItem } from '@/lib/data/treatments
 
 interface TreatmentsAccordionProps {
   categories: TreatmentCategory[];
-  initialCounts: Record<string, number>;
 }
 
 function SkeletonRows() {
   return (
-    <div className="px-5 sm:px-7 pb-2 sm:pb-3">
+    <div className="px-5 pb-2 sm:px-7 sm:pb-3">
       {[0, 1, 2].map((i) => (
         <div key={i} className="py-4 sm:py-5 border-t border-[rgba(74,64,56,0.1)]">
-          <div className="animate-pulse flex justify-between gap-6">
+          <div className="flex gap-6 justify-between animate-pulse">
             <div className="flex-1 space-y-2">
-              <div className="h-6 bg-stone rounded w-44" />
-              <div className="h-3 bg-stone rounded w-20" />
-              <div className="h-4 bg-stone rounded w-64 mt-1" />
+              <div className="w-44 h-6 rounded bg-stone" />
+              <div className="w-20 h-3 rounded bg-stone" />
+              <div className="mt-1 w-64 h-4 rounded bg-stone" />
             </div>
-            <div className="flex flex-col items-end gap-2 shrink-0">
-              <div className="h-6 bg-stone rounded w-12" />
-              <div className="h-3 bg-stone rounded w-20" />
+            <div className="flex flex-col gap-2 items-end shrink-0">
+              <div className="w-12 h-6 rounded bg-stone" />
+              <div className="w-20 h-3 rounded bg-stone" />
             </div>
           </div>
         </div>
@@ -32,7 +31,7 @@ function SkeletonRows() {
   );
 }
 
-export default function TreatmentsAccordion({ categories, initialCounts }: TreatmentsAccordionProps) {
+export default function TreatmentsAccordion({ categories }: TreatmentsAccordionProps) {
   const [openSlug, setOpenSlug] = useState<string | null>(null);
   const [cache, setCache] = useState<Record<string, TreatmentMenuItem[]>>({});
   const [loading, setLoading] = useState<Record<string, boolean>>({});
@@ -69,9 +68,6 @@ export default function TreatmentsAccordion({ categories, initialCounts }: Treat
         const headerId = `accordion-header-${category.slug}`;
         const treatments = cache[category.slug];
         const isLoading = loading[category.slug] ?? false;
-        const count = treatments !== undefined
-          ? treatments.length
-          : (initialCounts[category.slug] ?? null);
 
         return (
           <div
@@ -87,16 +83,11 @@ export default function TreatmentsAccordion({ categories, initialCounts }: Treat
               onClick={() => { void handleToggle(category.slug); }}
               className="w-full flex items-center gap-3 sm:gap-[18px] px-5 py-[18px] sm:px-7 sm:py-6 cursor-pointer text-left"
             >
-              {/* Mobile: name + count stacked, fills remaining space */}
+              {/* Mobile: name, fills remaining space */}
               <div className="flex-1 min-w-0 sm:hidden">
                 <span className="font-serif text-[22px] font-semibold text-[#3A332C] leading-tight block">
                   {category.name}
                 </span>
-                {count !== null && (
-                  <span className="text-[10.5px] tracking-[0.1em] uppercase text-sage font-semibold mt-[3px] block">
-                    {count} {count === 1 ? 'treatment' : 'treatments'}
-                  </span>
-                )}
               </div>
 
               {/* sm+ (tablet/desktop): name inline */}
@@ -109,20 +100,13 @@ export default function TreatmentsAccordion({ categories, initialCounts }: Treat
                 {category.shortDescription}
               </span>
 
-              {/* Count: tablet/desktop inline */}
-              {count !== null && (
-                <span className="hidden sm:block text-[11px] tracking-[0.12em] uppercase text-sage font-bold whitespace-nowrap shrink-0">
-                  {count} {count === 1 ? 'treatment' : 'treatments'}
-                </span>
-              )}
-
               {/* Toggle indicator — aria-hidden since button already has aria-expanded */}
               <span
                 aria-hidden="true"
                 className={
                   isOpen
-                    ? 'flex items-center justify-center w-[30px] h-[30px] sm:w-8 sm:h-8 rounded-full bg-sage text-warm-white text-[21px] leading-none shrink-0 select-none'
-                    : 'flex items-center justify-center w-[30px] h-[30px] sm:w-8 sm:h-8 rounded-full border border-clay text-sage text-[19px] leading-none shrink-0 select-none'
+                    ? 'flex justify-center items-center leading-none rounded-full select-none w-[30px] h-[30px] sm:w-8 sm:h-8 bg-sage text-warm-white text-[21px] shrink-0'
+                    : 'flex justify-center items-center leading-none rounded-full border select-none w-[30px] h-[30px] sm:w-8 sm:h-8 border-clay text-sage text-[19px] shrink-0'
                 }
               >
                 {isOpen ? '−' : '+'}
@@ -139,7 +123,7 @@ export default function TreatmentsAccordion({ categories, initialCounts }: Treat
                 {isLoading ? (
                   <SkeletonRows />
                 ) : treatments && treatments.length > 0 ? (
-                  <div className="px-5 sm:px-7 pb-2 sm:pb-3">
+                  <div className="px-5 pb-2 sm:px-7 sm:pb-3">
                     {treatments.map((item) => (
                       <Link
                         key={item.id}
@@ -149,7 +133,7 @@ export default function TreatmentsAccordion({ categories, initialCounts }: Treat
                         {/* Left: name (+ mobile price), duration, description */}
                         <div className="flex-1 min-w-0">
                           {/* Mobile: name + price on same baseline row */}
-                          <div className="flex justify-between items-baseline gap-3 sm:block">
+                          <div className="flex gap-3 justify-between items-baseline sm:block">
                             <p className="font-serif text-[20px] sm:text-[23px] font-semibold text-[#3A332C] mb-0 sm:mb-[5px] leading-snug">
                               {item.name}
                             </p>
@@ -158,7 +142,7 @@ export default function TreatmentsAccordion({ categories, initialCounts }: Treat
                               {item.price}
                             </span>
                           </div>
-                          <p className="text-[10.5px] sm:text-[11.5px] tracking-[0.1em] sm:tracking-[0.12em] uppercase text-sage font-semibold mb-[6px] sm:mb-[9px]">
+                          <p className="text-[10.5px] sm:text-[11.5px] tracking-widest sm:tracking-[0.12em] uppercase text-sage font-semibold mb-[6px] sm:mb-[9px]">
                             {item.durationLabel}
                           </p>
                           <p className="text-[13px] sm:text-[14px] leading-[1.55] sm:leading-[1.6] text-taupe max-w-[460px]">
@@ -167,7 +151,7 @@ export default function TreatmentsAccordion({ categories, initialCounts }: Treat
                         </div>
 
                         {/* Right: price (tablet/desktop) + "View details" (desktop only) */}
-                        <div className="hidden sm:flex flex-col items-end gap-1 shrink-0">
+                        <div className="hidden flex-col gap-1 items-end sm:flex shrink-0">
                           <span className="font-serif text-[22px] text-sage font-semibold whitespace-nowrap">
                             {item.price}
                           </span>

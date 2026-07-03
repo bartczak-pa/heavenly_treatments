@@ -74,7 +74,7 @@ export default function Navbar() {
   const closeOverlay = () => setIsOverlayOpen(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-cocoa/[8%] bg-cream/[86%] backdrop-blur-[10px] supports-backdrop-filter:bg-cream/[80%]">
+    <header className="sticky top-0 z-50 w-full border-b border-cocoa/8 bg-cream/86 backdrop-blur-[10px] supports-backdrop-filter:bg-cream/80">
       <div className="mx-auto flex h-[60px] w-full max-w-7xl items-center justify-between px-4 sm:h-[73px] sm:px-6 lg:px-8">
         <Wordmark />
 
@@ -117,7 +117,7 @@ export default function Navbar() {
               <button
                 type="button"
                 aria-label="Open menu"
-                className="inline-flex size-12 items-center justify-center rounded-full text-espresso transition-colors hover:bg-stone focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage"
+                className="inline-flex justify-center items-center rounded-full transition-colors size-12 text-espresso hover:bg-stone focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage"
               >
                 <Menu className="size-6" aria-hidden="true" />
               </button>
@@ -130,7 +130,7 @@ export default function Navbar() {
                 aria-describedby={undefined}
               >
                 {/* Header row */}
-                <div className="mb-10 flex items-center justify-between">
+                <div className="flex justify-between items-center mb-10">
                   <Dialog.Title className="font-serif text-[22px] font-semibold text-cream">
                     Menu
                   </Dialog.Title>
@@ -156,7 +156,7 @@ export default function Navbar() {
                         onClick={closeOverlay}
                         aria-current={active ? 'page' : undefined}
                         className={cn(
-                          'flex min-h-[48px] w-full items-center border-b border-white/[12%] py-3 font-serif text-[38px] font-medium leading-tight transition-colors hover:text-clay',
+                          'flex items-center py-3 w-full font-serif font-medium leading-tight border-b transition-colors min-h-[48px] border-white/12 text-[38px] hover:text-clay',
                           active ? 'text-clay' : 'text-cream',
                         )}
                       >
@@ -167,7 +167,7 @@ export default function Navbar() {
                 </nav>
 
                 {/* Contact info — pushed to bottom */}
-                <div className="mt-auto flex flex-col gap-2">
+                <div className="flex flex-col gap-2 mt-auto">
                   <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-sage">
                     Get in touch
                   </span>

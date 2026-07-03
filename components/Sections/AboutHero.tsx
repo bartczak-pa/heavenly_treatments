@@ -89,7 +89,7 @@ export default function AboutHero() {
               aria-hidden="true"
             />
             <div
-              className="relative aspect-[4/5] overflow-hidden shadow-[0_30px_60px_-30px_rgba(74,64,56,0.45)]"
+              className="relative aspect-4/5 overflow-hidden shadow-[0_30px_60px_-30px_rgba(74,64,56,0.45)]"
               style={{ borderRadius: '260px 260px 14px 14px' }}
             >
               <OptimizedImage
