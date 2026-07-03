@@ -41,27 +41,27 @@ export default function BookingCtaBand({ className }: BookingCtaBandProps) {
         </div>
 
         {/* Frosted-glass contact card — desktop only */}
-        <div className="hidden flex-col gap-[22px] rounded-[18px] border border-warm-white/[22%] bg-warm-white/10 p-9 lg:flex">
+        <div className="hidden flex-col gap-[22px] rounded-[18px] border border-warm-white/22 bg-warm-white/10 p-9 lg:flex">
           {/* Address */}
           <div className="flex items-start gap-[14px]">
-            <span className="w-[22px] flex-shrink-0 font-serif text-[18px] leading-none text-warm-white">
+            <span className="w-[22px] shrink-0 font-serif text-[18px] leading-none text-warm-white">
               ✦
             </span>
             <div>
               <p className="mb-1 text-[11px] uppercase tracking-[0.16em] text-warm-white/65">
                 Find me
               </p>
-              <address className="not-italic text-[15px] leading-[1.5] text-warm-white">
+              <address className="not-italic text-[15px] leading-normal text-warm-white">
                 {fullAddress}
               </address>
             </div>
           </div>
 
-          <hr className="border-warm-white/[18%]" />
+          <hr className="border-warm-white/18" />
 
           {/* Phone */}
           <div className="flex items-start gap-[14px]">
-            <span className="w-[22px] flex-shrink-0 font-serif text-[18px] leading-none text-warm-white">
+            <span className="w-[22px] shrink-0 font-serif text-[18px] leading-none text-warm-white">
               ✦
             </span>
             <div>
@@ -70,18 +70,18 @@ export default function BookingCtaBand({ className }: BookingCtaBandProps) {
               </p>
               <a
                 href={telHref}
-                className="text-[15px] leading-[1.5] text-warm-white transition-colors hover:text-cream"
+                className="text-[15px] leading-normal text-warm-white transition-colors hover:text-cream"
               >
                 {phone}
               </a>
             </div>
           </div>
 
-          <hr className="border-warm-white/[18%]" />
+          <hr className="border-warm-white/18" />
 
           {/* Email */}
           <div className="flex items-start gap-[14px]">
-            <span className="w-[22px] flex-shrink-0 font-serif text-[18px] leading-none text-warm-white">
+            <span className="w-[22px] shrink-0 font-serif text-[18px] leading-none text-warm-white">
               ✦
             </span>
             <div>
@@ -90,7 +90,7 @@ export default function BookingCtaBand({ className }: BookingCtaBandProps) {
               </p>
               <a
                 href={`mailto:${email}`}
-                className="break-all text-[15px] leading-[1.5] text-warm-white transition-colors hover:text-cream"
+                className="break-all text-[15px] leading-normal text-warm-white transition-colors hover:text-cream"
               >
                 {email}
               </a>

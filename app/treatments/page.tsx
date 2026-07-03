@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getCategories, getTreatmentCountsByCategory } from '@/lib/cms/treatments';
+import { getCategories } from '@/lib/cms/treatments';
 import { type TreatmentCategory } from '@/lib/data/treatments';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import TreatmentsAccordion from '@/components/Sections/TreatmentsAccordion';
@@ -61,10 +61,7 @@ export default async function TreatmentsPage() {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
 
   // Categories are fetched server-side; treatments load lazily per accordion panel
-  const [categories, initialCounts] = await Promise.all([
-    getCategories() as Promise<TreatmentCategory[]>,
-    getTreatmentCountsByCategory(),
-  ]);
+  const categories = (await getCategories()) as TreatmentCategory[];
 
   // Generate JSON-LD structured data (server-generated, trusted content)
   const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfo);
@@ -88,21 +85,21 @@ export default async function TreatmentsPage() {
       {jsonLdScript}
 
       {/* ── Intro band ────────────────────────────────────────────────── */}
-      <div className="bg-stone border-b border-cocoa/10">
+      <div className="border-b bg-stone border-cocoa/10">
         <div className="max-w-[1180px] mx-auto pt-[30px] pb-7 px-[22px] md:pt-[62px] md:pb-[56px] md:px-8">
 
           {/* Breadcrumb */}
           <nav aria-label="Breadcrumb" className="hidden sm:flex items-center mb-[22px] font-sans text-[12.5px]">
-            <Link href="/" className="text-sage font-semibold hover:opacity-80 transition-opacity">
+            <Link href="/" className="font-semibold transition-opacity text-sage hover:opacity-80">
               Home
             </Link>
-            <span className="text-clay mx-2" aria-hidden="true">/</span>
+            <span className="mx-2 text-clay" aria-hidden="true">/</span>
             <span className="text-[#8C8276]">Treatments</span>
           </nav>
 
           {/* Eyebrow */}
           <div className="flex items-center gap-[10px] sm:gap-3 mb-[14px] sm:mb-[18px]" aria-hidden="true">
-            <span className="w-[22px] sm:w-7 h-px bg-clay flex-shrink-0" />
+            <span className="w-[22px] sm:w-7 h-px bg-clay shrink-0" />
             <span className="font-sans text-[10.5px] sm:text-[12px] tracking-[0.2em] sm:tracking-[0.22em] uppercase text-sage font-semibold">
               The Treatment Menu
             </span>
@@ -139,7 +136,7 @@ export default async function TreatmentsPage() {
 
       {/* ── Accordion + CTA card on cream background ─────────────────── */}
       <div className="bg-cream">
-        <TreatmentsAccordion categories={categories} initialCounts={initialCounts} />
+        <TreatmentsAccordion categories={categories} />
 
         {/* "Not sure which to choose?" card — inline, per design */}
         <div className="max-w-[1180px] mx-auto px-[18px] sm:px-8 pt-4 pb-8 sm:pt-0 sm:pb-[90px]">

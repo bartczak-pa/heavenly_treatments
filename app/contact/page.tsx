@@ -106,7 +106,7 @@ export default async function ContactPage({ params, searchParams }: ContactPageP
                                     <span className="font-serif text-sage text-[18px] w-5">✦</span>
                                     <div>
                                         <div className="font-sans text-[10.5px] tracking-[0.16em] uppercase text-warm-white/55 mb-[5px]">Address</div>
-                                        <a href="https://www.google.com/maps/search/Heavenly+Treatments+with+Hayleybell,+6+Easter+Softlaw+Farm+Cottage,+Kelso+TD5+8BJ" target="_blank" rel="noopener noreferrer" className="font-sans text-[15px] text-warm-white leading-[1.5] hover:text-clay transition-colors">6 Easter Softlaw Farm Cottage,<br />Kelso TD5 8BJ</a>
+                                        <a href="https://www.google.com/maps/search/Heavenly+Treatments+with+Hayleybell,+6+Easter+Softlaw+Farm+Cottage,+Kelso+TD5+8BJ" target="_blank" rel="noopener noreferrer" className="font-sans text-[15px] text-warm-white leading-normal hover:text-clay transition-colors">6 Easter Softlaw Farm Cottage,<br />Kelso TD5 8BJ</a>
                                     </div>
                                 </div>
                                 <div className="h-px bg-warm-white/12" />

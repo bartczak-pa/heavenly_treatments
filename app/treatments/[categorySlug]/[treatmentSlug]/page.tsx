@@ -388,7 +388,7 @@ export default async function TreatmentDetailPage({ params }: Props) {
                 <Link
                   key={related.id}
                   href={getTreatmentPath(related)}
-                  className="bg-warm-white border border-cocoa/[0.08] rounded-[14px] hover:-translate-y-[5px] hover:shadow-[0_22px_44px_-28px_rgba(74,64,56,0.5)] transition-all duration-300
+                  className="bg-warm-white border border-cocoa/8 rounded-[14px] hover:-translate-y-[5px] hover:shadow-[0_22px_44px_-28px_rgba(74,64,56,0.5)] transition-all duration-300
                     flex items-center justify-between gap-4 p-5
                     md:flex-col md:items-start md:gap-2 md:p-7"
                 >
