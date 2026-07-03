@@ -55,5 +55,5 @@ export const contactInfo: ContactInfoType = {
             closes: "19:00"
         }
     ],
-    mapSrc: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2255.035262100064!2d-2.3875811231290975!3d55.583994173022155!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x488765fd908eb753%3A0x244d14e23ce79ebf!2sHeavenly%20Treatments%20with%20Hayleybell!5e0!3m2!1sen!2suk!4v1744138918784!5m2!1sen!2suk" // TODO: Change placement on the Google Maps 
+    mapSrc: "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d18036.667759682394!2d-2.4215643796331885!3d55.59185842044518!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x488765fd908eb753%3A0x244d14e23ce79ebf!2sHeavenly%20Treatments%20with%20Hayleybell!5e0!3m2!1sen!2suk!4v1783021426235!5m2!1sen!2suk" 
   }; 

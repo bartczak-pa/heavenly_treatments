@@ -1,41 +1,21 @@
-import { Suspense } from 'react';
 import type { Metadata } from 'next';
-import dynamic from 'next/dynamic';
-import { MainLayout } from '@/components/Layout/MainLayout';
-import MeetTherapist from '@/components/Sections/MeetTherapist';
-import { contactInfo } from '@/lib/data/contactInfo';
+import Link from 'next/link';
 import Script from 'next/script';
+import { MainLayout } from '@/components/Layout/MainLayout';
+import { contactInfo } from '@/lib/data/contactInfo';
 import { generateHealthAndBeautyBusinessJsonLd } from '@/lib/jsonLsUtils';
-
-// Loading component for lazy-loaded sections
-const SectionSkeleton = () => (
-  <div className="py-16 bg-gray-50 animate-pulse" aria-live="polite" aria-busy="true">
-    <div className="container mx-auto px-4 max-w-4xl">
-      <span className="sr-only">Loading section…</span>
-      <div className="h-8 bg-gray-200 rounded w-48 mx-auto mb-8" aria-hidden="true"></div>
-      <div className="flex flex-col lg:flex-row gap-8">
-        <div className="lg:w-2/3 space-y-4">
-          <div className="h-4 bg-gray-200 rounded" aria-hidden="true"></div>
-          <div className="h-4 bg-gray-200 rounded" aria-hidden="true"></div>
-          <div className="h-4 bg-gray-200 rounded w-3/4" aria-hidden="true"></div>
-        </div>
-        <div className="lg:w-1/3">
-          <div className="h-48 bg-gray-200 rounded" aria-hidden="true"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
-// Lazy load below-the-fold components via next/dynamic with Suspense wrappers for SSR streaming
-const MyStudio = dynamic(() => import('@/components/Sections/MyStudio'));
-const ContactInfo = dynamic(() => import('@/components/Sections/ContactInfo'));
-const CTASection = dynamic(() => import('@/components/Sections/Cta'));
+import AboutHero from '@/components/Sections/AboutHero';
+import AboutPullQuote from '@/components/Sections/AboutPullQuote';
+import AboutStory from '@/components/Sections/AboutStory';
+import AboutValues from '@/components/Sections/AboutValues';
+import TreatmentRoomSection from '@/components/Sections/TreatmentRoomSection';
+import AboutCta from '@/components/Sections/AboutCta';
 
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
   const pageTitle = 'About Hayley | Your Kelso Spa Therapist';
-  const pageDescription = 'Meet Hayley, your qualified spa therapist in Kelso, Scottish Borders. Years of 5-star experience, now offering professional massage, facials, and reflexology.';
+  const pageDescription =
+    'Meet Hayley, your qualified spa therapist in Kelso, Scottish Borders. Years of 5-star experience, now offering professional massage, facials, and reflexology.';
   const imageUrl = `${BASE_URL}/images/logo.png`;
   const siteName = 'Heavenly Treatments with Hayleybell';
   const canonicalUrl = `${BASE_URL}/about`;
@@ -65,83 +45,59 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-/**
- * AboutPage Component
- * 
- * @component
- * @description The About page component that displays information about the therapist, Hayley,
- * including her background, philosophy, and the studio environment. The page includes several sections:
- * - A main introduction section
- * - MeetTherapist section
- * - MyStudio section
- * - ContactInfo section
- * - A call-to-action section for booking appointments
- * 
- * @returns {JSX.Element} The rendered About page with all its sections
- * 
- * @example
- * return (
- *   <AboutPage />
- * )
- */
-
 export default function AboutPage() {
-  // Generate JSON-LD once per request with explicit field mapping
   const jsonLd = generateHealthAndBeautyBusinessJsonLd({
     address: {
       streetAddress: contactInfo.address.streetAddress,
       addressLocality: contactInfo.address.addressLocality,
       postalCode: contactInfo.address.postalCode,
-      addressCountry: contactInfo.address.addressCountry
+      addressCountry: contactInfo.address.addressCountry,
     },
     phone: contactInfo.phone,
     email: contactInfo.email,
-    openingHours: contactInfo.openingHours.map(hours => ({
+    openingHours: contactInfo.openingHours.map((hours) => ({
       dayOfWeek: hours.dayOfWeek,
       opens: hours.opens,
-      closes: hours.closes
+      closes: hours.closes,
     })),
-    // Handle optional mapSrc safely - provide empty string if undefined
-    mapSrc: contactInfo.mapSrc ?? ''
+    mapSrc: contactInfo.mapSrc ?? '',
   });
 
   return (
     <MainLayout>
-      <Script 
+      <Script
         id="about-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="flex flex-col">
-        <header className="mt-10 mb-12">
-          <h1 className="font-serif text-3xl md:text-4xl font-semibold text-primary text-center">
-            Meet Hayley - Your Kelso Massage & Beauty Therapist
-          </h1>
-        </header> 
-        
 
-        <main id="main-content">
-          <MeetTherapist />
-          
-          <Suspense fallback={<SectionSkeleton />}>
-            <MyStudio />
-          </Suspense>
-          
-          <Suspense fallback={<SectionSkeleton />}>
-            <CTASection 
-              title="Ready to Relax and Rejuvenate?"
-              description="Book your appointment today and start your journey towards wellness."
-              buttonText="Book Now"
-              buttonLink="/booking"
-            />
-          </Suspense>
-          
-          <Suspense fallback={<SectionSkeleton />}>
-            <ContactInfo />
-          </Suspense>
-        </main>
-        
+      {/* Breadcrumb band */}
+      <div className="bg-stone border-b border-cocoa/10 py-3 px-8">
+        <div className="max-w-[1180px] mx-auto">
+          <nav aria-label="Breadcrumb">
+            <ol className="flex items-center gap-2 font-sans text-[13px]">
+              <li>
+                <Link href="/" className="font-semibold text-sage hover:text-sage-hover transition-colors">
+                  Home
+                </Link>
+              </li>
+              <li className="text-taupe" aria-hidden="true">/</li>
+              <li className="text-taupe">About</li>
+            </ol>
+          </nav>
+        </div>
       </div>
+
+      <main id="main-content">
+        <AboutHero />
+        <AboutPullQuote />
+        <AboutStory />
+        <AboutValues />
+        <div className="hidden md:block">
+          <TreatmentRoomSection />
+        </div>
+        <AboutCta />
+      </main>
     </MainLayout>
   );
 }

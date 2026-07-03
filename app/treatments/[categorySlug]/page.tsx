@@ -117,25 +117,25 @@ export default async function CategoryPage({ params }: Props) {
       />
 
       {/* ── Intro band ────────────────────────────────────────────────── */}
-      <div className="bg-stone border-b border-cocoa/10">
+      <div className="border-b bg-stone border-cocoa/10">
         <div className="max-w-[1180px] mx-auto pt-[30px] pb-7 px-[22px] md:pt-[62px] md:pb-[56px] md:px-8">
 
           {/* Breadcrumb */}
           <nav aria-label="Breadcrumb" className="hidden sm:flex items-center mb-[22px] font-sans text-[12.5px] text-[#8C8276]">
-            <Link href="/" className="text-sage font-semibold hover:opacity-80 transition-opacity">
+            <Link href="/" className="font-semibold transition-opacity text-sage hover:opacity-80">
               Home
             </Link>
-            <span className="text-clay mx-2" aria-hidden="true">/</span>
-            <Link href="/treatments" className="text-sage font-semibold hover:opacity-80 transition-opacity">
+            <span className="mx-2 text-clay" aria-hidden="true">/</span>
+            <Link href="/treatments" className="font-semibold transition-opacity text-sage hover:opacity-80">
               Treatments
             </Link>
-            <span className="text-clay mx-2" aria-hidden="true">/</span>
+            <span className="mx-2 text-clay" aria-hidden="true">/</span>
             <span>{categoryData.name}</span>
           </nav>
 
           {/* Eyebrow */}
           <div className="flex items-center gap-[10px] sm:gap-3 mb-[14px] sm:mb-[18px]" aria-hidden="true">
-            <span className="w-[22px] sm:w-7 h-px bg-clay flex-shrink-0" />
+            <span className="w-[22px] sm:w-7 h-px bg-clay shrink-0" />
             <span className="font-sans text-[10.5px] sm:text-[12px] tracking-[0.2em] sm:tracking-[0.22em] uppercase text-sage font-semibold">
               {categoryData.name}
             </span>
@@ -181,7 +181,7 @@ export default async function CategoryPage({ params }: Props) {
                     </div>
 
                     {/* Right: price + link cue */}
-                    <div className="flex-shrink-0 text-right">
+                    <div className="text-right shrink-0">
                       <p className="font-serif text-[22px] text-sage font-semibold whitespace-nowrap">
                         {treatment.price}
                       </p>
