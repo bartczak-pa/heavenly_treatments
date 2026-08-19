@@ -42,7 +42,8 @@ export function generateServiceJsonLd(treatment: Treatment, contactInfo: Contact
         image: treatment.image ? `${BASE_URL}${treatment.image}` : undefined,
         sameAs: [
             'https://www.facebook.com/heavenlytreatmentswithhayleybell',
-            'https://www.instagram.com/heavenlytreatments_hayleybell/'
+            'https://www.instagram.com/heavenlytreatments_hayleybell/',
+            config.reviews.FRESHA_PROFILE_URL,
         ],
         url: `${BASE_URL}/treatments/${treatment.category}/${treatment.slug}`,
         provider: {
@@ -102,7 +103,8 @@ export function generateHealthAndBeautyBusinessJsonLd(
         image: `${BASE_URL}/images/logo.png`,
         sameAs: [
             'https://www.facebook.com/heavenlytreatmentswithhayleybell',
-            'https://www.instagram.com/heavenlytreatments_hayleybell/'
+            'https://www.instagram.com/heavenlytreatments_hayleybell/',
+            config.reviews.FRESHA_PROFILE_URL,
         ],
         address: contactInfo.address,
         telephone: contactInfo.phone,
@@ -166,7 +168,8 @@ export function generateWebSiteJsonLd() {
         url: BASE_URL,
         sameAs: [
             'https://www.facebook.com/heavenlytreatmentswithhayleybell',
-            'https://www.instagram.com/heavenlytreatments_hayleybell/'
+            'https://www.instagram.com/heavenlytreatments_hayleybell/',
+            config.reviews.FRESHA_PROFILE_URL,
         ],
     };
 }

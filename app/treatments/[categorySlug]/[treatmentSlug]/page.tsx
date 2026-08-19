@@ -9,6 +9,7 @@ import Script from 'next/script';
 import { contactInfo } from '@/lib/data/contactInfo';
 import { generateServiceJsonLd, ContactInfo, generateBreadcrumbJsonLd } from '@/lib/jsonLsUtils';
 import { config } from '@/lib/config';
+import { truncateAtWord } from '@/lib/utils';
 import { TreatmentViewTracker } from '@/components/Analytics/TreatmentViewTracker';
 import { AnalyticsErrorBoundary } from '@/components/Analytics/AnalyticsErrorBoundary';
 import { TreatmentCategorySlug } from '@/lib/data/treatments';
@@ -480,7 +481,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
-  const description = treatment.description.substring(0, config.seo.MAX_DESCRIPTION_LENGTH);
+  const description = truncateAtWord(treatment.description, config.seo.MAX_DESCRIPTION_LENGTH);
   const canonicalUrl = `${BASE_URL}/treatments/${treatment.category}/${treatment.slug}`;
 
   return {

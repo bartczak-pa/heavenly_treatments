@@ -52,9 +52,16 @@ export default function AboutHero() {
               </span>
             </div>
 
-            <h1 className="font-serif text-[42px] lg:text-[52px] xl:text-[70px] leading-[1.02] font-medium text-espresso mb-6">
+            {/*
+              Rendered as <p>, not <h1>: the mobile block above already provides
+              the page's single H1. Two responsive blocks both ship in the DOM
+              (CSS `hidden` doesn't remove them), so a second <h1> here would give
+              the page two H1s. Mobile keeps the semantic heading for mobile-first
+              indexing; this desktop variant is visually identical but non-heading.
+            */}
+            <p className="font-serif text-[42px] lg:text-[52px] xl:text-[70px] leading-[1.02] font-medium text-espresso mb-6">
               Hi, I&apos;m Hayley — lovely to meet you
-            </h1>
+            </p>
 
             <p className="font-sans text-[14.5px] lg:text-[15.5px] xl:text-[17.5px] leading-[1.7] text-taupe mb-6">
               I&apos;m a qualified spa therapist with a passion for wellness and skincare, and the face

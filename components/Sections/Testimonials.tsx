@@ -1,8 +1,9 @@
 import { getTestimonials } from '@/lib/cms/testimonials';
+import { config } from '@/lib/config';
 
 function TestimonialCard({ testimonial }: { testimonial: Awaited<ReturnType<typeof getTestimonials>>[number] }) {
   return (
-    <div className="bg-[#F6F1EA] border border-[rgba(74,64,56,0.08)] rounded-2xl p-9">
+    <div className="flex h-full flex-col bg-[#F6F1EA] border border-[rgba(74,64,56,0.08)] rounded-2xl p-9">
       {/* Stars */}
       <p
         className="text-clay text-[18px] tracking-[2px] mb-[18px]"
@@ -16,8 +17,8 @@ function TestimonialCard({ testimonial }: { testimonial: Awaited<ReturnType<type
         &ldquo;{testimonial.quote}&rdquo;
       </p>
 
-      {/* Author row */}
-      <div className="flex items-center gap-3">
+      {/* Author row — pushed to the card bottom so names align across cards */}
+      <div className="flex items-center gap-3 mt-auto">
         <div
           className="w-[42px] h-[42px] rounded-full bg-sage text-warm-white font-serif text-[20px] font-semibold flex items-center justify-center shrink-0"
           aria-hidden="true"
@@ -58,6 +59,37 @@ export default async function TestimonialsSection() {
           >
             What my clients say
           </h2>
+        </div>
+
+        {/*
+          Aggregate rating — genuine figures from the live Fresha listing.
+          Shown on every breakpoint so the rating is visibly on-page (matching
+          the aggregateRating in the business JSON-LD), and links out to Fresha
+          where the full review base and star rich results actually live.
+        */}
+        <div className="text-center mb-8 md:mb-12">
+          <a
+            href={config.reviews.FRESHA_PROFILE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-2"
+          >
+            <span
+              className="text-clay text-[18px] tracking-[2px]"
+              aria-label={`${config.reviews.RATING_VALUE.toFixed(1)} out of 5 stars`}
+            >
+              ★★★★★
+            </span>
+            <span className="font-sans text-[14px] text-taupe">
+              <strong className="font-bold text-espresso">
+                {config.reviews.RATING_VALUE.toFixed(1)}
+              </strong>{' '}
+              from {config.reviews.REVIEW_COUNT} reviews on{' '}
+              <span className="underline decoration-clay/40 group-hover:decoration-clay">
+                Fresha
+              </span>
+            </span>
+          </a>
         </div>
 
         {/* Mobile: single featured card */}

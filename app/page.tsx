@@ -73,7 +73,10 @@ const homepageFAQs = [
 
 async function HomePage() {
   const webSiteJsonLd = generateWebSiteJsonLd();
-  const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfoType);
+  const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfoType, {
+    ratingValue: config.reviews.RATING_VALUE,
+    reviewCount: config.reviews.REVIEW_COUNT,
+  });
   const faqJsonLd = generateFAQJsonLd(homepageFAQs);
   const jsonLdContent = JSON.stringify([webSiteJsonLd, businessJsonLd, faqJsonLd]);
 
