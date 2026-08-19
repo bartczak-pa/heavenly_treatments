@@ -8,6 +8,8 @@ import {
   allTreatmentSlugsQuery,
   categoryBySlugQuery,
   treatmentCountsByCategoryQuery,
+  sitemapTreatmentsQuery,
+  sitemapCategoriesQuery,
 } from '@/lib/sanity/queries';
 import { getImageUrl } from '@/lib/sanity/image';
 import {
@@ -141,6 +143,52 @@ export async function getTreatmentsByCategory(
     return treatments.map(transformTreatment);
   } catch (error) {
     console.error('Error fetching treatments by category from Sanity:', error);
+    return [];
+  }
+}
+
+/**
+ * Lightweight sitemap entry shapes — just enough to build a URL and an honest
+ * <lastmod>. Kept separate from the rich {@link Treatment} type so the sitemap
+ * never over-fetches.
+ */
+export interface SitemapTreatmentEntry {
+  slug: string;
+  categorySlug: string;
+  _updatedAt: string;
+}
+
+export interface SitemapCategoryEntry {
+  slug: string;
+  _updatedAt: string;
+}
+
+/**
+ * Fetch treatment slugs + last-modified timestamps for the sitemap.
+ */
+export async function getSitemapTreatments(): Promise<SitemapTreatmentEntry[]> {
+  try {
+    const entries = await sanityClient.fetch<SitemapTreatmentEntry[]>(
+      sitemapTreatmentsQuery
+    );
+    return entries ?? [];
+  } catch (error) {
+    console.error('Error fetching sitemap treatments from Sanity:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch category slugs + last-modified timestamps for the sitemap.
+ */
+export async function getSitemapCategories(): Promise<SitemapCategoryEntry[]> {
+  try {
+    const entries = await sanityClient.fetch<SitemapCategoryEntry[]>(
+      sitemapCategoriesQuery
+    );
+    return entries ?? [];
+  } catch (error) {
+    console.error('Error fetching sitemap categories from Sanity:', error);
     return [];
   }
 }

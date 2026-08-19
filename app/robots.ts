@@ -8,7 +8,7 @@ import { MetadataRoute } from 'next';
 export default function robots(): MetadataRoute.Robots {
   // Use fallback to maintain consistency with other files in the codebase
   // (app/page.tsx, app/treatments/[categorySlug]/page.tsx, lib/jsonLsUtils.ts)
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://heavenly-treatments.com';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.heavenly-treatments.co.uk';
 
   return {
     rules: [

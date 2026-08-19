@@ -153,6 +153,26 @@ export const allCategorySlugsQuery = groq`
 `;
 
 /**
+ * GROQ query for sitemap entries — slugs plus genuine last-modified
+ * timestamps. Used by app/sitemap.ts so <lastmod> reflects real content
+ * changes (Sanity's `_updatedAt`) rather than the build time.
+ */
+export const sitemapTreatmentsQuery = groq`
+  *[_type == "treatment" ${devFilter}] {
+    "slug": slug.current,
+    "categorySlug": category->slug.current,
+    _updatedAt
+  }
+`;
+
+export const sitemapCategoriesQuery = groq`
+  *[_type == "treatmentCategory"] {
+    "slug": slug.current,
+    _updatedAt
+  }
+`;
+
+/**
  * GROQ query to fetch all testimonials ordered by displayOrder
  */
 export const allTestimonialsQuery = groq`
