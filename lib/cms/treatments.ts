@@ -59,6 +59,12 @@ function transformTreatment(sanityTreatment: SanityTreatment): Treatment {
     whatIsIncluded: sanityTreatment.whatIsIncluded,
     goodFor: sanityTreatment.goodFor,
     image: getImageUrl(sanityTreatment.image, 1000, undefined, 90),
+    // 4:5 portrait crop for the detail-page arched hero. Passing width + height
+    // with fit:'crop' makes Sanity honor the editor's hotspot/crop when framing.
+    detailImage: getImageUrl(sanityTreatment.image, 1000, 1250, {
+      fit: 'crop',
+      quality: 90,
+    }),
     imageWidth: 1000,
     imageHeight: 667,
     category: sanityTreatment.category.slug as TreatmentCategorySlug,

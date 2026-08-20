@@ -17,6 +17,7 @@ export interface Treatment {
     description: string; // TODO: Refine descriptions for better SEO and engagement.
     shortDescription?: string; // Punchy summary for cards, menu, and detail-page lead (falls back to description)
     image: string; // Relative path to the image in /public
+    detailImage?: string; // Hotspot-aware 4:5 crop for the detail-page arched hero (falls back to `image`)
     imageWidth?: number; // Optional: Add actual image width
     imageHeight?: number; // Optional: Add actual image height
     duration: string;
