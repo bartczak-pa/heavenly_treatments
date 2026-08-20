@@ -183,7 +183,7 @@ export default async function TreatmentDetailPage({ params }: Props) {
 
               {/* Lead — 22px bottom margin on mobile, 28px on tablet+ */}
               <p className="font-sans text-[16px] md:text-[18px] leading-[1.65] text-taupe mb-[22px] md:mb-7 max-w-[460px]">
-                {treatment.description}
+                {treatment.shortDescription || treatment.description}
               </p>
 
               {/* Duration | Price strip */}

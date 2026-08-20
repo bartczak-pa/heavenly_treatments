@@ -45,7 +45,7 @@ export default function IntroductionSection() {
               id="about-heading"
               className="font-serif text-4xl xl:text-[52px] text-espresso leading-[1.1] mb-0"
             >
-              I&apos;m Hayley — a qualified spa therapist, bringing five-star care home.
+              I&apos;m Hayley - a qualified spa therapist, bringing five-star care home.
             </h2>
 
             <div className="flex flex-col gap-4">

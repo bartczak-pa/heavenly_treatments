@@ -19,7 +19,7 @@ export default function AboutHero() {
         </h1>
 
         <p className="font-sans text-[15.5px] leading-[1.7] text-taupe mb-[22px]">
-          A qualified spa therapist with a passion for wellness and skincare — and the face
+          A qualified spa therapist with a passion for wellness and skincare - and the face
           behind every treatment.
         </p>
 
@@ -60,7 +60,7 @@ export default function AboutHero() {
               indexing; this desktop variant is visually identical but non-heading.
             */}
             <p className="font-serif text-[42px] lg:text-[52px] xl:text-[70px] leading-[1.02] font-medium text-espresso mb-6">
-              Hi, I&apos;m Hayley — lovely to meet you
+              Hi, I&apos;m Hayley - lovely to meet you
             </p>
 
             <p className="font-sans text-[14.5px] lg:text-[15.5px] xl:text-[17.5px] leading-[1.7] text-taupe mb-6">
@@ -70,7 +70,7 @@ export default function AboutHero() {
 
             <p className="font-sans text-[14px] lg:text-[15px] xl:text-[16px] leading-[1.8] text-taupe mb-8">
               After years working in five-star establishments, I decided to bring that same level of
-              care into a space of my own — calmer, more personal, and entirely focused on you.
+              care into a space of my own - calmer, more personal, and entirely focused on you.
             </p>
 
             <div className="flex flex-wrap gap-6 items-center">

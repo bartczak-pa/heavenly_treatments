@@ -86,7 +86,7 @@ const TreatmentCard = memo<TreatmentCardProps>(({ treatment }) => {
         </CardHeader>
         <CardContent className="pb-3">
           <p className="font-sans text-sm text-muted-foreground line-clamp-4">
-            {treatment.description}
+            {treatment.shortDescription || treatment.description}
           </p>
         </CardContent>
       </Link>

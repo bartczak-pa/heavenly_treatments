@@ -72,7 +72,7 @@ export default function AboutStory() {
 
             <p className="font-sans text-[16.5px] leading-[1.8] text-taupe mb-[18px]">
               When I opened Heavenly Treatments, I carefully curated a menu of all my favourite
-              treatments — the ones I&apos;ve seen make the biggest difference. Every product I use is
+              treatments - the ones I&apos;ve seen make the biggest difference. Every product I use is
               high-quality, primarily organic and natural, and always vegan and cruelty-free.
             </p>
 

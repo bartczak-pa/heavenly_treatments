@@ -12,7 +12,7 @@ export default function AboutPullQuote() {
 
         <blockquote>
           <p className="font-serif text-[24px] md:text-[34px] leading-[1.4] italic text-espresso mb-6">
-            I&apos;ve always believed that looking after yourself shouldn&apos;t feel like a luxury — it
+            I&apos;ve always believed that looking after yourself shouldn&apos;t feel like a luxury - it
             should feel like coming home.
           </p>
           <footer>

@@ -115,7 +115,7 @@ export default async function TreatmentsPage() {
             Tap a category to explore, then tap any treatment for the full details.
           </p>
           <p className="hidden sm:block font-sans text-[16.5px] leading-[1.7] text-taupe max-w-[560px] mb-6">
-            Each treatment uses high-quality, primarily organic and natural products — and everything
+            Each treatment uses high-quality, primarily organic and natural products - and everything
             I use is vegan and cruelty-free. Browse by category, then tap any treatment for the full
             details.
           </p>

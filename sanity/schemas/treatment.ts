@@ -29,6 +29,14 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'shortDescription',
+      title: 'Short Description',
+      type: 'text',
+      description:
+        'Punchy 1–2 sentence summary shown in treatment cards, the /treatments menu, and directly under the title on the treatment page. Keep it under ~160 characters. Falls back to the full Description if left empty.',
+      validation: (Rule) => Rule.max(200),
+    }),
+    defineField({
       name: 'category',
       title: 'Category',
       type: 'reference',
