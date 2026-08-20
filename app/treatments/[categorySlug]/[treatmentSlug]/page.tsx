@@ -7,7 +7,7 @@ import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Script from 'next/script';
 import { contactInfo } from '@/lib/data/contactInfo';
-import { generateServiceJsonLd, ContactInfo, generateBreadcrumbJsonLd } from '@/lib/jsonLsUtils';
+import { generateServiceJsonLd, ContactInfo, generateBreadcrumbJsonLd, generateFAQJsonLd } from '@/lib/jsonLsUtils';
 import { config } from '@/lib/config';
 import { truncateAtWord } from '@/lib/utils';
 import { TreatmentViewTracker } from '@/components/Analytics/TreatmentViewTracker';
@@ -100,12 +100,34 @@ export default async function TreatmentDetailPage({ params }: Props) {
       }))
     : DEFAULT_WHAT_TO_EXPECT;
 
+  // --- FAQ JSON-LD — answers are grounded in content visible on this page
+  // (duration strip, price, and the "Good for" panel) per Google's FAQ policy. ---
+  const treatmentFaqs = [
+    {
+      question: `How long does the ${treatment.title} take?`,
+      answer: `The ${treatment.title} takes approximately ${treatment.duration}.`,
+    },
+    {
+      question: `How much does the ${treatment.title} cost?`,
+      answer: `The ${treatment.title} starts from ${treatment.price}.`,
+    },
+    {
+      question: `Who is the ${treatment.title} good for?`,
+      answer: resolvedGoodFor,
+    },
+    {
+      question: `Where can I book the ${treatment.title}?`,
+      answer: `Book the ${treatment.title} at Heavenly Treatments in Kelso, Scottish Borders. Get in touch and I'll arrange a time that suits you.`,
+    },
+  ];
+  const faqJsonLd = generateFAQJsonLd(treatmentFaqs);
+
   return (
     <MainLayout>
       <Script
         id={`treatment-jsonld-${treatment.slug}`}
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify([serviceJsonLd, breadcrumbJsonLd]) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([serviceJsonLd, breadcrumbJsonLd, faqJsonLd]) }}
       />
 
       {/* Track treatment view and scroll depth for GA4 analytics */}
@@ -157,7 +179,7 @@ export default async function TreatmentDetailPage({ params }: Props) {
               >
                 <Image
                   src={treatment.image}
-                  alt={`${treatment.title} treatment`}
+                  alt={`${treatment.title} treatment at Heavenly Treatments, Kelso`}
                   fill
                   style={{ objectFit: 'cover' }}
                   sizes="100vw"
@@ -239,7 +261,7 @@ export default async function TreatmentDetailPage({ params }: Props) {
                 >
                   <Image
                     src={treatment.image}
-                    alt={`${treatment.title} treatment`}
+                    alt={`${treatment.title} treatment at Heavenly Treatments, Kelso`}
                     fill
                     style={{ objectFit: 'cover' }}
                     sizes="(max-width: 768px) 100vw, 50vw"
@@ -485,13 +507,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const canonicalUrl = `${BASE_URL}/treatments/${treatment.category}/${treatment.slug}`;
 
   return {
-    title: `${treatment.title} in Kelso | Heavenly Treatments Spa`,
+    title: `${treatment.title} in Kelso | Heavenly Treatments`,
     description: description,
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: `${treatment.title} in Kelso | Heavenly Treatments Spa`,
+      title: `${treatment.title} in Kelso | Heavenly Treatments`,
       description: description,
       url: canonicalUrl,
       type: 'article',
