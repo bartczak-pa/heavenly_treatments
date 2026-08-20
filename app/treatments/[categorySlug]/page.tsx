@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
   const siteName = 'Heavenly Treatments with Hayleybell';
-  const pageTitle = `${categoryData.name} in Kelso | Heavenly Treatments Spa`;
+  const pageTitle = `${categoryData.name} in Kelso | Heavenly Treatments`;
   const pageDescription =
     categoryData.description ||
     categoryData.shortDescription ||
