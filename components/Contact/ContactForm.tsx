@@ -65,12 +65,13 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
    * // Basic usage
    * <ContactForm treatments={treatments} />
    *
-   * // With initial treatment pre-selected
-   * <ContactForm initialTreatment="pumpkin-pie-pamper" treatments={treatments} />
+   * // With initial treatment pre-selected (value must match a treatment title,
+   * // since the Select options use treatment.title as their value)
+   * <ContactForm initialTreatment="Signature Heavenly Facial" treatments={treatments} />
    * ```
    *
    * @param {ContactFormProps} props - Component props
-   * @param {string} [props.initialTreatment] - Optional treatment slug to pre-select
+   * @param {string} [props.initialTreatment] - Optional treatment title to pre-select (must match a treatment.title)
    * @param {Treatment[]} props.treatments - Array of available treatments for selection
    *
    * @returns {JSX.Element} A contact form with validation and submission handling
