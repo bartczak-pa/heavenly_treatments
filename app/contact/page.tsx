@@ -7,6 +7,7 @@ import { contactInfo } from '@/lib/data/contactInfo';
 import { generateHealthAndBeautyBusinessJsonLd, ContactInfo as ContactInfoType } from '@/lib/jsonLsUtils';
 import { getTreatments } from '@/lib/cms/treatments';
 import ContactMap from '@/components/Sections/ContactMap';
+import Reveal from '@/components/Shared/Reveal';
 
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
@@ -70,22 +71,23 @@ export default async function ContactPage({ params, searchParams }: ContactPageP
             {/* A: Hero band */}
             <section className="bg-stone py-14 md:py-[56px]">
                 <div className="max-w-[1180px] mx-auto px-4 sm:px-8 text-center">
-                    <div className="flex gap-3 justify-center items-center mb-5">
+                    <Reveal className="flex gap-3 justify-center items-center mb-5">
                         <span className="w-7 h-px bg-clay" />
                         <span className="font-sans text-[12px] tracking-[0.22em] uppercase text-sage font-semibold">Get in touch</span>
                         <span className="w-7 h-px bg-clay" />
-                    </div>
+                    </Reveal>
+                    {/* H1 left instant: LCP. */}
                     <h1 className="font-serif text-[38px] md:text-[52px] lg:text-[64px] leading-[1.04] font-medium text-espresso mb-[18px] tracking-[-0.01em]">
                         Let&apos;s book your moment of calm
                     </h1>
-                    <p className="font-sans text-[15px] md:text-[17px] leading-[1.7] text-taupe max-w-[540px] mx-auto">
+                    <Reveal as="p" delay={120} className="font-sans text-[15px] md:text-[17px] leading-[1.7] text-taupe max-w-[540px] mx-auto">
                         Send me a message with the treatment you&apos;re after and a few times that suit you. I&apos;ll come back to you with my availability - usually within a day.
-                    </p>
+                    </Reveal>
                 </div>
             </section>
 
             {/* B: Form + sidebar */}
-            <section className="max-w-[1180px] mx-auto px-4 sm:px-8 py-[56px] xl:py-[70px] xl:pb-[90px]">
+            <Reveal as="section" className="max-w-[1180px] mx-auto px-4 sm:px-8 py-[56px] xl:py-[70px] xl:pb-[90px]">
                 <div className="grid grid-cols-1 xl:grid-cols-[1.15fr_0.85fr] gap-8 xl:gap-12 items-start">
 
                     {/* Form card */}
@@ -153,10 +155,10 @@ export default async function ContactPage({ params, searchParams }: ContactPageP
 
                     </aside>
                 </div>
-            </section>
+            </Reveal>
 
             {/* C: Map */}
-            <ContactMap />
+            <Reveal><ContactMap /></Reveal>
 
         </MainLayout>
     );

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Reveal from '@/components/Shared/Reveal';
 
 const SERVICES = [
   {
@@ -62,7 +63,7 @@ export default function ServicesSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
         {/* Section header */}
-        <div className="mb-10 md:mb-14 text-center">
+        <Reveal className="mb-10 md:mb-14 text-center">
           <p className="font-sans text-[11px] uppercase tracking-[0.24em] text-sage mb-4">
             <span className="sm:hidden">My Services</span>
             <span className="hidden sm:inline">Explore My Services</span>
@@ -76,10 +77,10 @@ export default function ServicesSection() {
               Treatments designed to soothe,<br />rejuvenate &amp; restore balance
             </span>
           </h2>
-        </div>
+        </Reveal>
 
         {/* ─── MOBILE: list rows ─────────────────────────── */}
-        <div className="sm:hidden flex flex-col gap-3">
+        <Reveal as="div" className="sm:hidden flex flex-col gap-3">
           {MOBILE_SERVICES.map((s) => (
             <Link
               key={s.slug}
@@ -100,21 +101,23 @@ export default function ServicesSection() {
           >
             View all treatments &#8594;
           </Link>
-        </div>
+        </Reveal>
 
         {/* ─── TABLET: 2×2 grid + full-width CTA banner ─── */}
         <div className="hidden sm:flex lg:hidden flex-col gap-4">
           <div className="grid grid-cols-2 gap-4">
-            {TABLET_SERVICES.map((s) => (
-              <Link key={s.slug} href={`/treatments/${s.slug}`} className="group">
-                <article className="bg-warm-white rounded-2xl p-6 h-full flex flex-col gap-3 transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-xl">
-                  <span className="font-sans text-sm text-clay">{s.tabletNum}</span>
-                  <h3 className="font-serif text-2xl text-espresso mb-0 leading-snug">{s.name}</h3>
-                  <p className="font-sans text-sm text-taupe leading-relaxed flex-1 mb-0">
-                    {s.descTablet}
-                  </p>
-                </article>
-              </Link>
+            {TABLET_SERVICES.map((s, i) => (
+              <Reveal key={s.slug} delay={i * 80} className="h-full">
+                <Link href={`/treatments/${s.slug}`} className="group block h-full">
+                  <article className="bg-warm-white rounded-2xl p-6 h-full flex flex-col gap-3 transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-xl">
+                    <span className="font-sans text-sm text-clay">{s.tabletNum}</span>
+                    <h3 className="font-serif text-2xl text-espresso mb-0 leading-snug">{s.name}</h3>
+                    <p className="font-sans text-sm text-taupe leading-relaxed flex-1 mb-0">
+                      {s.descTablet}
+                    </p>
+                  </article>
+                </Link>
+              </Reveal>
             ))}
           </div>
           <Link href={CTA_CONTENT.href} className="group">
@@ -128,25 +131,29 @@ export default function ServicesSection() {
 
         {/* ─── DESKTOP: 3-col grid with CTA tile ─────────── */}
         <div className="hidden lg:grid grid-cols-3 gap-6">
-          {SERVICES.map((s) => (
-            <Link key={s.slug} href={`/treatments/${s.slug}`} className="group">
-              <article className="bg-warm-white rounded-2xl p-6 xl:p-8 h-full flex flex-col gap-3 transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-xl">
-                <span className="font-sans text-sm text-clay">{s.num}</span>
-                <h3 className="font-serif text-2xl text-espresso mb-0 leading-snug">{s.name}</h3>
-                <p className="font-sans text-sm text-taupe leading-relaxed flex-1 mb-0">
-                  {s.descDesktop}
-                </p>
-                <span className="font-sans text-sm font-semibold text-sage group-hover:underline">Discover &#8594;</span>
+          {SERVICES.map((s, i) => (
+            <Reveal key={s.slug} delay={i * 80} className="h-full">
+              <Link href={`/treatments/${s.slug}`} className="group block h-full">
+                <article className="bg-warm-white rounded-2xl p-6 xl:p-8 h-full flex flex-col gap-3 transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-xl">
+                  <span className="font-sans text-sm text-clay">{s.num}</span>
+                  <h3 className="font-serif text-2xl text-espresso mb-0 leading-snug">{s.name}</h3>
+                  <p className="font-sans text-sm text-taupe leading-relaxed flex-1 mb-0">
+                    {s.descDesktop}
+                  </p>
+                  <span className="font-sans text-sm font-semibold text-sage group-hover:underline">Discover &#8594;</span>
+                </article>
+              </Link>
+            </Reveal>
+          ))}
+          <Reveal delay={SERVICES.length * 80} className="h-full">
+            <Link href={CTA_CONTENT.href} className="group block h-full">
+              <article className="bg-sage rounded-2xl p-6 xl:p-8 h-full flex flex-col gap-4 transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-xl">
+                <h3 className="font-serif italic text-2xl text-warm-white mb-0">{CTA_CONTENT.heading}</h3>
+                <p className="font-sans text-sm text-warm-white/80 flex-1 mb-0">{CTA_CONTENT.body}</p>
+                <span className="font-sans text-sm font-bold text-warm-white">{CTA_CONTENT.link}</span>
               </article>
             </Link>
-          ))}
-          <Link href={CTA_CONTENT.href} className="group">
-            <article className="bg-sage rounded-2xl p-6 xl:p-8 h-full flex flex-col gap-4 transition-all duration-300 ease-out hover:-translate-y-[6px] hover:shadow-xl">
-              <h3 className="font-serif italic text-2xl text-warm-white mb-0">{CTA_CONTENT.heading}</h3>
-              <p className="font-sans text-sm text-warm-white/80 flex-1 mb-0">{CTA_CONTENT.body}</p>
-              <span className="font-sans text-sm font-bold text-warm-white">{CTA_CONTENT.link}</span>
-            </article>
-          </Link>
+          </Reveal>
         </div>
 
       </div>

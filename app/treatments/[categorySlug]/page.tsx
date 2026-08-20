@@ -18,6 +18,7 @@ import {
   generateBreadcrumbJsonLd,
 } from '@/lib/jsonLsUtils';
 import { config } from '@/lib/config';
+import Reveal from '@/components/Shared/Reveal';
 
 // Revalidate this page every hour
 export const revalidate = 3600;
@@ -193,7 +194,7 @@ export default async function CategoryPage({ params }: Props) {
           {/* ── Left: text column ─────────────────────────────────────────── */}
           <div>
             {/* Eyebrow */}
-            <div
+            <Reveal
               className="flex items-center gap-[10px] sm:gap-3 mb-[14px] sm:mb-[18px]"
               aria-hidden="true"
             >
@@ -201,23 +202,25 @@ export default async function CategoryPage({ params }: Props) {
               <span className="font-sans text-[10.5px] sm:text-[12px] tracking-[0.2em] sm:tracking-[0.22em] uppercase text-sage font-semibold">
                 {categoryData.name}
               </span>
-            </div>
+            </Reveal>
 
-            {/* H1 */}
+            {/* H1 left instant: LCP. */}
             <h1 className="font-serif text-[40px] sm:text-[50px] lg:text-[64px] font-medium text-[#3A332C] tracking-[-0.01em] leading-[1.02] mb-3 sm:mb-5">
               {categoryData.name}
             </h1>
 
             {/* Intro paragraph */}
             {(categoryData.description || categoryData.shortDescription) && (
-              <p className="font-sans text-[15px] sm:text-[17px] leading-[1.75] text-taupe max-w-[480px] mb-[20px] sm:mb-[30px]">
+              <Reveal as="p" delay={120} className="font-sans text-[15px] sm:text-[17px] leading-[1.75] text-taupe max-w-[480px] mb-[20px] sm:mb-[30px]">
                 {categoryData.description || categoryData.shortDescription}
-              </p>
+              </Reveal>
             )}
 
             {/* Stats row */}
             {(priceFrom || durationRange) && (
-              <div
+              <Reveal
+                as="div"
+                delay={220}
                 className="flex items-center gap-[14px] sm:gap-6 border-t border-b py-[16px] sm:py-[20px] mb-[24px] sm:mb-[30px]"
                 style={{ borderColor: 'rgba(74,64,56,0.12)' }}
               >
@@ -252,11 +255,11 @@ export default async function CategoryPage({ params }: Props) {
                     </div>
                   </>
                 )}
-              </div>
+              </Reveal>
             )}
 
             {/* CTAs — desktop / tablet only (spec: no CTAs in mobile hero) */}
-            <div className="hidden gap-6 items-center sm:flex">
+            <Reveal delay={320} className="hidden gap-6 items-center sm:flex">
               <Link
                 href="/contact"
                 className="inline-block font-sans font-semibold text-[14.5px] bg-sage text-warm-white px-[34px] py-4 rounded-full hover:opacity-90 transition-opacity"
@@ -270,7 +273,7 @@ export default async function CategoryPage({ params }: Props) {
               >
                 All treatments &rarr;
               </Link>
-            </div>
+            </Reveal>
           </div>
 
           {/* ── Right: image column ───────────────────────────────────────── */}
@@ -387,7 +390,7 @@ export default async function CategoryPage({ params }: Props) {
 
       {/* ── SECTION 4: Explore other collections ─────────────────────────── */}
       {otherCategories.length > 0 && (
-        <div className="bg-stone py-[50px] sm:py-[60px]">
+        <Reveal as="div" className="bg-stone py-[50px] sm:py-[60px]">
           <div className="max-w-[1180px] mx-auto px-[22px] sm:px-8">
 
             {/* Eyebrow */}
@@ -437,11 +440,11 @@ export default async function CategoryPage({ params }: Props) {
               ))}
             </div>
           </div>
-        </div>
+        </Reveal>
       )}
 
       {/* ── SECTION 5: Green CTA block ───────────────────────────────────── */}
-      <div className="bg-cream py-[60px] sm:py-[80px] sm:pb-[90px]">
+      <Reveal as="div" className="bg-cream py-[60px] sm:py-[80px] sm:pb-[90px]">
         <div className="max-w-[1180px] mx-auto px-[22px] sm:px-8">
           <div className="bg-sage rounded-[20px] p-[40px_22px] sm:p-[54px] text-center">
             <h2 className="font-serif text-[28px] sm:text-[40px] font-medium text-warm-white mb-[14px] leading-tight">
@@ -459,7 +462,7 @@ export default async function CategoryPage({ params }: Props) {
             </Link>
           </div>
         </div>
-      </div>
+      </Reveal>
     </MainLayout>
   );
 }
