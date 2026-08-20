@@ -100,6 +100,90 @@ const nextConfig: NextConfig = {
     },
 
     // ===========================================
+    // TREATMENT SLUG REDIRECTS — menu overhaul 2026
+    // Activate together when the new menu goes live (new docs un-hidden,
+    // stale docs retired). Each preserves link equity for a renamed treatment.
+    // ===========================================
+    {
+      // P4: Botanical Dry Head Spa → Sensory Dry Head Spa (Mini Facial variant)
+      source: '/treatments/body-treatments/botanical-dry-head-spa-with-mini-facial',
+      destination: '/treatments/body-treatments/sensory-dry-head-spa-mini-facial',
+      permanent: true,
+    },
+    // Renamed treatments (slug changes) — preserve link equity
+    {
+      source: '/treatments/body-treatments/back-cleanse',
+      destination: '/treatments/body-treatments/fruity-bacial',
+      permanent: true,
+    },
+    {
+      source: '/treatments/body-treatments/fruity-bacial-express-calming-facial',
+      destination: '/treatments/body-treatments/fruity-bacial-express-facial',
+      permanent: true,
+    },
+    {
+      source: '/treatments/facials/golden-glow-facial',
+      destination: '/treatments/facials/up-in-the-clouds-facial',
+      permanent: true,
+    },
+    {
+      source: '/treatments/facials/hydrating-jelly-mask-facial',
+      destination: '/treatments/facials/celestial-facial',
+      permanent: true,
+    },
+    {
+      source: '/treatments/facials/signature-facial',
+      destination: '/treatments/facials/signature-heavenly-facial',
+      permanent: true,
+    },
+    {
+      source: '/treatments/facials/signature-facial-back-massage',
+      destination: '/treatments/facials/signature-heavenly-facial-back-neck-shoulders',
+      permanent: true,
+    },
+    {
+      source: '/treatments/massages/swedish-back-neck-shoulders',
+      destination: '/treatments/massages/back-neck-shoulders-massage',
+      permanent: true,
+    },
+    {
+      source: '/treatments/massages/swedish-full-body-massage',
+      destination: '/treatments/massages/full-body-massage-relax-restore',
+      permanent: true,
+    },
+    {
+      source: '/treatments/massages/swedish-full-body-express-facial',
+      destination: '/treatments/massages/full-body-massage-express-facial',
+      permanent: true,
+    },
+    {
+      source: '/treatments/reflexology/reflexology',
+      destination: '/treatments/reflexology/reflexology-foot-massage',
+      permanent: true,
+    },
+    {
+      source: '/treatments/seasonal-treatments/valentines-sweet-treat-scrub-and-massage',
+      destination: '/treatments/seasonal-treatments/sweet-treat-scrub-full-body-massage',
+      permanent: true,
+    },
+    // Discontinued treatments → send to their category page
+    {
+      source: '/treatments/facials/express-facial',
+      destination: '/treatments/facials',
+      permanent: true,
+    },
+    {
+      source: '/treatments/facials/seilich-meadowsweet-facial',
+      destination: '/treatments/facials',
+      permanent: true,
+    },
+    {
+      source: '/treatments/facials/seilich-facial-back-massage',
+      destination: '/treatments/facials',
+      permanent: true,
+    },
+
+    // ===========================================
     // LEGACY ROOT-LEVEL URL REDIRECTS
     // ===========================================
     {
