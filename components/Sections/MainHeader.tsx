@@ -59,7 +59,7 @@ const MainHeader: React.FC = () => {
 
             {/* Lead paragraph */}
             <p className="font-sans text-base md:text-[17px] text-taupe max-w-[520px] leading-relaxed mb-0">
-              A five-star cottage spa experience, hidden in the Scottish countryside &mdash; thoughtfully crafted by Hayley.
+              A five-star cottage spa experience, hidden in the Scottish countryside - thoughtfully crafted by Hayley.
             </p>
 
             {/* CTA row */}

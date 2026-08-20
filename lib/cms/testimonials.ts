@@ -48,7 +48,7 @@ const FALLBACK_TESTIMONIALS: Testimonial[] = [
     id: '3',
     name: 'Selena',
     quote:
-      '90 minutes of bliss. I felt like I was in a luxury spa — so many thoughtful touches.',
+      '90 minutes of bliss. I felt like I was in a luxury spa - so many thoughtful touches.',
     customerType: 'Visiting Kelso',
     rating: 5,
   },

@@ -79,7 +79,7 @@ export default async function ContactPage({ params, searchParams }: ContactPageP
                         Let&apos;s book your moment of calm
                     </h1>
                     <p className="font-sans text-[15px] md:text-[17px] leading-[1.7] text-taupe max-w-[540px] mx-auto">
-                        Send me a message with the treatment you&apos;re after and a few times that suit you. I&apos;ll come back to you with my availability — usually within a day.
+                        Send me a message with the treatment you&apos;re after and a few times that suit you. I&apos;ll come back to you with my availability - usually within a day.
                     </p>
                 </div>
             </section>

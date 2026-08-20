@@ -28,7 +28,7 @@ export default async function MenuTeaserSection() {
             </h2>
 
             <p className="font-sans text-[16px] leading-[1.8] text-taupe mb-8">
-              High-quality professional products, primarily organic and natural — and everything
+              High-quality professional products, primarily organic and natural - and everything
               I use is vegan and cruelty-free.
             </p>
 

@@ -7,12 +7,12 @@ const VALUES = [
   {
     num: '02',
     title: 'Five-star products, always',
-    body: 'Everything I use is high-quality, primarily organic and natural — and always vegan and cruelty-free.',
+    body: 'Everything I use is high-quality, primarily organic and natural - and always vegan and cruelty-free.',
   },
   {
     num: '03',
     title: 'A space made for you',
-    body: 'No waiting rooms, no rushing — just a warm, private cottage space set aside entirely for your wellbeing.',
+    body: 'No waiting rooms, no rushing - just a warm, private cottage space set aside entirely for your wellbeing.',
   },
   {
     num: '04',
