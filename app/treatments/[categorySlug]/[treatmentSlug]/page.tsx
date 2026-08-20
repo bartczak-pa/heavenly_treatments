@@ -178,7 +178,7 @@ export default async function TreatmentDetailPage({ params }: Props) {
                 style={{ aspectRatio: '4/5', maxHeight: '440px' }}
               >
                 <Image
-                  src={treatment.image}
+                  src={treatment.detailImage ?? treatment.image}
                   alt={`${treatment.title} treatment at Heavenly Treatments, Kelso`}
                   fill
                   style={{ objectFit: 'cover' }}
@@ -260,7 +260,7 @@ export default async function TreatmentDetailPage({ params }: Props) {
                   style={{ aspectRatio: '4/5', maxHeight: '580px' }}
                 >
                   <Image
-                    src={treatment.image}
+                    src={treatment.detailImage ?? treatment.image}
                     alt={`${treatment.title} treatment at Heavenly Treatments, Kelso`}
                     fill
                     style={{ objectFit: 'cover' }}
