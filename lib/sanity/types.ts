@@ -40,6 +40,7 @@ export interface SanityTreatmentMenuItem {
   title: string;
   slug: string;
   description: string;
+  shortDescription?: string;
   duration: string;
   price: string;
   categorySlug: string;
@@ -62,6 +63,7 @@ export interface SanityTreatment {
   title: string;
   slug: string;
   description: string;
+  shortDescription?: string;
   duration: string;
   price: string;
   keyFeatures?: string[];

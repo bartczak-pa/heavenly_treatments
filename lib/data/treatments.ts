@@ -15,6 +15,7 @@ export interface Treatment {
     title: string;
     slug: string;
     description: string; // TODO: Refine descriptions for better SEO and engagement.
+    shortDescription?: string; // Punchy summary for cards, menu, and detail-page lead (falls back to description)
     image: string; // Relative path to the image in /public
     imageWidth?: number; // Optional: Add actual image width
     imageHeight?: number; // Optional: Add actual image height
