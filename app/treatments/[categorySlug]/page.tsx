@@ -406,7 +406,7 @@ export default async function CategoryPage({ params }: Props) {
                   href={`/treatments/${cat.slug}`}
                   className="flex items-center gap-[14px] bg-[#FAF6F0] border border-cocoa/8 rounded-2xl p-[16px_20px] hover:bg-cream transition-colors"
                 >
-                  <p className="font-serif text-[21px] font-semibold text-[#3A332C] leading-tight flex-1 min-w-0">
+                  <p className="font-serif text-[21px] font-semibold text-[#3A332C] leading-tight flex-1 min-w-0 m-0">
                     {cat.name}
                   </p>
                   <span className="font-sans font-bold text-sage text-[13px] tracking-[0.02em] shrink-0">
@@ -430,7 +430,7 @@ export default async function CategoryPage({ params }: Props) {
                   <p className="font-sans text-[13.5px] leading-[1.6] text-taupe flex-1">
                     {cat.shortDescription || cat.description}
                   </p>
-                  <p className="font-sans font-bold text-sage text-[13px] tracking-[0.02em]">
+                  <p className="font-sans font-bold text-sage text-[13px] tracking-[0.02em] mb-0">
                     Discover &rarr;
                   </p>
                 </Link>
