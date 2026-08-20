@@ -332,7 +332,7 @@ export default async function CategoryPage({ params }: Props) {
                     {treatment.duration}
                   </p>
                   <p className="font-sans text-[13px] leading-[1.6] text-taupe">
-                    {treatment.description}
+                    {treatment.shortDescription || treatment.description}
                   </p>
                 </Link>
               ))
@@ -361,7 +361,7 @@ export default async function CategoryPage({ params }: Props) {
                       {treatment.duration}
                     </p>
                     <p className="font-sans text-[14px] leading-[1.6] text-taupe max-w-[440px] lg:max-w-[520px]">
-                      {treatment.description}
+                      {treatment.shortDescription || treatment.description}
                     </p>
                   </div>
 
