@@ -232,7 +232,7 @@ export default async function TreatmentDetailPage({ params }: Props) {
               {/* CTA row */}
               <div className="flex items-center gap-[22px] flex-wrap">
                 <Link
-                  href="/contact"
+                  href={`/contact?treatment=${encodeURIComponent(treatment.title)}`}
                   className="bg-sage text-warm-white px-[34px] py-4 rounded-full font-sans font-semibold text-[14.5px] hover:bg-sage-hover transition-colors shadow-[0_12px_28px_-12px_rgba(110,126,96,0.7)]"
                 >
                   Book this treatment
@@ -379,7 +379,7 @@ export default async function TreatmentDetailPage({ params }: Props) {
 
                 {/* Book button — design: padding 15px all sides, font-weight 700 */}
                 <Link
-                  href="/contact"
+                  href={`/contact?treatment=${encodeURIComponent(treatment.title)}`}
                   className="block w-full text-center bg-sage text-warm-white py-[15px] rounded-full font-sans font-bold text-[14.5px] hover:bg-sage-hover transition-colors"
                 >
                   Book this treatment
