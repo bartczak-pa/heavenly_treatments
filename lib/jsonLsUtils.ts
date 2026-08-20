@@ -99,6 +99,7 @@ export function generateHealthAndBeautyBusinessJsonLd(
         '@context': 'https://schema.org',
         '@type': 'HealthAndBeautyBusiness',
         name: 'Heavenly Treatments with Hayleybell',
+        alternateName: ['Heavenly Treatments', 'Heavenly Treatments Kelso'],
         url: `${BASE_URL}/treatments`,
         image: `${BASE_URL}/images/logo.png`,
         sameAs: [
@@ -165,6 +166,7 @@ export function generateWebSiteJsonLd() {
         '@context': 'https://schema.org',
         '@type': 'WebSite',
         name: 'Heavenly Treatments with Hayleybell',
+        alternateName: ['Heavenly Treatments', 'Heavenly Treatments Kelso'],
         url: BASE_URL,
         sameAs: [
             'https://www.facebook.com/heavenlytreatmentswithhayleybell',

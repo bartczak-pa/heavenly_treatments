@@ -43,19 +43,23 @@ const MainHeader: React.FC = () => {
               </span>
             </div>
 
-            {/* H1 */}
+            {/* H1 — keyword-led for local search ("massage kelso") */}
             <h1
               id="hero-heading"
-              className="font-serif text-4xl sm:text-5xl lg:text-[68px] xl:text-[76px] font-normal leading-[1.1] text-espresso mb-0"
+              className="font-serif text-4xl sm:text-5xl lg:text-[60px] xl:text-[68px] font-normal leading-[1.08] text-espresso mb-0"
             >
-              Revitalise your mind, body &amp;{' '}
-              <em className="italic text-sage">soul.</em>
+              Massage, Facials &amp; Reflexology{' '}
+              <em className="italic text-sage">in Kelso</em>
             </h1>
+
+            {/* Emotive subhead — brand voice, demoted from H1 */}
+            <p className="font-serif italic text-xl md:text-2xl lg:text-[27px] text-taupe leading-snug mb-0 -mt-1">
+              Revitalise your mind, body &amp; soul.
+            </p>
 
             {/* Lead paragraph */}
             <p className="font-sans text-base md:text-[17px] text-taupe max-w-[520px] leading-relaxed mb-0">
-              <span className="md:hidden">A five-star cottage spa experience, hidden in the Scottish countryside. Crafted by Hayley.</span>
-              <span className="hidden md:inline">A five-star cottage spa experience, hidden in the Scottish countryside. Massage, facials &amp; reflexology — thoughtfully crafted by Hayley.</span>
+              A five-star cottage spa experience, hidden in the Scottish countryside &mdash; thoughtfully crafted by Hayley.
             </p>
 
             {/* CTA row */}
