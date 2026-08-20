@@ -31,6 +31,32 @@ export interface SanityTreatmentCategory {
   displayOrder?: number;
 }
 
+/**
+ * Lean Sanity response for the lazy-loaded treatments accordion menu.
+ * Only the fields an accordion row needs — no image asset (rows are text-only).
+ */
+export interface SanityTreatmentMenuItem {
+  _id: string;
+  title: string;
+  slug: string;
+  description: string;
+  duration: string;
+  price: string;
+  categorySlug: string;
+}
+
+/**
+ * Sanity testimonial document type
+ */
+export interface SanityTestimonial {
+  _id: string;
+  name: string;
+  quote: string;
+  customerType?: string;
+  rating?: number;
+  displayOrder?: number;
+}
+
 export interface SanityTreatment {
   _id: string;
   title: string;
@@ -39,6 +65,10 @@ export interface SanityTreatment {
   duration: string;
   price: string;
   keyFeatures?: string[];
+  benefits?: string[];
+  whatToExpect?: Array<{ title: string; description: string }>;
+  whatIsIncluded?: string[];
+  goodFor?: string;
   image: SanityImageSource;
   category: {
     _id: string;
@@ -46,4 +76,5 @@ export interface SanityTreatment {
     slug: string;
   };
   freshaUrl?: string;
+  devOnly?: boolean;
 }

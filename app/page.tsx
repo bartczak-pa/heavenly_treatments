@@ -1,14 +1,14 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { MainLayout } from '@/components/Layout/MainLayout';
-import {
-  DynamicTestimonials,
-  DynamicExperienceSection,
-  DynamicServicesSection
-} from '@/components/Dynamic/DynamicComponents';
 
 import MainHeader from '@/components/Sections/MainHeader';
+import MarqueeStrip from '@/components/Sections/MarqueeStrip';
+import IntroductionSection from '@/components/Sections/Introduction';
 import ServicesSection from '@/components/Sections/Services';
+import MenuTeaserSection from '@/components/Sections/MenuTeaserSection';
+import TreatmentRoomSection from '@/components/Sections/TreatmentRoomSection';
+import TestimonialsSection from '@/components/Sections/Testimonials';
 import Script from 'next/script';
 import { contactInfo } from '@/lib/data/contactInfo';
 import {
@@ -18,9 +18,6 @@ import {
   ContactInfo as ContactInfoType
 } from '@/lib/jsonLsUtils';
 import { config } from '@/lib/config';
-import LocationAndBookingSection from '@/components/Sections/LocationAndBooking';
-import IntroductionSection from '@/components/Sections/Introduction';
-import { getCategories } from '@/lib/cms/treatments';
 
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
@@ -76,33 +73,45 @@ const homepageFAQs = [
 
 async function HomePage() {
   const webSiteJsonLd = generateWebSiteJsonLd();
-  // Business schema without aggregateRating (will be added when real review data is integrated)
-  const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfoType);
+  const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfoType, {
+    ratingValue: config.reviews.RATING_VALUE,
+    reviewCount: config.reviews.REVIEW_COUNT,
+  });
   const faqJsonLd = generateFAQJsonLd(homepageFAQs);
-  const categories = await getCategories();
-
-  // Combine all JSON-LD schemas (server-generated from trusted utility functions)
   const jsonLdContent = JSON.stringify([webSiteJsonLd, businessJsonLd, faqJsonLd]);
 
   return (
-    <MainLayout>
+    <MainLayout showCtaBand>
       <Script
         id="homepage-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdContent }}
       />
+
+      {/* Hero — two-column Sanctuary layout */}
       <MainHeader />
 
-      <IntroductionSection />
-      <ServicesSection categories={categories} showAllButton={false} />
+      {/* Scrolling service categories marquee */}
+      <MarqueeStrip />
 
+      {/* Welcome / Meet Hayley — hidden on tablet only */}
+      <div className="block md:hidden lg:block">
+        <IntroductionSection />
+      </div>
 
-      <DynamicExperienceSection />
+      {/* Numbered treatment category cards */}
+      <ServicesSection />
 
-      <LocationAndBookingSection />
+      {/* Treatment menu preview — 5 representative treatments */}
+      <MenuTeaserSection />
 
-      <DynamicTestimonials />
-    </MainLayout>
+      {/* Full-bleed treatment room image with overlay */}
+      <TreatmentRoomSection />
+
+      {/* Client testimonials */}
+      <TestimonialsSection />
+
+    </MainLayout>   
   );
 }
 

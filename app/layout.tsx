@@ -1,9 +1,8 @@
 import React from "react";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Cormorant_Garamond, Mulish } from "next/font/google";
 import "./styles/globals.css";
 import { validateEnv } from '@/lib/env';
-import { Playfair_Display, Open_Sans } from 'next/font/google';
 import * as Toast from '@radix-ui/react-toast';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
@@ -12,29 +11,20 @@ import { DynamicGoogleAnalytics } from '@/components/Dynamic/DynamicComponents';
 import { GlobalAnalytics } from '@/components/Analytics/GlobalAnalytics';
 import { AnalyticsErrorBoundary } from '@/components/Analytics/AnalyticsErrorBoundary';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-// Serif font for headings
-const playfair = Playfair_Display({
+// Display serif for headings — Sanctuary redesign
+const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-playfair',
-  weight: ['400', '500', '600', '700'],
+  variable: '--font-cormorant',
+  weight: ['500', '600'],
+  style: ['normal', 'italic'],
 });
 
-// Sans-serif font for body text
-const openSans = Open_Sans({
+// Body / UI sans — Sanctuary redesign
+const mulish = Mulish({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-open-sans',
+  variable: '--font-mulish',
   weight: ['300', '400', '500', '600', '700'],
 });
 
@@ -88,7 +78,7 @@ export default function RootLayout({
   const googleAdsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
 
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${openSans.variable} antialiased`}>
+    <html lang="en" className={`${cormorant.variable} ${mulish.variable} antialiased`}>
       <body className="font-sans min-h-screen bg-background text-foreground">
         <SpeedInsights />
         <ErrorBoundary

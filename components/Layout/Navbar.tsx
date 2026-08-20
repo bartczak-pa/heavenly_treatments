@@ -1,308 +1,210 @@
-
 'use client';
 
-import React, { useState, useMemo, memo } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  NavigationMenuContent,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { Menu, ChevronRight, ChevronDown } from 'lucide-react';
-import { categoryIconMap, type TreatmentCategory } from '@/lib/data/treatments';
-import TreatmentCategoryLinks from '@/components/Layout/TreatmentCategoryLinks';
+import { usePathname } from 'next/navigation';
+import * as Dialog from '@radix-ui/react-dialog';
+import { Menu } from 'lucide-react';
 import { BookingButton } from '@/components/BookingButton';
+import { contactInfo } from '@/lib/data/contactInfo';
 import { cn } from '@/lib/utils';
 
-// --- Style Constants ---
-const styles = {
-  desktop: {
-    categoryLink: "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-  },
-  mobile: {
-    categoryLink: "text-sm text-foreground hover:text-primary",
-  },
-} as const;
+const navContactPhone = contactInfo.phone;
+const navContactEmail = contactInfo.email;
+const navContactTelHref = `tel:${navContactPhone.replace(/\s+/g, '')}`;
 
-// --- Navigation Data ---
-const navigationItems = [
+/**
+ * Primary site navigation for the Sanctuary redesign.
+ *
+ * - Sticky, translucent cream header with blur and a wordmark lockup.
+ * - Inline desktop/tablet nav with a Sage "Book Now" pill.
+ * - Collapses to a hamburger at the mobile breakpoint (≤640px) that opens a
+ *   full-screen Espresso overlay with Cormorant links.
+ *
+ * Accessibility: the overlay is a Radix Dialog, giving Esc-to-close, focus
+ * trapping, and scroll-lock. All interactive targets are ≥48px.
+ *
+ * @component
+ */
+
+const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/about', label: 'About Me' },
+  { href: '/about', label: 'About' },
+  { href: '/treatments', label: 'Treatments' },
   { href: '/contact', label: 'Contact' },
 ] as const;
 
-// --- Types ---
-interface ProcessedTreatmentCategory extends TreatmentCategory {
-  IconComponent: React.ComponentType<{ className?: string }> | null;
+interface WordmarkProps {
+  className?: string;
 }
 
-
-interface MobileNavigationMenuProps {
-  isTreatmentsOpen: boolean;
-  setIsTreatmentsOpen: (open: boolean) => void;
-  categories: TreatmentCategory[];
+/**
+ * Returns true when `href` is the active route. The home route ("/") matches
+ * exactly; section routes match the current path or any nested sub-path.
+ */
+function isActiveRoute(href: string, pathname: string): boolean {
+  if (href === '/') return pathname === '/';
+  return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-interface TreatmentDropdownContentProps {
-  processedCategories: ProcessedTreatmentCategory[];
-}
-
-// --- Sub-Components ---
-const TreatmentDropdownContent = memo<TreatmentDropdownContentProps>(({ processedCategories }) => (
-  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 bg-secondary/15">
-    <li className="row-span-2 md:row-span-3">
-      <NavigationMenuLink asChild>
-        <Link
-          className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-secondary/50 to-secondary p-6 no-underline outline-none focus:shadow-md"
-          href="/treatments"
-        >
-          <div className="mb-2 mt-4 text-lg font-medium text-secondary-foreground">
-            All Treatments
-          </div>
-          <p className="text-sm leading-tight text-secondary-foreground/80">
-            Explore my full range of treatments.
-          </p>
-        </Link>
-      </NavigationMenuLink>
-    </li>
-    {processedCategories.map((category) => (
-      <li key={category.id}>
-        <NavigationMenuLink asChild>
-          <Link
-            href={`/treatments/${category.slug}`}
-            className={styles.desktop.categoryLink}
-          >
-            <div className="flex items-center space-x-3">
-              {category.IconComponent && (
-                <category.IconComponent className="h-4 w-4 flex-shrink-0 text-primary" />
-              )}
-              <div className="text-sm font-medium leading-none">{category.name}</div>
-            </div>
-            {category.shortDescription && (
-              <p className="line-clamp-2 text-sm leading-snug text-muted-foreground mt-1">
-                {category.shortDescription}
-              </p>
-            )}
-          </Link>
-        </NavigationMenuLink>
-      </li>
-    ))}
-  </ul>
-));
-
-TreatmentDropdownContent.displayName = 'TreatmentDropdownContent';
-
-const DesktopNavigationLinks = memo(() => (
-  <>
-    {navigationItems.map((item) => (
-      <NavigationMenuItem key={item.href}>
-        <NavigationMenuLink asChild className={cn(navigationMenuTriggerStyle(), "bg-transparent transition-all duration-200 ease-out hover:text-primary hover:bg-primary/10 relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-primary after:transition-all after:duration-300 hover:after:w-full")}>
-          <Link href={item.href}>
-            {item.label}
-          </Link>
-        </NavigationMenuLink>
-      </NavigationMenuItem>
-    ))}
-  </>
-));
-
-DesktopNavigationLinks.displayName = 'DesktopNavigationLinks';
-
-const MobileNavigationLinks = memo(() => (
-  <>
-    {navigationItems.map((item) => (
-      <Link
-        key={item.href}
-        href={item.href}
-        className="text-sm font-medium transition-colors hover:text-primary"
-      >
-        {item.label}
-      </Link>
-    ))}
-  </>
-));
-
-MobileNavigationLinks.displayName = 'MobileNavigationLinks';
-
-const MobileNavigationMenu = memo<MobileNavigationMenuProps>(({
-  isTreatmentsOpen,
-  setIsTreatmentsOpen,
-  categories
-}) => (
-  <div className="flex flex-col space-y-3 mt-4 pl-4 pr-4">
-    <MobileNavigationLinks />
-
-    <Collapsible
-      open={isTreatmentsOpen}
-      onOpenChange={setIsTreatmentsOpen}
+/** Brand wordmark + location lockup, links to home. */
+function Wordmark({ className }: WordmarkProps) {
+  return (
+    <Link
+      href="/"
+      className={cn(
+        'flex flex-col leading-none transition-opacity hover:opacity-80',
+        className,
+      )}
     >
-      <div className="flex items-center">
-        <Link href="/treatments" className="text-sm font-medium transition-colors hover:text-primary">
-          Treatments
-        </Link>
-        <CollapsibleTrigger asChild>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-9 p-0 ml-2"
-            aria-label="Toggle treatment categories"
-          >
-            {isTreatmentsOpen ? (
-              <ChevronDown className="h-4 w-4" aria-hidden="true" />
-            ) : (
-              <ChevronRight className="h-4 w-4" aria-hidden="true" />
-            )}
-          </Button>
-        </CollapsibleTrigger>
-      </div>
-
-      <CollapsibleContent>
-        <div className="flex flex-col space-y-2 pl-4 pt-2">
-          <Link href="/treatments" className={styles.mobile.categoryLink}>
-            All Treatments
-          </Link>
-          <TreatmentCategoryLinks
-            categories={categories}
-            showIcon={true}
-            baseLinkClasses={styles.mobile.categoryLink}
-            textClasses="text-secondary-foreground hover:text-primary"
-            iconClasses="h-4 w-4 flex-shrink-0 text-primary pr-0.5"
-          />
-        </div>
-      </CollapsibleContent>
-    </Collapsible>
-
-    <div className="pt-4">
-      <BookingButton
-        context="navbar"
-        variant="default"
-        className="w-full"
-      >
-        Book Now
-      </BookingButton>
-    </div>
-  </div>
-));
-
-MobileNavigationMenu.displayName = 'MobileNavigationMenu';
-
-interface NavbarProps {
-  categories: TreatmentCategory[];
+      <span className="font-serif text-xl font-semibold text-espresso sm:text-2xl">
+        Heavenly Treatments
+      </span>
+      <span className="mt-1 font-sans text-[10px] font-semibold uppercase tracking-[0.34em] text-sage">
+        with Hayleybell · Kelso
+      </span>
+    </Link>
+  );
 }
 
-export default function Navbar({ categories }: NavbarProps) {
-  /**
-   * Navbar Component
-   *
-   * A responsive navigation bar component that provides:
-   * - Desktop navigation with dropdown menus
-   * - Mobile navigation with a collapsible sheet
-   * - Treatment category navigation in both desktop and mobile views
-   *
-   * Features:
-   * - Responsive design with mobile-first approach
-   * - Integration with TreatmentCategoryLinks component
-   * - Uses Radix UI components for accessibility
-   * - Optimized performance with memoization
-   *
-   * @component
-   * @example
-   * ```tsx
-   * <Navbar categories={categories} />
-   * ```
-   *
-   * @returns {JSX.Element} A responsive navigation bar
-   */
-  const [isMobileTreatmentsOpen, setIsMobileTreatmentsOpen] = useState(false);
+export default function Navbar() {
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+  const pathname = usePathname();
 
-  // Memoize processed treatment categories to prevent unnecessary re-renders
-  const processedCategories = useMemo<ProcessedTreatmentCategory[]>(() =>
-    categories.map((category) => ({
-      ...category,
-      IconComponent: category.iconName ? categoryIconMap[category.iconName] : null,
-    })), [categories]);
+  const closeOverlay = () => setIsOverlayOpen(false);
 
   return (
-    <header className="w-full border-b bg-secondary/15 backdrop-blur supports-[backdrop-filter]:bg-secondary/15 z-40">
-      {/* Desktop Layout - Flexbox with proper spacing */}
-      <div className="hidden lg:flex items-center justify-between h-16 w-full px-4 sm:px-6 lg:px-8">
-        {/* Left Navigation - Fixed width container */}
-        <div className="flex items-center w-80">
+    <header className="sticky top-0 z-50 w-full border-b border-cocoa/8 bg-cream/86 backdrop-blur-[10px] supports-backdrop-filter:bg-cream/80">
+      <div className="mx-auto flex h-[60px] w-full max-w-7xl items-center justify-between px-4 sm:h-[73px] sm:px-6 lg:px-8">
+        <Wordmark />
+
+        {/* Desktop / tablet: inline nav + Book pill */}
+        <div className="hidden items-center gap-5 sm:flex lg:gap-[38px]">
           <nav aria-label="Primary">
-            <NavigationMenu className="relative z-50">
-              <NavigationMenuList className="flex items-center space-x-2">
-                <DesktopNavigationLinks />
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger className="bg-transparent">Treatments</NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <TreatmentDropdownContent processedCategories={processedCategories} />
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
+            <ul className="flex items-center gap-5 lg:gap-[38px]">
+              {navLinks.map((item) => {
+                const active = isActiveRoute(item.href, pathname);
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      aria-current={active ? 'page' : undefined}
+                      className={cn(
+                        'inline-flex min-h-[48px] items-center text-sm font-medium transition-colors hover:text-cocoa',
+                        active ? 'text-cocoa' : 'text-[#6B6157]',
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
           </nav>
-        </div>
-
-        {/* Centered Logo - Flex grow with center alignment */}
-        <div className="flex-1 flex items-center justify-center px-8">
-          <Link href="/" className="flex items-center space-x-2 transition-all duration-300 ease-out hover:scale-105 hover:drop-shadow-md">
-            <span className="text-xl font-bold font-serif text-primary truncate">Heavenly Treatments with Hayleybell</span>
-          </Link>
-        </div>
-
-        {/* Right Navigation - Fixed width container */}
-        <div className="flex items-center justify-end w-32">
-          <BookingButton context="navbar" variant="default" size="lg">
+          <BookingButton
+            context="navbar"
+            size="lg"
+            className="rounded-full bg-sage py-[11px] px-6 text-[13px] font-semibold text-warm-white hover:bg-sage-hover"
+          >
             Book Now
           </BookingButton>
         </div>
-      </div>
 
-      {/* Mobile/Tablet Layout - True Full Width */}
-      <div className="flex lg:hidden items-center justify-between h-16 w-full px-4 sm:px-6">
-        {/* Centered Logo */}
-        <div className="flex-1 flex justify-center">
-          <Link href="/" className="flex items-center space-x-2 transition-all duration-300 ease-out hover:scale-105 hover:drop-shadow-md">
-            <span className="text-lg sm:text-2xl font-bold font-serif text-primary">Heavenly Treatments with Hayleybell</span>
-          </Link>
-        </div>
+        {/* Mobile: hamburger → full-screen Espresso overlay */}
+        <div className="sm:hidden">
+          <Dialog.Root open={isOverlayOpen} onOpenChange={setIsOverlayOpen}>
+            <Dialog.Trigger asChild>
+              <button
+                type="button"
+                aria-label="Open menu"
+                className="inline-flex justify-center items-center rounded-full transition-colors size-12 text-espresso hover:bg-stone focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sage"
+              >
+                <Menu className="size-6" aria-hidden="true" />
+              </button>
+            </Dialog.Trigger>
 
-        {/* Mobile Menu Button */}
-        <div className="flex items-center">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" aria-label="Toggle main menu">
-                <Menu className="h-5 w-5" aria-hidden="true" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] sm:w-[400px] z-50 bg-secondary ">
-              <SheetHeader>
-                <SheetTitle>Menu</SheetTitle>
-              </SheetHeader>
-              <MobileNavigationMenu
-                isTreatmentsOpen={isMobileTreatmentsOpen}
-                setIsTreatmentsOpen={setIsMobileTreatmentsOpen}
-                categories={categories}
-              />
-            </SheetContent>
-          </Sheet>
+            <Dialog.Portal>
+              <Dialog.Content
+                className="fixed inset-0 z-50 flex flex-col bg-espresso px-[30px] pt-[30px] pb-[34px] text-cream focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0"
+                aria-label="Site menu"
+                aria-describedby={undefined}
+              >
+                {/* Header row */}
+                <div className="flex justify-between items-center mb-10">
+                  <Dialog.Title className="font-serif text-[22px] font-semibold text-cream">
+                    Menu
+                  </Dialog.Title>
+                  <Dialog.Close asChild>
+                    <button
+                      type="button"
+                      aria-label="Close menu"
+                      className="inline-flex size-[38px] items-center justify-center rounded-full border border-white/30 text-[20px] text-cream transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-clay"
+                    >
+                      ✕
+                    </button>
+                  </Dialog.Close>
+                </div>
+
+                {/* Nav links — top-aligned, not centered */}
+                <nav aria-label="Mobile primary" className="flex flex-col gap-1">
+                  {navLinks.map((item) => {
+                    const active = isActiveRoute(item.href, pathname);
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={closeOverlay}
+                        aria-current={active ? 'page' : undefined}
+                        className={cn(
+                          'flex items-center py-3 w-full font-serif font-medium leading-tight border-b transition-colors min-h-[48px] border-white/12 text-[38px] hover:text-clay',
+                          active ? 'text-clay' : 'text-cream',
+                        )}
+                      >
+                        {item.label}
+                      </Link>
+                    );
+                  })}
+                </nav>
+
+                {/* Contact info — pushed to bottom */}
+                <div className="flex flex-col gap-2 mt-auto">
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-sage">
+                    Get in touch
+                  </span>
+                  <a
+                    href={navContactTelHref}
+                    className="text-[15px] text-cream transition-colors hover:text-clay"
+                  >
+                    {navContactPhone}
+                  </a>
+                  <a
+                    href={`mailto:${navContactEmail}`}
+                    className="text-[15px] text-cream/70 transition-colors hover:text-clay"
+                  >
+                    {navContactEmail}
+                  </a>
+                  <div className="mt-2 flex gap-[14px]">
+                    <a
+                      href="https://www.facebook.com/heavenlytreatmentswithhayleybell"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[13px] font-semibold text-clay transition-colors hover:text-cream"
+                    >
+                      Facebook
+                    </a>
+                    <a
+                      href="https://www.instagram.com/heavenlytreatments_hayleybell/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[13px] font-semibold text-clay transition-colors hover:text-cream"
+                    >
+                      Instagram
+                    </a>
+                  </div>
+                </div>
+              </Dialog.Content>
+            </Dialog.Portal>
+          </Dialog.Root>
         </div>
       </div>
     </header>

@@ -1,0 +1,26 @@
+# Heavenly Treatments with Hayleybell
+
+> A private cottage spa in Kelso, Scottish Borders, offering professional massage,
+> facials, reflexology, body treatments, and seasonal treatments. Run by therapist
+> Hayley in a calm, welcoming setting. Bookings are handled online via Fresha.
+
+## Key pages
+
+- [Home](https://www.heavenly-treatments.co.uk/): Overview of the spa, services, and how to book.
+- [Treatments](https://www.heavenly-treatments.co.uk/treatments): Full treatment menu, grouped by category.
+- [About](https://www.heavenly-treatments.co.uk/about): About Hayley and the cottage spa.
+- [Contact](https://www.heavenly-treatments.co.uk/contact): Location, contact details, and enquiry form.
+
+## Treatment categories
+
+- [Massages](https://www.heavenly-treatments.co.uk/treatments/massages)
+- [Facials](https://www.heavenly-treatments.co.uk/treatments/facials)
+- [Reflexology](https://www.heavenly-treatments.co.uk/treatments/reflexology)
+- [Body Treatments](https://www.heavenly-treatments.co.uk/treatments/body-treatments)
+- [Seasonal Treatments](https://www.heavenly-treatments.co.uk/treatments/seasonal-treatments)
+
+## Location & booking
+
+- Based in Kelso, Scottish Borders, Scotland.
+- Booking is via the Fresha listing: https://www.fresha.com/en-GB/a/heavenly-treatments-with-hayleybell-kelso-easter-softlaw-farm-cottage-h3aozhyl
+- Rated 5.0 from 42 reviews on Fresha.

@@ -30,4 +30,13 @@ export const config = {
       LONGITUDE: '-2.385',
     },
   },
+  reviews: {
+    // Genuine figures from the public Fresha listing. Fresha exposes no public
+    // API, so these are maintained by hand — re-check periodically and update.
+    // Last verified: 2026-08-19 → "5.0 rating with 42 votes".
+    FRESHA_PROFILE_URL:
+      'https://www.fresha.com/en-GB/a/heavenly-treatments-with-hayleybell-kelso-easter-softlaw-farm-cottage-h3aozhyl',
+    RATING_VALUE: 5.0,
+    REVIEW_COUNT: 42,
+  },
 } as const;

@@ -21,10 +21,29 @@ export interface Treatment {
     duration: string;
     price: string;
     keyFeatures?: string[]; // Optional array of key features
+    benefits?: string[]; // Benefits shown in the detail page (falls back to keyFeatures)
+    whatToExpect?: Array<{ title: string; description: string }>; // Step-by-step walkthrough (falls back to generic steps)
+    whatIsIncluded?: string[]; // What's included in the aside card (falls back to keyFeatures)
+    goodFor?: string; // Who or what this treatment is good for (falls back to first sentence of description)
     category: TreatmentCategorySlug; // Link to the category
     freshaUrl?: string; // Optional Fresha booking URL (dedicated to this treatment)
   }
   
+  /**
+   * Lightweight, accordion-row-shaped treatment used by the lazy-loaded
+   * `/treatments` menu. Derived from {@link Treatment} but carries only the
+   * fields a menu row renders, plus a ready-to-use detail-page `href`.
+   */
+  export interface TreatmentMenuItem {
+    id: string;
+    name: string;
+    slug: string;
+    shortDescription: string;
+    durationLabel: string;
+    price: string;
+    href: string;
+  }
+
   /**
    * Represents the different categories of treatments.
    */

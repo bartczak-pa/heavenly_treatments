@@ -4,18 +4,24 @@ import {
   allTreatmentsQuery,
   treatmentBySlugQuery,
   treatmentsByCategoryQuery,
+  treatmentsMenuByCategoryQuery,
   allTreatmentSlugsQuery,
   categoryBySlugQuery,
+  treatmentCountsByCategoryQuery,
+  sitemapTreatmentsQuery,
+  sitemapCategoriesQuery,
 } from '@/lib/sanity/queries';
 import { getImageUrl } from '@/lib/sanity/image';
 import {
   SanityTreatment,
   SanityTreatmentCategory,
+  SanityTreatmentMenuItem,
 } from '@/lib/sanity/types';
 import {
   Treatment,
   TreatmentCategory,
   TreatmentCategorySlug,
+  TreatmentMenuItem,
 } from '@/lib/data/treatments';
 
 /**
@@ -47,6 +53,10 @@ function transformTreatment(sanityTreatment: SanityTreatment): Treatment {
     duration: sanityTreatment.duration,
     price: sanityTreatment.price,
     keyFeatures: sanityTreatment.keyFeatures,
+    benefits: sanityTreatment.benefits,
+    whatToExpect: sanityTreatment.whatToExpect,
+    whatIsIncluded: sanityTreatment.whatIsIncluded,
+    goodFor: sanityTreatment.goodFor,
     image: getImageUrl(sanityTreatment.image, 1000, undefined, 90),
     imageWidth: 1000,
     imageHeight: 667,
@@ -138,6 +148,96 @@ export async function getTreatmentsByCategory(
 }
 
 /**
+ * Lightweight sitemap entry shapes — just enough to build a URL and an honest
+ * <lastmod>. Kept separate from the rich {@link Treatment} type so the sitemap
+ * never over-fetches.
+ */
+export interface SitemapTreatmentEntry {
+  slug: string;
+  categorySlug: string;
+  _updatedAt: string;
+}
+
+export interface SitemapCategoryEntry {
+  slug: string;
+  _updatedAt: string;
+}
+
+/**
+ * Fetch treatment slugs + last-modified timestamps for the sitemap.
+ */
+export async function getSitemapTreatments(): Promise<SitemapTreatmentEntry[]> {
+  try {
+    const entries = await sanityClient.fetch<SitemapTreatmentEntry[]>(
+      sitemapTreatmentsQuery
+    );
+    return entries ?? [];
+  } catch (error) {
+    console.error('Error fetching sitemap treatments from Sanity:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch category slugs + last-modified timestamps for the sitemap.
+ */
+export async function getSitemapCategories(): Promise<SitemapCategoryEntry[]> {
+  try {
+    const entries = await sanityClient.fetch<SitemapCategoryEntry[]>(
+      sitemapCategoriesQuery
+    );
+    return entries ?? [];
+  } catch (error) {
+    console.error('Error fetching sitemap categories from Sanity:', error);
+    return [];
+  }
+}
+
+/**
+ * Transform a lean Sanity menu row into the accordion-row shape
+ */
+function transformTreatmentMenuItem(
+  row: SanityTreatmentMenuItem
+): TreatmentMenuItem {
+  return {
+    id: row._id,
+    name: row.title,
+    slug: row.slug,
+    shortDescription: row.description,
+    durationLabel: row.duration && !/min/i.test(row.duration) ? `${row.duration} min` : row.duration,
+    price: row.price,
+    href: `/treatments/${row.categorySlug}/${row.slug}`,
+  };
+}
+
+/**
+ * Fetch a lean, accordion-row-shaped list of treatments for a single category.
+ *
+ * Backs the lazy-loaded `/treatments` accordion: category headers render
+ * immediately and each panel resolves its rows on expand. Uses the
+ * parameterized `treatmentsMenuByCategoryQuery` (server-side GROQ filtering by
+ * slug — never fetch-all-then-filter) and returns `[]` for unknown/empty
+ * categories or on error, so the UI never crashes.
+ */
+export async function getTreatmentMenuByCategory(
+  categorySlug: string
+): Promise<TreatmentMenuItem[]> {
+  try {
+    const rows = await sanityClient.fetch<SanityTreatmentMenuItem[]>(
+      treatmentsMenuByCategoryQuery,
+      { categorySlug }
+    );
+    return (rows ?? []).map(transformTreatmentMenuItem);
+  } catch (error) {
+    console.error(
+      'Error fetching treatment menu by category from Sanity:',
+      error
+    );
+    return [];
+  }
+}
+
+/**
  * Get all treatment slugs for static path generation
  */
 export async function getAllTreatmentSlugs(): Promise<
@@ -148,6 +248,21 @@ export async function getAllTreatmentSlugs(): Promise<
   } catch (error) {
     console.error('Error fetching treatment slugs from Sanity:', error);
     return [];
+  }
+}
+
+/**
+ * Fetch treatment counts per category from Sanity (no treatment payload)
+ */
+export async function getTreatmentCountsByCategory(): Promise<Record<string, number>> {
+  try {
+    const rows = await sanityClient.fetch<{ slug: string; count: number }[]>(
+      treatmentCountsByCategoryQuery
+    );
+    return Object.fromEntries(rows.map(({ slug, count }) => [slug, count]));
+  } catch (error) {
+    console.error('Error fetching treatment counts from Sanity:', error);
+    return {};
   }
 }
 
