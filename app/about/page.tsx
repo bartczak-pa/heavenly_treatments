@@ -10,6 +10,7 @@ import AboutStory from '@/components/Sections/AboutStory';
 import AboutValues from '@/components/Sections/AboutValues';
 import TreatmentRoomSection from '@/components/Sections/TreatmentRoomSection';
 import AboutCta from '@/components/Sections/AboutCta';
+import Reveal from '@/components/Shared/Reveal';
 
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
@@ -90,13 +91,13 @@ export default function AboutPage() {
 
       <main id="main-content">
         <AboutHero />
-        <AboutPullQuote />
-        <AboutStory />
-        <AboutValues />
+        <Reveal><AboutPullQuote /></Reveal>
+        <Reveal><AboutStory /></Reveal>
+        <Reveal><AboutValues /></Reveal>
         <div className="hidden md:block">
-          <TreatmentRoomSection />
+          <Reveal><TreatmentRoomSection /></Reveal>
         </div>
-        <AboutCta />
+        <Reveal><AboutCta /></Reveal>
       </main>
     </MainLayout>
   );

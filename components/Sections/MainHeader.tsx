@@ -4,6 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { BookingButton } from '@/components/BookingButton';
+import Reveal from '@/components/Shared/Reveal';
 
 const TrustRowContent: React.FC = () => (
   <>
@@ -36,14 +37,14 @@ const MainHeader: React.FC = () => {
           <div className="flex-1 md:flex-[1.2] flex flex-col gap-6 text-left">
 
             {/* Eyebrow */}
-            <div className="flex gap-3 items-center" aria-hidden="true">
+            <Reveal className="flex gap-3 items-center" aria-hidden="true">
               <div className="w-8 h-px bg-clay" />
               <span className="font-sans text-[11px] uppercase tracking-[0.24em] text-taupe">
                 Kelso · Scottish Borders
               </span>
-            </div>
+            </Reveal>
 
-            {/* H1 — keyword-led for local search ("massage kelso") */}
+            {/* H1 — keyword-led for local search ("massage kelso"). Left instant: LCP. */}
             <h1
               id="hero-heading"
               className="font-serif text-4xl sm:text-5xl lg:text-[60px] xl:text-[68px] font-normal leading-[1.08] text-espresso mb-0"
@@ -53,17 +54,17 @@ const MainHeader: React.FC = () => {
             </h1>
 
             {/* Emotive subhead — brand voice, demoted from H1 */}
-            <p className="font-serif italic text-xl md:text-2xl lg:text-[27px] text-taupe leading-snug mb-0 -mt-1">
+            <Reveal as="p" delay={120} className="font-serif italic text-xl md:text-2xl lg:text-[27px] text-taupe leading-snug mb-0 -mt-1">
               Revitalise your mind, body &amp; soul.
-            </p>
+            </Reveal>
 
             {/* Lead paragraph */}
-            <p className="font-sans text-base md:text-[17px] text-taupe max-w-[520px] leading-relaxed mb-0">
+            <Reveal as="p" delay={220} className="font-sans text-base md:text-[17px] text-taupe max-w-[520px] leading-relaxed mb-0">
               A five-star cottage spa experience, hidden in the Scottish countryside - thoughtfully crafted by Hayley.
-            </p>
+            </Reveal>
 
             {/* CTA row */}
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+            <Reveal delay={320} className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
               <BookingButton
                 context="hero"
                 className="px-8 py-3 w-full h-auto font-sans text-sm font-semibold rounded-full transition-colors sm:w-auto"
@@ -76,12 +77,12 @@ const MainHeader: React.FC = () => {
               >
                 Explore the menu →
               </Link>
-            </div>
+            </Reveal>
 
             {/* Trust row — tablet/desktop only (mobile renders after image below) */}
-            <div className="hidden flex-wrap gap-5 items-center md:flex">
+            <Reveal delay={420} className="hidden flex-wrap gap-5 items-center md:flex">
               <TrustRowContent />
-            </div>
+            </Reveal>
           </div>
 
           {/* ── Right column: arched image ───────────────────────────── */}
@@ -108,9 +109,9 @@ const MainHeader: React.FC = () => {
           </div>
 
           {/* Trust row — mobile only, 3rd flex item so it renders after image */}
-          <div className="flex flex-wrap gap-5 items-center md:hidden">
+          <Reveal className="flex flex-wrap gap-5 items-center md:hidden">
             <TrustRowContent />
-          </div>
+          </Reveal>
 
         </div>
       </div>

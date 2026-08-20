@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { MainLayout } from '@/components/Layout/MainLayout';
 
 import MainHeader from '@/components/Sections/MainHeader';
+import Reveal from '@/components/Shared/Reveal';
 import MarqueeStrip from '@/components/Sections/MarqueeStrip';
 import IntroductionSection from '@/components/Sections/Introduction';
 import ServicesSection from '@/components/Sections/Services';
@@ -96,20 +97,28 @@ async function HomePage() {
 
       {/* Welcome / Meet Hayley — hidden on tablet only */}
       <div className="block md:hidden lg:block">
-        <IntroductionSection />
+        <Reveal>
+          <IntroductionSection />
+        </Reveal>
       </div>
 
       {/* Numbered treatment category cards */}
       <ServicesSection />
 
       {/* Treatment menu preview — 5 representative treatments */}
-      <MenuTeaserSection />
+      <Reveal>
+        <MenuTeaserSection />
+      </Reveal>
 
       {/* Full-bleed treatment room image with overlay */}
-      <TreatmentRoomSection />
+      <Reveal>
+        <TreatmentRoomSection />
+      </Reveal>
 
       {/* Client testimonials */}
-      <TestimonialsSection />
+      <Reveal>
+        <TestimonialsSection />
+      </Reveal>
 
     </MainLayout>   
   );

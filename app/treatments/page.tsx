@@ -5,6 +5,7 @@ import { getCategories } from '@/lib/cms/treatments';
 import { type TreatmentCategory } from '@/lib/data/treatments';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import TreatmentsAccordion from '@/components/Sections/TreatmentsAccordion';
+import Reveal from '@/components/Shared/Reveal';
 import { contactInfo } from '@/lib/data/contactInfo';
 import Script from 'next/script';
 import {
@@ -98,30 +99,30 @@ export default async function TreatmentsPage() {
           </nav>
 
           {/* Eyebrow */}
-          <div className="flex items-center gap-[10px] sm:gap-3 mb-[14px] sm:mb-[18px]" aria-hidden="true">
+          <Reveal className="flex items-center gap-[10px] sm:gap-3 mb-[14px] sm:mb-[18px]" aria-hidden="true">
             <span className="w-[22px] sm:w-7 h-px bg-clay shrink-0" />
             <span className="font-sans text-[10.5px] sm:text-[12px] tracking-[0.2em] sm:tracking-[0.22em] uppercase text-sage font-semibold">
               The Treatment Menu
             </span>
-          </div>
+          </Reveal>
 
-          {/* H1 */}
+          {/* H1 left instant: LCP. */}
           <h1 className="font-serif text-[36px] sm:text-[46px] lg:text-[60px] font-medium text-[#3A332C] tracking-[-0.01em] max-w-[720px] mb-3 sm:mb-5 leading-[1.04]">
             Every treatment, gathered in one calm place
           </h1>
 
           {/* Lead copy — shorter on mobile, longer on tablet+ */}
-          <p className="sm:hidden font-sans text-[14.5px] leading-[1.65] text-taupe max-w-[560px]">
+          <Reveal as="p" delay={120} className="sm:hidden font-sans text-[14.5px] leading-[1.65] text-taupe max-w-[560px]">
             Tap a category to explore, then tap any treatment for the full details.
-          </p>
-          <p className="hidden sm:block font-sans text-[16.5px] leading-[1.7] text-taupe max-w-[560px] mb-6">
+          </Reveal>
+          <Reveal as="p" delay={120} className="hidden sm:block font-sans text-[16.5px] leading-[1.7] text-taupe max-w-[560px] mb-6">
             Each treatment uses high-quality, primarily organic and natural products - and everything
             I use is vegan and cruelty-free. Browse by category, then tap any treatment for the full
             details.
-          </p>
+          </Reveal>
 
           {/* Trust chips */}
-          <div className="hidden sm:flex flex-wrap gap-[14px]">
+          <Reveal as="div" delay={220} className="hidden sm:flex flex-wrap gap-[14px]">
             {TRUST_CHIPS.map((chip) => (
               <span
                 key={chip}
@@ -130,7 +131,7 @@ export default async function TreatmentsPage() {
                 {chip}
               </span>
             ))}
-          </div>
+          </Reveal>
         </div>
       </div>
 
@@ -139,7 +140,7 @@ export default async function TreatmentsPage() {
         <TreatmentsAccordion categories={categories} />
 
         {/* "Not sure which to choose?" card — inline, per design */}
-        <div className="max-w-[1180px] mx-auto px-[18px] sm:px-8 pt-4 pb-8 sm:pt-0 sm:pb-[90px]">
+        <Reveal as="div" className="max-w-[1180px] mx-auto px-[18px] sm:px-8 pt-4 pb-8 sm:pt-0 sm:pb-[90px]">
           <div className="bg-sage rounded-2xl sm:rounded-[20px] py-[30px] px-6 sm:p-[54px] text-center">
             <h2 className="font-serif text-[26px] sm:text-[40px] font-medium text-warm-white mb-[10px] sm:mb-[14px] leading-tight">
               Not sure which to choose?
@@ -155,7 +156,7 @@ export default async function TreatmentsPage() {
               Contact me &amp; book
             </Link>
           </div>
-        </div>
+        </Reveal>
       </div>
     </MainLayout>
   );

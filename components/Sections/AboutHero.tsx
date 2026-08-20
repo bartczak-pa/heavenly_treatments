@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import OptimizedImage from '@/components/OptimizedImage';
+import Reveal from '@/components/Shared/Reveal';
 
 export default function AboutHero() {
   return (
@@ -7,21 +8,22 @@ export default function AboutHero() {
 
       {/* ── Mobile (below md) ── */}
       <div className="md:hidden pt-[28px] px-[22px]">
-        <div className="flex items-center gap-[10px] mb-4">
+        <Reveal className="flex items-center gap-[10px] mb-4">
           <span className="w-[22px] h-px bg-clay" aria-hidden="true" />
           <span className="font-sans text-[10.5px] tracking-[0.2em] uppercase text-sage font-semibold">
             About Hayley
           </span>
-        </div>
+        </Reveal>
 
+        {/* H1 left instant: LCP candidate on mobile. */}
         <h1 className="font-serif text-[40px] leading-[1.02] font-medium text-espresso mb-4 tracking-[-0.01em]">
           Hi, I&apos;m Hayley
         </h1>
 
-        <p className="font-sans text-[15.5px] leading-[1.7] text-taupe mb-[22px]">
+        <Reveal as="p" delay={120} className="font-sans text-[15.5px] leading-[1.7] text-taupe mb-[22px]">
           A qualified spa therapist with a passion for wellness and skincare - and the face
           behind every treatment.
-        </p>
+        </Reveal>
 
         <div
           className="relative w-full overflow-hidden shadow-[0_24px_44px_-26px_rgba(74,64,56,0.45)]"
@@ -45,12 +47,12 @@ export default function AboutHero() {
 
           {/* Left: text */}
           <div>
-            <div className="flex gap-3 items-center mb-6">
+            <Reveal className="flex gap-3 items-center mb-6">
               <span className="w-7 h-px bg-clay" aria-hidden="true" />
               <span className="font-sans text-[12px] tracking-[0.22em] uppercase text-sage font-semibold">
                 About Hayley
               </span>
-            </div>
+            </Reveal>
 
             {/*
               Rendered as <p>, not <h1>: the mobile block above already provides
@@ -63,17 +65,17 @@ export default function AboutHero() {
               Hi, I&apos;m Hayley - lovely to meet you
             </p>
 
-            <p className="font-sans text-[14.5px] lg:text-[15.5px] xl:text-[17.5px] leading-[1.7] text-taupe mb-6">
+            <Reveal as="p" delay={120} className="font-sans text-[14.5px] lg:text-[15.5px] xl:text-[17.5px] leading-[1.7] text-taupe mb-6">
               I&apos;m a qualified spa therapist with a passion for wellness and skincare, and the face
               behind every treatment at Heavenly Treatments.
-            </p>
+            </Reveal>
 
-            <p className="font-sans text-[14px] lg:text-[15px] xl:text-[16px] leading-[1.8] text-taupe mb-8">
+            <Reveal as="p" delay={220} className="font-sans text-[14px] lg:text-[15px] xl:text-[16px] leading-[1.8] text-taupe mb-8">
               After years working in five-star establishments, I decided to bring that same level of
               care into a space of my own - calmer, more personal, and entirely focused on you.
-            </p>
+            </Reveal>
 
-            <div className="flex flex-wrap gap-6 items-center">
+            <Reveal delay={320} className="flex flex-wrap gap-6 items-center">
               <Link
                 href="/contact"
                 className="bg-sage text-warm-white px-[34px] py-[16px] rounded-full font-sans text-[14.5px] font-semibold hover:bg-sage-hover transition-colors"
@@ -86,7 +88,7 @@ export default function AboutHero() {
               >
                 See treatments →
               </Link>
-            </div>
+            </Reveal>
           </div>
 
           {/* Right: portrait */}
