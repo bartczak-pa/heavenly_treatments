@@ -7,6 +7,12 @@ import type { TreatmentCategory, TreatmentMenuItem } from '@/lib/data/treatments
 
 interface TreatmentsAccordionProps {
   categories: TreatmentCategory[];
+  /**
+   * Treatments per category slug, fetched server-side so their links are present
+   * in the initial HTML (crawlable). Seeds the cache; the click-time server
+   * action remains as a fallback for any category not provided here.
+   */
+  initialTreatments?: Record<string, TreatmentMenuItem[]>;
 }
 
 function SkeletonRows() {
@@ -31,9 +37,12 @@ function SkeletonRows() {
   );
 }
 
-export default function TreatmentsAccordion({ categories }: TreatmentsAccordionProps) {
+export default function TreatmentsAccordion({
+  categories,
+  initialTreatments = {},
+}: TreatmentsAccordionProps) {
   const [openSlug, setOpenSlug] = useState<string | null>(null);
-  const [cache, setCache] = useState<Record<string, TreatmentMenuItem[]>>({});
+  const [cache, setCache] = useState<Record<string, TreatmentMenuItem[]>>(initialTreatments);
   const [loading, setLoading] = useState<Record<string, boolean>>({});
 
   async function handleToggle(slug: string) {
@@ -113,13 +122,16 @@ export default function TreatmentsAccordion({ categories }: TreatmentsAccordionP
               </span>
             </button>
 
-            {/* Expanded panel */}
-            {isOpen && (
-              <div
-                id={panelId}
-                role="region"
-                aria-labelledby={headerId}
-              >
+            {/* Expanded panel — always rendered so treatment links are present
+                in the initial HTML (crawlable); collapsed with `hidden` when
+                the panel is closed. Links inside a display:none element are
+                still discovered and followed by search engines. */}
+            <div
+              id={panelId}
+              role="region"
+              aria-labelledby={headerId}
+              hidden={!isOpen}
+            >
                 {isLoading ? (
                   <SkeletonRows />
                 ) : treatments && treatments.length > 0 ? (
@@ -161,14 +173,22 @@ export default function TreatmentsAccordion({ categories }: TreatmentsAccordionP
                         </div>
                       </Link>
                     ))}
+
+                    {/* Crawlable link to the category index page, so it also
+                        earns an internal link (not just the treatment pages). */}
+                    <Link
+                      href={`/treatments/${category.slug}`}
+                      className="block py-4 sm:py-5 sm:px-2 border-t border-[rgba(74,64,56,0.1)] text-[13px] font-bold tracking-[0.04em] text-sage hover:opacity-80 transition-opacity"
+                    >
+                      View all {category.name} →
+                    </Link>
                   </div>
                 ) : (
                   <p className="px-5 sm:px-7 pb-5 text-[14px] text-taupe">
                     No treatments found in this category.
                   </p>
                 )}
-              </div>
-            )}
+            </div>
           </div>
         );
       })}

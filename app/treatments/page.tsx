@@ -1,8 +1,8 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { getCategories } from '@/lib/cms/treatments';
-import { type TreatmentCategory } from '@/lib/data/treatments';
+import { getCategories, getTreatmentMenuByCategory } from '@/lib/cms/treatments';
+import { type TreatmentCategory, type TreatmentMenuItem } from '@/lib/data/treatments';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import TreatmentsAccordion from '@/components/Sections/TreatmentsAccordion';
 import Reveal from '@/components/Shared/Reveal';
@@ -61,8 +61,19 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function TreatmentsPage() {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
 
-  // Categories are fetched server-side; treatments load lazily per accordion panel
+  // Categories are fetched server-side. Each category's treatments are also
+  // fetched here (not lazily on click) so their detail-page links render in the
+  // initial HTML — crawlable by search engines without JavaScript. The accordion
+  // still collapses them visually; it just no longer gates them behind a click.
   const categories = (await getCategories()) as TreatmentCategory[];
+
+  const treatmentLists = await Promise.all(
+    categories.map((category) => getTreatmentMenuByCategory(category.slug)),
+  );
+  const initialTreatments: Record<string, TreatmentMenuItem[]> = {};
+  categories.forEach((category, index) => {
+    initialTreatments[category.slug] = treatmentLists[index];
+  });
 
   // Generate JSON-LD structured data (server-generated, trusted content)
   const businessJsonLd = generateHealthAndBeautyBusinessJsonLd(contactInfo as ContactInfo);
@@ -137,7 +148,7 @@ export default async function TreatmentsPage() {
 
       {/* ── Accordion + CTA card on cream background ─────────────────── */}
       <div className="bg-cream">
-        <TreatmentsAccordion categories={categories} />
+        <TreatmentsAccordion categories={categories} initialTreatments={initialTreatments} />
 
         {/* "Not sure which to choose?" card — inline, per design */}
         <Reveal as="div" className="max-w-[1180px] mx-auto px-[18px] sm:px-8 pt-4 pb-8 sm:pt-0 sm:pb-[90px]">

@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import { getTreatmentBySlug, getAllTreatmentSlugs, getCategories, getTreatmentsByCategory, getTreatmentPath } from '@/lib/cms/treatments';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { Metadata } from 'next';
 import Script from 'next/script';
 import { contactInfo } from '@/lib/data/contactInfo';
@@ -52,6 +52,14 @@ export default async function TreatmentDetailPage({ params }: Props) {
 
   if (!treatment) {
     notFound();
+  }
+
+  // A treatment resolves by its slug alone, so it would otherwise render (200)
+  // under ANY category prefix (e.g. /treatments/massages/reflexology-foot-massage),
+  // creating duplicate URLs that waste crawl budget. Send any non-canonical
+  // category prefix to the treatment's real path with a 308.
+  if (categorySlug !== treatment.category) {
+    permanentRedirect(getTreatmentPath(treatment));
   }
 
   // Resolve categories (already in-flight) and related treatments in parallel.
