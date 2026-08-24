@@ -166,6 +166,13 @@ const nextConfig: NextConfig = {
       destination: '/treatments/seasonal-treatments/sweet-treat-scrub-full-body-massage',
       permanent: true,
     },
+    {
+      // Old "Scrub & Soothe" under the misspelled "hollistic" category (both
+      // retired). Was a GSC 404; map to the nearest current scrub treatment.
+      source: '/treatments/hollistic-treatments/scrub-soothe',
+      destination: '/treatments/seasonal-treatments/sweet-treat-scrub-full-body-massage',
+      permanent: true,
+    },
     // Discontinued treatments → send to their category page
     {
       source: '/treatments/facials/express-facial',
