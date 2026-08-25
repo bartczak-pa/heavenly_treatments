@@ -14,7 +14,6 @@ import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -351,7 +350,8 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
           render={({ field }) => (
             <FormItem>
               <div
-                role="button"
+                role="checkbox"
+                aria-checked={field.value}
                 tabIndex={0}
                 onClick={() => field.onChange(!field.value)}
                 onKeyDown={(e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); field.onChange(!field.value); }}}
@@ -362,19 +362,10 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
                     field.value
                       ? 'bg-sage text-warm-white'
                       : 'bg-warm-white border border-cocoa/28'
-                  }`} 
+                  }`}
                 >
                   {field.value && '✓'}
                 </span>
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    className="sr-only"
-                    aria-hidden="true"
-                    tabIndex={-1}
-                  />
-                </FormControl>
                 <span className="font-sans text-[13.5px] leading-normal text-taupe">
                   I accept that cancelling a confirmed booking with less than 24 hours&apos; notice will result in a 50% charge.{' '}
                   <span className="font-bold text-sage">✦</span>
