@@ -3,52 +3,62 @@
 import { useEffect, useState } from 'react';
 import {
   getVariantAssignment,
-  isABTestEnabled,
+  type ABTestVariant,
 } from '@/lib/abTesting/variantAssignment';
-import { trackVariantAssignment } from '@/lib/analytics/trackAbTest';
+import { tryRecordParticipantGroup } from '@/lib/analytics/trackAbTest';
+import { useAnalyticsConsent } from '@/hooks/useAnalyticsConsent';
 
-type Variant = 'fresha' | 'form';
-
-interface VariantAssignment {
-  variant: Variant;
-  cohort: 'control' | 'test';
+interface AbTestVariantState {
+  variant: ABTestVariant;
+  /** True when the visitor consented and the experiment is running */
+  isParticipant: boolean;
   isLoading: boolean;
 }
 
+/** How often, and for how long, to wait for GA4 to finish loading */
+const GA_RETRY_INTERVAL_MS = 500;
+const GA_RETRY_ATTEMPTS = 20;
+
 /**
- * Hook for accessing the user's A/B test variant assignment
+ * The visitor's Booking Route Experiment group.
  *
- * Returns the variant assignment and tracks the assignment in analytics
- * Handles hydration safely
+ * Non-Participants (no consent, or experiment off) always get the Form
+ * Route. A visitor who accepts cookies partway through a visit becomes a
+ * Participant straight away. A Participant's group is recorded in GA4 at
+ * most once per visit. Hydration-safe: `isLoading` is true until mounted.
  */
-export function useAbTestVariant(): VariantAssignment {
-  const [assignment, setAssignment] = useState<VariantAssignment>({
+export function useAbTestVariant(): AbTestVariantState {
+  const consent = useAnalyticsConsent();
+  const [state, setState] = useState<AbTestVariantState>({
     variant: 'form',
-    cohort: 'control',
+    isParticipant: false,
     isLoading: true,
   });
 
   useEffect(() => {
-    if (!isABTestEnabled()) {
-      setAssignment({
-        variant: 'form',
-        cohort: 'control',
-        isLoading: false,
-      });
+    // Re-runs when the visitor answers the cookie banner (`consent`);
+    // getVariantAssignment reads the consent cookie itself.
+    const { variant, isParticipant } = getVariantAssignment();
+    setState({ variant, isParticipant, isLoading: false });
+
+    if (!isParticipant || tryRecordParticipantGroup(variant)) {
       return;
     }
 
-    const { variant, cohort } = getVariantAssignment();
+    // GA4 loads after the page becomes interactive: retry briefly
+    let attempts = 0;
+    const timer = setInterval(() => {
+      attempts++;
+      if (
+        tryRecordParticipantGroup(variant) ||
+        attempts >= GA_RETRY_ATTEMPTS
+      ) {
+        clearInterval(timer);
+      }
+    }, GA_RETRY_INTERVAL_MS);
 
-    setAssignment({
-      variant,
-      cohort,
-      isLoading: false,
-    });
+    return () => clearInterval(timer);
+  }, [consent]);
 
-    // Track variant assignment once
-    trackVariantAssignment();
-  }, []);
-
-  return assignment;
+  return state;
 }

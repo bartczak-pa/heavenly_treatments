@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import Script from 'next/script';
 import { usePathname } from 'next/navigation';
-import { hasConsent } from '@/lib/cookieUtils'; 
+import { useAnalyticsConsent } from '@/hooks/useAnalyticsConsent';
 
 
 declare global {
@@ -47,7 +47,8 @@ const GoogleAnalytics: React.FC<GoogleAnalyticsProps> = ({
   googleAdsId 
 }) => {
   const pathname = usePathname();
-  const consentGiven = hasConsent(); 
+  // Re-renders when the visitor accepts cookies partway through a visit
+  const consentGiven = useAnalyticsConsent();
 
   useEffect(() => {
     if (!consentGiven || (!measurementId && !googleAdsId)) {

@@ -14,12 +14,11 @@
 import React from 'react';
 import CookieConsent from 'react-cookie-consent';
 import Link from 'next/link';
-import Cookies from 'js-cookie';
-
-/** Cookie name used for storing consent preferences */
-const COOKIE_NAME = 'HeavenlyTreatmentsCookieConsent';
-/** Number of days before cookie consent expires */
-const COOKIE_EXPIRY_DAYS = 150;
+import {
+  CONSENT_COOKIE_EXPIRY_DAYS,
+  CONSENT_COOKIE_NAME,
+  setConsent,
+} from '@/lib/cookieUtils';
 
 /**
  * Cookie consent wrapper component with GDPR compliance
@@ -51,7 +50,7 @@ const CookieConsentWrapper: React.FC = () => {
    * @returns void
    */
   const handleAccept = () => {
-    Cookies.set(COOKIE_NAME, 'true', { expires: COOKIE_EXPIRY_DAYS });
+    setConsent(true);
   };
 
   /**
@@ -63,7 +62,7 @@ const CookieConsentWrapper: React.FC = () => {
    * @returns void
    */
   const handleDecline = () => {
-    Cookies.set(COOKIE_NAME, 'false', { expires: COOKIE_EXPIRY_DAYS });
+    setConsent(false);
   };
 
   return (
@@ -71,7 +70,7 @@ const CookieConsentWrapper: React.FC = () => {
       location="bottom"
       buttonText="Accept Cookies"
       declineButtonText="Decline Cookies"
-      cookieName={COOKIE_NAME}
+      cookieName={CONSENT_COOKIE_NAME}
       enableDeclineButton
       onAccept={handleAccept}
       onDecline={handleDecline}
@@ -96,7 +95,7 @@ const CookieConsentWrapper: React.FC = () => {
         padding: '0.5rem 1rem',
         borderRadius: 'var(--radius)',
       }}
-      expires={COOKIE_EXPIRY_DAYS}
+      expires={CONSENT_COOKIE_EXPIRY_DAYS}
     >
       This website uses cookies, including Google Analytics for performance tracking, to enhance your experience. See our{' '}
       <Link href="/cookie-policy" className="underline hover:text-background">

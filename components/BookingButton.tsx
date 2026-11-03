@@ -74,7 +74,12 @@ export const BookingButton = React.forwardRef<
     ref
   ) => {
     const { variant: testVariant, isLoading } = useAbTestVariant();
-    const bookingUrl = getBookingUrl(context, treatmentTitle, freshaUrl);
+    const bookingUrl = getBookingUrl(
+      context,
+      testVariant,
+      treatmentTitle,
+      freshaUrl
+    );
 
     // Determine if this is Fresha variant based on URL
     const isFresha = bookingUrl.includes('fresha.com');

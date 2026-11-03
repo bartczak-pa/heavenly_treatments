@@ -1,14 +1,33 @@
 /**
- * A/B Test Variant Assignment
+ * Booking Route Experiment: group assignment
  *
- * Handles 50/50 traffic split using consistent hashing.
- * User assignment is persisted via cookie to ensure consistent variant across sessions.
+ * Only visitors who have accepted analytics cookies are Participants.
+ * A Participant is placed in the Form Group or the Fresha Group (50/50,
+ * by consistent hashing of a random ID) and the ID is stored in a cookie
+ * so they keep the same Assigned Group on later visits.
+ *
+ * Everyone else (no consent, or the experiment flag off) gets the Form
+ * Route and no cookie is stored for them.
  */
 
-type ABTestVariant = 'fresha' | 'form';
+import Cookies from 'js-cookie';
+import { getCookie, hasConsent } from '@/lib/cookieUtils';
+
+export type ABTestVariant = 'fresha' | 'form';
+
+export interface VariantAssignment {
+  variant: ABTestVariant;
+  /** True when the visitor consented and the experiment is running */
+  isParticipant: boolean;
+}
 
 const VARIANT_COOKIE_NAME = 'ab_test_variant';
-const VARIANT_COOKIE_MAX_AGE = 365 * 24 * 60 * 60; // 1 year in seconds
+const VARIANT_COOKIE_EXPIRY_DAYS = 365;
+
+const NON_PARTICIPANT: VariantAssignment = {
+  variant: 'form',
+  isParticipant: false,
+};
 
 /**
  * Simple hash function for consistent assignment
@@ -17,77 +36,54 @@ function simpleHash(str: string): number {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash; // Convert to 32bit integer
   }
   return Math.abs(hash);
 }
 
-/**
- * Get user identifier (from cookie or generate new one)
- */
-function getUserId(): string {
-  if (typeof window === 'undefined') {
-    return '';
-  }
-
-  // Try to get from existing cookie
-  const cookies = document.cookie.split(';').map((c) => c.trim());
-  const variantCookie = cookies.find((c) =>
-    c.startsWith(VARIANT_COOKIE_NAME + '=')
-  );
-
-  if (variantCookie) {
-    const value = variantCookie.split('=')[1];
-    if (value.startsWith('user_')) {
-      return value;
-    }
-  }
-
-  // Generate new user ID
-  return `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+function generateUserId(): string {
+  return `user_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
 }
 
 /**
- * Assign variant based on user ID
+ * Map an experiment ID to its Assigned Group (deterministic, ~50/50)
  */
-function assignVariantFromId(userId: string): ABTestVariant {
+export function assignVariantFromId(userId: string): ABTestVariant {
   const hash = simpleHash(userId);
   return hash % 2 === 0 ? 'form' : 'fresha';
 }
 
 /**
- * Get or create variant assignment
- */
-export function getVariantAssignment(): {
-  variant: ABTestVariant;
-  userId: string;
-  cohort: 'control' | 'test';
-} {
-  if (typeof window === 'undefined') {
-    return { variant: 'form', userId: '', cohort: 'control' };
-  }
-
-  const userId = getUserId();
-  const variant = assignVariantFromId(userId);
-
-  // Set cookie if not already set
-  if (!document.cookie.includes(VARIANT_COOKIE_NAME + '=')) {
-    const expires = new Date();
-    expires.setSeconds(expires.getSeconds() + VARIANT_COOKIE_MAX_AGE);
-    document.cookie = `${VARIANT_COOKIE_NAME}=${userId}; path=/; expires=${expires.toUTCString()}; SameSite=Lax`;
-  }
-
-  return {
-    variant,
-    userId,
-    cohort: variant === 'form' ? 'control' : 'test',
-  };
-}
-
-/**
- * Check if A/B test is enabled via environment variable
+ * Check if the experiment is enabled via environment variable
  */
 export function isABTestEnabled(): boolean {
   return process.env.NEXT_PUBLIC_AB_TEST_ENABLED === 'true';
+}
+
+/**
+ * Get the visitor's Assigned Group, creating and storing one for a new
+ * Participant. Non-Participants always get the Form Route and never get
+ * a cookie.
+ */
+export function getVariantAssignment(): VariantAssignment {
+  if (typeof window === 'undefined' || !isABTestEnabled() || !hasConsent()) {
+    return NON_PARTICIPANT;
+  }
+
+  const stored = getCookie(VARIANT_COOKIE_NAME);
+  const userId = stored?.startsWith('user_') ? stored : generateUserId();
+
+  if (userId !== stored) {
+    Cookies.set(VARIANT_COOKIE_NAME, userId, {
+      expires: VARIANT_COOKIE_EXPIRY_DAYS,
+      path: '/',
+      sameSite: 'Lax',
+    });
+  }
+
+  return {
+    variant: assignVariantFromId(userId),
+    isParticipant: true,
+  };
 }
