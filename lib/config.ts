@@ -1,3 +1,6 @@
+// Root layout appends this to every nested page title; page titles must not repeat it
+const TITLE_BRAND = 'Heavenly Treatments';
+
 export const config = {
   ui: {
     INITIAL_VISIBLE_TREATMENTS: 3,
@@ -23,6 +26,8 @@ export const config = {
     },
     MAX_DESCRIPTION_LENGTH: 160,
     MAX_STRUCTURED_DATA_DESCRIPTION: 5000,
+    TITLE_BRAND,
+    TITLE_TEMPLATE: `%s | ${TITLE_BRAND}`,
   },
   location: {
     COORDINATES: {

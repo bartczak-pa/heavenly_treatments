@@ -1,10 +1,11 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import { config } from '@/lib/config';
 import { MainLayout } from '@/components/Layout/MainLayout';
 
 export function generateMetadata(): Metadata {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
-  const pageTitle = 'Terms of Service | Heavenly Treatments';
+  const pageTitle = 'Terms of Service';
   const pageDescription = 'Terms and conditions for booking and receiving treatments with Heavenly Treatments in Kelso.';
   const canonicalUrl = `${BASE_URL}/terms`;
 
@@ -15,7 +16,7 @@ export function generateMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: pageTitle,
+      title: `${pageTitle} | ${config.seo.TITLE_BRAND}`,
       description: pageDescription,
       url: canonicalUrl,
       type: 'website',

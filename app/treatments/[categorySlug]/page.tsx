@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
   const siteName = 'Heavenly Treatments with Hayleybell';
-  const pageTitle = `${categoryData.name} in Kelso | Heavenly Treatments`;
+  const pageTitle = `${categoryData.name} in Kelso`;
   const pageDescription =
     categoryData.description ||
     categoryData.shortDescription ||
@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: pageTitle,
+      title: `${pageTitle} | ${config.seo.TITLE_BRAND}`,
       description: pageDescription,
       url: canonicalUrl,
       siteName: siteName,
