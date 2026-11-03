@@ -2,10 +2,7 @@
  * Booking URL Resolution based on A/B test variant
  */
 
-import {
-  getVariantAssignment,
-  isABTestEnabled,
-} from './variantAssignment';
+import { getVariantAssignment, type ABTestVariant } from './variantAssignment';
 
 export type BookingContext =
   | 'navbar'
@@ -15,9 +12,13 @@ export type BookingContext =
   | 'location-section';
 
 /**
- * Get the appropriate booking URL based on variant and context
+ * Get the booking URL for the visitor's Assigned Group.
+ *
+ * Pure: takes the group already resolved by `useAbTestVariant` (always
+ * 'form' for non-Participants), so it reads and writes no cookies.
  *
  * @param context - Where the booking button is located
+ * @param variant - The visitor's Assigned Group
  * @param treatmentTitle - Name of the treatment (optional, used
  * for form variant)
  * @param freshaUrl - Dedicated Fresha URL for this treatment
@@ -26,27 +27,17 @@ export type BookingContext =
  */
 export function getBookingUrl(
   context: BookingContext,
+  variant: ABTestVariant,
   treatmentTitle?: string,
   freshaUrl?: string
 ): string {
-  // If A/B test is disabled, always use form
-  if (!isABTestEnabled()) {
-    if (treatmentTitle) {
-      return `/contact?treatment=${encodeURIComponent(treatmentTitle)}`;
-    }
-    return '/contact';
-  }
-
-  const { variant } = getVariantAssignment();
-  const freshaGeneralUrl = process.env.NEXT_PUBLIC_FRESHA_GENERAL_URL;
-
   // FRESHA VARIANT
   if (variant === 'fresha') {
     // Prefer dedicated URL, fallback to general
     if (freshaUrl) {
       return freshaUrl;
     }
-    return freshaGeneralUrl || '/contact'; // Ultimate fallback to form
+    return process.env.NEXT_PUBLIC_FRESHA_GENERAL_URL || '/contact'; // Ultimate fallback to form
   }
 
   // FORM VARIANT

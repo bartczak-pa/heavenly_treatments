@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach, type MockInstance } from 'vitest';
 import { render } from '@testing-library/react';
 import { FallingHearts } from '@/components/ui/falling-hearts';
 
@@ -35,7 +35,7 @@ beforeEach(() => {
 
 describe('FallingHearts', () => {
   let cancelAnimationFrameSpy: ReturnType<typeof vi.spyOn>;
-  let matchMediaSpy: ReturnType<typeof vi.spyOn>;
+  let matchMediaSpy: MockInstance<typeof window.matchMedia>;
 
   beforeEach(() => {
     cancelAnimationFrameSpy = vi.spyOn(window, 'cancelAnimationFrame');
