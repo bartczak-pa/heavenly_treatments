@@ -47,6 +47,12 @@ describe('getBookingUrl', () => {
       );
     });
 
+    it('returns a malformed Fresha link untagged instead of throwing', () => {
+      expect(
+        getBookingUrl('treatment-card', 'fresha', 'Swedish Massage', 'not a url')
+      ).toBe('not a url');
+    });
+
     it('falls back to the untagged contact page when no Fresha link is configured', () => {
       vi.stubEnv('NEXT_PUBLIC_FRESHA_GENERAL_URL', '');
 

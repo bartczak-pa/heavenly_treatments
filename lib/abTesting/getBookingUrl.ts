@@ -9,7 +9,8 @@ export type BookingContext =
   | 'hero'
   | 'treatment-card'
   | 'treatment-detail'
-  | 'location-section';
+  | 'location-section'
+  | 'cta-band';
 
 /**
  * Fixed campaign tags added to every Fresha URL a Booking Button sends a
@@ -24,9 +25,16 @@ const CAMPAIGN_TAGS = {
 /**
  * Add the campaign tags (and the button context as `utm_content`) to a
  * Fresha URL, keeping any existing query parameters and hash.
+ * A malformed or relative URL (e.g. a bad CMS value) is returned untagged
+ * rather than throwing during render.
  */
 function withCampaignTags(url: string, context: BookingContext): string {
-  const tagged = new URL(url);
+  let tagged: URL;
+  try {
+    tagged = new URL(url);
+  } catch {
+    return url;
+  }
   for (const [key, value] of Object.entries(CAMPAIGN_TAGS)) {
     tagged.searchParams.set(key, value);
   }
@@ -57,12 +65,9 @@ export function getBookingUrl(
   // FRESHA VARIANT
   if (variant === 'fresha') {
     // Prefer dedicated URL, fallback to general
-    if (freshaUrl) {
-      return withCampaignTags(freshaUrl, context);
-    }
-    const generalUrl = process.env.NEXT_PUBLIC_FRESHA_GENERAL_URL;
-    if (generalUrl) {
-      return withCampaignTags(generalUrl, context);
+    const url = freshaUrl || process.env.NEXT_PUBLIC_FRESHA_GENERAL_URL;
+    if (url) {
+      return withCampaignTags(url, context);
     }
     return '/contact'; // Ultimate fallback to form, left untagged
   }
