@@ -23,7 +23,7 @@ const TRUST_CHIPS = ['✦ Organic & natural', '✦ 100% vegan & cruelty-free', '
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
   const siteName = 'Heavenly Treatments with Hayleybell';
-  const pageTitle = "Spa Treatments in Kelso | Massage, Facials & Reflexology Menu";
+  const pageTitle = 'Spa Treatment Menu in Kelso';
   const pageDescription = "Browse our full menu of massage, facial, and reflexology treatments in Kelso, Scottish Borders. Professional spa services. Book online today.";
   const canonicalUrl = `${BASE_URL}/treatments`;
 
@@ -34,7 +34,7 @@ export async function generateMetadata(): Promise<Metadata> {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: pageTitle,
+      title: `${pageTitle} | ${config.seo.TITLE_BRAND}`,
       description: pageDescription,
       url: canonicalUrl,
       siteName: siteName,

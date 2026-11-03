@@ -515,13 +515,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const canonicalUrl = `${BASE_URL}/treatments/${treatment.category}/${treatment.slug}`;
 
   return {
-    title: `${treatment.title} in Kelso | Heavenly Treatments`,
+    title: `${treatment.title} in Kelso`,
     description: description,
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: `${treatment.title} in Kelso | Heavenly Treatments`,
+      title: `${treatment.title} in Kelso | ${config.seo.TITLE_BRAND}`,
       description: description,
       url: canonicalUrl,
       type: 'article',

@@ -1,10 +1,11 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import { config } from '@/lib/config';
 import { MainLayout } from '@/components/Layout/MainLayout';
 
 export function generateMetadata(): Metadata {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
-  const pageTitle = 'Cookie Policy | Heavenly Treatments';
+  const pageTitle = 'Cookie Policy';
   const pageDescription = 'Learn about how Heavenly Treatments uses cookies, including Google Analytics, to improve your browsing experience and our services.';
   const canonicalUrl = `${BASE_URL}/cookie-policy`;
 
@@ -15,7 +16,7 @@ export function generateMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: pageTitle,
+      title: `${pageTitle} | ${config.seo.TITLE_BRAND}`,
       description: pageDescription,
       url: canonicalUrl,
       type: 'website',

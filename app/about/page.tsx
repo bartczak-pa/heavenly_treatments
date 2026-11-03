@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { config } from '@/lib/config';
 import Link from 'next/link';
 import Script from 'next/script';
 import { MainLayout } from '@/components/Layout/MainLayout';
@@ -14,7 +15,7 @@ import Reveal from '@/components/Shared/Reveal';
 
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
-  const pageTitle = 'About Hayley | Kelso Massage & Facial Therapist';
+  const pageTitle = 'About Hayley, Kelso Massage Therapist';
   const pageDescription =
     'Meet Hayley, your qualified spa therapist in Kelso, Scottish Borders. Years of 5-star experience, now offering professional massage, facials, and reflexology.';
   const imageUrl = `${BASE_URL}/images/logo.png`;
@@ -28,7 +29,7 @@ export async function generateMetadata(): Promise<Metadata> {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: pageTitle,
+      title: `${pageTitle} | ${config.seo.TITLE_BRAND}`,
       description: pageDescription,
       url: canonicalUrl,
       siteName: siteName,

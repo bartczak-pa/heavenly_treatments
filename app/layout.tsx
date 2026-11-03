@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Mulish } from "next/font/google";
 import "./styles/globals.css";
 import { validateEnv } from '@/lib/env';
+import { config } from '@/lib/config';
 import * as Toast from '@radix-ui/react-toast';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/react"
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
   metadataBase: process.env.NEXT_PUBLIC_BASE_URL ? new URL(process.env.NEXT_PUBLIC_BASE_URL) : undefined,
   title: {
     default: 'Heavenly Treatments with Hayleybell - Wellness & Self-Care',
-    template: '%s | Heavenly Treatments with Hayleybell',
+    template: config.seo.TITLE_TEMPLATE,
   },
   description: "Discover relaxing massage therapies, rejuvenating facials, and holistic body treatments in Kelso. Book your journey to wellness with Heavenly Treatments.",
   keywords: ['Massage', 'Facial', 'Reflexology', 'Body Treatments', 'Kelso', 'Wellness', 'Spa', 'Heavenly Treatments', 'Heavenly Treatments with Hayleybell', 'Heavenly Treatments with Hayleybell Kelso', 'Scottish Borders', 'Scottish Borders Massage', 'Scottish Borders Facials', 'Scottish Borders Body Treatments'],

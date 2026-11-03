@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import { config } from '@/lib/config';
 import Script from 'next/script';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import ContactForm from '@/components/Contact/ContactForm';
@@ -11,7 +12,7 @@ import Reveal from '@/components/Shared/Reveal';
 
 export async function generateMetadata(): Promise<Metadata> {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
-  const pageTitle = 'Book Massage in Kelso | Contact Heavenly Treatments';
+  const pageTitle = 'Contact & Bookings in Kelso';
   const pageDescription = 'Book your spa treatment at Heavenly Treatments in Kelso, Scottish Borders. Contact us for massage, facials, reflexology appointments. Easy online booking.';
   const imageUrl = `${BASE_URL}/images/logo.png`;
   const siteName = 'Heavenly Treatments with Hayleybell';
@@ -24,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: pageTitle,
+      title: `${pageTitle} | ${config.seo.TITLE_BRAND}`,
       description: pageDescription,
       url: canonicalUrl,
       siteName: siteName,

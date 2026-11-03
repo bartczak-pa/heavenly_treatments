@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
+import { config } from '@/lib/config';
 import Link from 'next/link';
 import { MainLayout } from '@/components/Layout/MainLayout';
 import { Button } from '@/components/ui/button';
@@ -8,7 +9,7 @@ import { AnalyticsErrorBoundary } from '@/components/Analytics/AnalyticsErrorBou
 
 export function generateMetadata(): Metadata {
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || '';
-  const pageTitle = 'Booking Request Received | Heavenly Treatments';
+  const pageTitle = 'Booking Request Received';
   const pageDescription = 'Thank you for requesting an appointment with Heavenly Treatments.';
   const canonicalUrl = `${BASE_URL}/booking-confirmation`;
 
@@ -19,7 +20,7 @@ export function generateMetadata(): Metadata {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: pageTitle,
+      title: `${pageTitle} | ${config.seo.TITLE_BRAND}`,
       description: pageDescription,
       url: canonicalUrl,
       type: 'website',
