@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity';
+import { validateFreshaUrl } from '../../lib/abTesting/validateFreshaUrl';
 
 export default defineType({
   name: 'treatment',
@@ -119,10 +120,10 @@ export default defineType({
       name: 'freshaUrl',
       title: 'Fresha Booking URL (Dedicated)',
       type: 'url',
-      description: 'Direct Fresha booking link for this specific treatment. Optional - will fallback to general Fresha URL if empty.',
+      description: 'Direct Fresha booking link for this specific treatment. Optional - will fallback to general Fresha URL if empty. Open the l.fresha.com short link first and paste the www.fresha.com address it lands on, without "&cartId=…".',
       validation: (Rule) => Rule.uri({
         scheme: ['http', 'https'],
-      }),
+      }).custom((value) => validateFreshaUrl(value)),
     }),
     defineField({
       name: 'devOnly',
