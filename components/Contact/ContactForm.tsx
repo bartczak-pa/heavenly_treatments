@@ -9,7 +9,7 @@ import { Treatment } from '@/lib/data/treatments';
 import { ContactFormData, contactFormSchema } from '@/lib/validations/contact';
 import { useContactFormToast } from '@/hooks/useContactFormToast';
 import { useFormTracking } from '@/hooks/useFormTracking';
-import { trackFormSubmission } from '@/lib/analytics/trackAbTest';
+import { trackBookingRequest } from '@/lib/analytics/trackAbTest';
 import { useRouter } from 'next/navigation';
 
 import { Button } from "@/components/ui/button";
@@ -155,7 +155,7 @@ export default function ContactForm({ initialTreatment, treatments }: ContactFor
         // Booking Request: the experiment's Form Route conversion, credited
         // to the visitor's Assigned Group. Fired here (server accepted), not
         // on /booking-confirmation, so opening that page can't fake one.
-        trackFormSubmission(data.treatment);
+        trackBookingRequest(data.treatment);
 
         // Use showToast from the hook
         showToast("Success", result.message || "Your message has been sent! I will get back to you as soon as possible.", "success");

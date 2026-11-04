@@ -5,9 +5,10 @@
  */
 
 import {
-  getVariantAssignment,
+  experimentParams,
   type ABTestVariant,
 } from '@/lib/abTesting/variantAssignment';
+import { hasConsent } from '@/lib/cookieUtils';
 import type { BookingContext } from '@/lib/abTesting/getBookingUrl';
 
 /** sessionStorage key marking the group as already recorded this visit */
@@ -27,30 +28,27 @@ function isGroupRecordedThisVisit(): boolean {
   }
 }
 
+/** `treatment_name` value when no treatment was chosen */
+const NO_TREATMENT_LABEL = 'none';
+
+/**
+ * GA4's gtag, when a booking event may be sent: GA4 is loaded and the
+ * visitor still consents (consent can be withdrawn mid-visit while GA4
+ * stays loaded). Null otherwise.
+ */
+function bookingEventGtag(): NonNullable<Window['gtag']> | null {
+  if (typeof window === 'undefined' || typeof window.gtag !== 'function') {
+    return null;
+  }
+  return hasConsent() ? window.gtag : null;
+}
+
 function markGroupRecordedThisVisit(variant: ABTestVariant): void {
   try {
     sessionStorage.setItem(GROUP_RECORDED_KEY, variant);
   } catch {
     groupRecordedThisPageLoad = true;
   }
-}
-
-/** Experiment label for a visitor who is not a Participant */
-export const NON_PARTICIPANT_LABEL = 'non_participant';
-
-export type ExperimentGroupLabel = ABTestVariant | typeof NON_PARTICIPANT_LABEL;
-
-/**
- * The experiment parameter for booking events: a Participant's Assigned
- * Group, or `non_participant` otherwise.
- *
- * GA4 only loads after consent, so in practice `non_participant` means
- * "consented, but the experiment flag is off". It is sent explicitly so
- * it can't be confused with a broken tag ("(not set)" in GA4).
- */
-export function experimentParams(): { ab_test_variant: ExperimentGroupLabel } {
-  const { variant, isParticipant } = getVariantAssignment();
-  return { ab_test_variant: isParticipant ? variant : NON_PARTICIPANT_LABEL };
 }
 
 /**
@@ -87,14 +85,15 @@ export function trackBookingButtonClick(
   context: BookingContext,
   treatmentName?: string
 ) {
-  if (typeof window === 'undefined' || !window.gtag) {
+  const gtag = bookingEventGtag();
+  if (!gtag) {
     return;
   }
 
-  window.gtag('event', 'booking_button_clicked', {
+  gtag('event', 'booking_button_clicked', {
     ...experimentParams(),
     context,
-    treatment_name: treatmentName || 'none',
+    treatment_name: treatmentName || NO_TREATMENT_LABEL,
   });
 }
 
@@ -106,15 +105,16 @@ export function trackBookingRedirect(
   context: BookingContext,
   treatmentName?: string
 ) {
-  if (typeof window === 'undefined' || !window.gtag) {
+  const gtag = bookingEventGtag();
+  if (!gtag) {
     return;
   }
 
-  window.gtag('event', 'booking_redirect', {
+  gtag('event', 'booking_redirect', {
     ...experimentParams(),
     destination,
     context,
-    treatment_name: treatmentName || 'none',
+    treatment_name: treatmentName || NO_TREATMENT_LABEL,
   });
 }
 
@@ -127,13 +127,14 @@ export function trackBookingRedirect(
  *
  * Call it from the form's success path, not the booking confirmation page.
  */
-export function trackFormSubmission(treatmentName?: string) {
-  if (typeof window === 'undefined' || !window.gtag) {
+export function trackBookingRequest(treatmentName?: string) {
+  const gtag = bookingEventGtag();
+  if (!gtag) {
     return;
   }
 
-  window.gtag('event', 'booking_form_submitted', {
+  gtag('event', 'booking_form_submitted', {
     ...experimentParams(),
-    treatment_name: treatmentName || 'none',
+    treatment_name: treatmentName || NO_TREATMENT_LABEL,
   });
 }

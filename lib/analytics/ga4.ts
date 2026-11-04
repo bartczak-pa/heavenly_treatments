@@ -8,7 +8,7 @@
  */
 
 import { hasConsent } from '@/lib/cookieUtils';
-import { experimentParams } from '@/lib/analytics/trackAbTest';
+import { experimentParams } from '@/lib/abTesting/variantAssignment';
 
 // ============================================================================
 // Types

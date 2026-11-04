@@ -87,3 +87,22 @@ export function getVariantAssignment(): VariantAssignment {
     isParticipant: true,
   };
 }
+
+/** Experiment label for a visitor who is not a Participant */
+export const NON_PARTICIPANT_LABEL = 'non_participant';
+
+export type ExperimentGroupLabel = ABTestVariant | typeof NON_PARTICIPANT_LABEL;
+
+/**
+ * The experiment parameter for booking events: a Participant's Assigned
+ * Group, or `non_participant` otherwise.
+ *
+ * Booking events are only sent with consent, so in practice
+ * `non_participant` means "consented, but the experiment flag is off".
+ * It is sent explicitly so it can't be confused with a broken tag
+ * ("(not set)" in GA4).
+ */
+export function experimentParams(): { ab_test_variant: ExperimentGroupLabel } {
+  const { variant, isParticipant } = getVariantAssignment();
+  return { ab_test_variant: isParticipant ? variant : NON_PARTICIPANT_LABEL };
+}

@@ -77,6 +77,16 @@ describe('trackAbTest', () => {
     });
   });
 
+  describe('without cookie consent', () => {
+    it('sends no booking events, even with GA4 still loaded (consent withdrawn mid-visit)', () => {
+      track.trackBookingButtonClick('hero', 'Swedish Massage');
+      track.trackBookingRedirect('form', 'hero', 'Swedish Massage');
+      track.trackBookingRequest('Swedish Massage');
+
+      expect(gtag).not.toHaveBeenCalled();
+    });
+  });
+
   describe('Booking Button click tracking', () => {
     function trackClick() {
       track.trackBookingButtonClick('hero', 'Swedish Massage');
@@ -95,17 +105,6 @@ describe('trackAbTest', () => {
       expect(redirects).toHaveLength(1);
       expect(clicks[0]).toMatchObject({ ab_test_variant: 'non_participant' });
       expect(redirects[0]).toMatchObject({ ab_test_variant: 'non_participant' });
-    });
-
-    it('labels a visitor who is not a Participant as non_participant', () => {
-      trackClick();
-
-      expect(eventParams(gtag, 'booking_button_clicked')[0]).toMatchObject({
-        ab_test_variant: 'non_participant',
-      });
-      expect(eventParams(gtag, 'booking_redirect')[0]).toMatchObject({
-        ab_test_variant: 'non_participant',
-      });
     });
 
     it("attaches a Participant's Assigned Group", () => {
@@ -129,7 +128,7 @@ describe('trackAbTest', () => {
       giveConsent();
       document.cookie = 'ab_test_variant=user_form_group; path=/';
 
-      track.trackFormSubmission('Swedish Massage');
+      track.trackBookingRequest('Swedish Massage');
 
       expect(eventParams(gtag, 'booking_form_submitted')).toEqual([
         { ab_test_variant: 'form', treatment_name: 'Swedish Massage' },
@@ -140,7 +139,7 @@ describe('trackAbTest', () => {
       giveConsent();
       document.cookie = 'ab_test_variant=user_fresha_group; path=/';
 
-      track.trackFormSubmission('Swedish Massage');
+      track.trackBookingRequest('Swedish Massage');
 
       expect(eventParams(gtag, 'booking_form_submitted')).toEqual([
         { ab_test_variant: 'fresha', treatment_name: 'Swedish Massage' },
@@ -151,7 +150,7 @@ describe('trackAbTest', () => {
       vi.stubEnv('NEXT_PUBLIC_AB_TEST_ENABLED', 'false');
       giveConsent();
 
-      track.trackFormSubmission('Swedish Massage');
+      track.trackBookingRequest('Swedish Massage');
 
       expect(eventParams(gtag, 'booking_form_submitted')).toEqual([
         { ab_test_variant: 'non_participant', treatment_name: 'Swedish Massage' },
@@ -162,7 +161,7 @@ describe('trackAbTest', () => {
       giveConsent();
       document.cookie = 'ab_test_variant=user_fresha_group; path=/';
 
-      track.trackFormSubmission();
+      track.trackBookingRequest();
 
       expect(eventParams(gtag, 'booking_form_submitted')).toEqual([
         { ab_test_variant: 'fresha', treatment_name: 'none' },

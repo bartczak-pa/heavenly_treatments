@@ -6,6 +6,7 @@ import * as Toast from '@radix-ui/react-toast';
 import ContactFormComponent from '@/components/Contact/ContactForm';
 import { CONSENT_COOKIE_NAME } from '@/lib/cookieUtils';
 import type { Treatment } from '@/lib/data/treatments';
+import type { ABTestVariant } from '@/lib/abTesting/variantAssignment';
 
 const push = vi.fn();
 vi.mock('next/navigation', () => ({
@@ -57,15 +58,15 @@ function clearCookies() {
   });
 }
 
-/** A consented Participant whose Assigned Group is the Fresha Group */
-function joinFreshaGroup() {
+function giveConsent() {
   document.cookie = `${CONSENT_COOKIE_NAME}=true; path=/`;
-  document.cookie = 'ab_test_variant=user_fresha_group; path=/';
 }
 
-function joinFormGroup() {
-  document.cookie = `${CONSENT_COOKIE_NAME}=true; path=/`;
-  document.cookie = 'ab_test_variant=user_form_group; path=/';
+/** A consented Participant in the given Assigned Group */
+function joinGroup(group: ABTestVariant) {
+  giveConsent();
+  // Experiment IDs that hash to each group
+  document.cookie = `ab_test_variant=user_${group}_group; path=/`;
 }
 
 async function fillAndSubmit({ valid = true } = {}) {
@@ -113,6 +114,7 @@ describe('ContactForm Booking Request tracking', () => {
   });
 
   afterEach(() => {
+    vi.restoreAllMocks();
     vi.unstubAllEnvs();
     vi.unstubAllGlobals();
     clearCookies();
@@ -120,7 +122,7 @@ describe('ContactForm Booking Request tracking', () => {
   });
 
   it('records one Booking Request with the Assigned Group and treatment once the server accepts it', async () => {
-    joinFormGroup();
+    joinGroup('form');
     vi.stubGlobal('fetch', respond(true));
     render(
       <ContactForm treatments={treatments} initialTreatment="Swedish Massage" />
@@ -135,7 +137,7 @@ describe('ContactForm Booking Request tracking', () => {
   });
 
   it('credits a Fresha Group Participant who reached the form through a Contact Link to fresha, with treatment_name=none', async () => {
-    joinFreshaGroup();
+    joinGroup('fresha');
     vi.stubGlobal('fetch', respond(true));
     render(<ContactForm treatments={treatments} />);
 
@@ -149,7 +151,7 @@ describe('ContactForm Booking Request tracking', () => {
 
   it('records a Booking Request as non_participant while the experiment flag is off', async () => {
     vi.stubEnv('NEXT_PUBLIC_AB_TEST_ENABLED', 'false');
-    document.cookie = `${CONSENT_COOKIE_NAME}=true; path=/`;
+    giveConsent();
     vi.stubGlobal('fetch', respond(true));
     render(<ContactForm treatments={treatments} />);
 
@@ -162,7 +164,7 @@ describe('ContactForm Booking Request tracking', () => {
   });
 
   it('records no Booking Request when the server rejects the submission', async () => {
-    joinFreshaGroup();
+    joinGroup('fresha');
     const fetchMock = respond(false);
     vi.stubGlobal('fetch', fetchMock);
     render(<ContactForm treatments={treatments} />);
@@ -178,7 +180,7 @@ describe('ContactForm Booking Request tracking', () => {
   });
 
   it('records no Booking Request on a network error', async () => {
-    joinFreshaGroup();
+    joinGroup('fresha');
     vi.spyOn(console, 'error').mockImplementation(() => {});
     const fetchMock = vi.fn().mockRejectedValue(new Error('offline'));
     vi.stubGlobal('fetch', fetchMock);
@@ -194,7 +196,7 @@ describe('ContactForm Booking Request tracking', () => {
   });
 
   it('records no Booking Request when validation fails', async () => {
-    joinFreshaGroup();
+    joinGroup('fresha');
     const fetchMock = respond(true);
     vi.stubGlobal('fetch', fetchMock);
     render(<ContactForm treatments={treatments} />);
