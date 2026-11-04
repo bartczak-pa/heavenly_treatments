@@ -9,7 +9,38 @@ export type BookingContext =
   | 'hero'
   | 'treatment-card'
   | 'treatment-detail'
-  | 'location-section';
+  | 'location-section'
+  | 'cta-band';
+
+/**
+ * Fixed campaign tags added to every Fresha URL a Booking Button sends a
+ * visitor to, so Fresha Bookings can be credited to the Fresha Group.
+ */
+const CAMPAIGN_TAGS = {
+  utm_source: 'website',
+  utm_medium: 'booking_button',
+  utm_campaign: 'booking_route_test',
+} as const;
+
+/**
+ * Add the campaign tags (and the button context as `utm_content`) to a
+ * Fresha URL, keeping any existing query parameters and hash.
+ * A malformed or relative URL (e.g. a bad CMS value) is returned untagged
+ * rather than throwing during render.
+ */
+function withCampaignTags(url: string, context: BookingContext): string {
+  let tagged: URL;
+  try {
+    tagged = new URL(url);
+  } catch {
+    return url;
+  }
+  for (const [key, value] of Object.entries(CAMPAIGN_TAGS)) {
+    tagged.searchParams.set(key, value);
+  }
+  tagged.searchParams.set('utm_content', context);
+  return tagged.toString();
+}
 
 /**
  * Get the booking URL for the visitor's Assigned Group.
@@ -34,10 +65,11 @@ export function getBookingUrl(
   // FRESHA VARIANT
   if (variant === 'fresha') {
     // Prefer dedicated URL, fallback to general
-    if (freshaUrl) {
-      return freshaUrl;
+    const url = freshaUrl || process.env.NEXT_PUBLIC_FRESHA_GENERAL_URL;
+    if (url) {
+      return withCampaignTags(url, context);
     }
-    return process.env.NEXT_PUBLIC_FRESHA_GENERAL_URL || '/contact'; // Ultimate fallback to form
+    return '/contact'; // Ultimate fallback to form, left untagged
   }
 
   // FORM VARIANT

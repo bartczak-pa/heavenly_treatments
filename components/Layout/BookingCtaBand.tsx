@@ -32,7 +32,7 @@ export default function BookingCtaBand({ className }: BookingCtaBandProps) {
             availability.
           </p>
           <BookingButton
-            context="location-section"
+            context="cta-band"
             size="lg"
             className="mt-6 h-auto rounded-full bg-warm-white py-[15px] px-[34px] text-[14px] font-bold text-espresso hover:bg-white lg:mt-9 lg:py-[17px] lg:px-[38px] lg:text-[15px]"
           >

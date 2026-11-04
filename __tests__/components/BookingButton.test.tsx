@@ -38,7 +38,10 @@ describe('BookingButton', () => {
       />
     );
 
-    expect(screen.getByRole('link')).toHaveAttribute('href', FRESHA_URL);
+    expect(screen.getByRole('link')).toHaveAttribute(
+      'href',
+      `${FRESHA_URL}?utm_source=website&utm_medium=booking_button&utm_campaign=booking_route_test&utm_content=treatment-card`
+    );
   });
 
   it('routes the Form Group to the contact form with the treatment prefilled', () => {

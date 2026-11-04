@@ -117,7 +117,9 @@ describe('Booking Route Experiment assignment', () => {
       // Guard: confirm the fixture ID really lands in the Fresha Group
       expect(assignVariantFromId('user_fresha_group')).toBe('fresha');
 
-      expect(bookingUrlFor('Swedish Massage', FRESHA_URL)).toBe(FRESHA_URL);
+      expect(bookingUrlFor('Swedish Massage', FRESHA_URL)).toMatch(
+        /^https:\/\/www\.fresha\.com\/book\/swedish-massage\?utm_source=website&/
+      );
     });
   });
 
