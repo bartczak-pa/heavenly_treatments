@@ -17,8 +17,7 @@ const CONTENT = {
   availability: "Appointments are available Monday to Sunday from 10am to 5pm; some evenings are also available.",
   process: "Use the simple online form below to get in touch, and I will get back to you as soon as possible with my availability.",
   callToAction: "Your journey to relaxation starts here!",
-  buttonText: "Contact Me & Book",
-  buttonHref: "/contact"
+  buttonText: "Contact Me & Book"
 } as const satisfies {
   heading: string;
   location: string;
@@ -26,7 +25,6 @@ const CONTENT = {
   process: string;
   callToAction: string;
   buttonText: string;
-  buttonHref: string;
 };
 
 export default function LocationAndBookingSection({ 
