@@ -8,6 +8,7 @@
  */
 
 import { hasConsent } from '@/lib/cookieUtils';
+import { experimentParams } from '@/lib/analytics/trackAbTest';
 
 // ============================================================================
 // Types
@@ -246,6 +247,11 @@ export function trackPurchase(
     value,
     items,
     booking_source: source,
+    // The group is attached for context only. Fresha also sends `purchase`,
+    // so form conversions are counted on `booking_form_submitted`; any
+    // report counting form conversions on `purchase` must filter on the
+    // site hostname (see #170).
+    ...experimentParams(),
   });
 }
 

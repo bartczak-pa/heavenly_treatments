@@ -35,14 +35,22 @@ function markGroupRecordedThisVisit(variant: ABTestVariant): void {
   }
 }
 
+/** Experiment label for a visitor who is not a Participant */
+export const NON_PARTICIPANT_LABEL = 'non_participant';
+
+export type ExperimentGroupLabel = ABTestVariant | typeof NON_PARTICIPANT_LABEL;
+
 /**
  * The experiment parameter for booking events: a Participant's Assigned
- * Group, or nothing when the visitor is not a Participant (no consent,
- * or the experiment flag off).
+ * Group, or `non_participant` otherwise.
+ *
+ * GA4 only loads after consent, so in practice `non_participant` means
+ * "consented, but the experiment flag is off". It is sent explicitly so
+ * it can't be confused with a broken tag ("(not set)" in GA4).
  */
-function experimentParams(): { ab_test_variant?: ABTestVariant } {
+export function experimentParams(): { ab_test_variant: ExperimentGroupLabel } {
   const { variant, isParticipant } = getVariantAssignment();
-  return isParticipant ? { ab_test_variant: variant } : {};
+  return { ab_test_variant: isParticipant ? variant : NON_PARTICIPANT_LABEL };
 }
 
 /**
@@ -111,12 +119,21 @@ export function trackBookingRedirect(
 }
 
 /**
- * Track form submission (Fresha variant won't track this)
+ * Track a Booking Request: the server accepted a contact form submission.
+ *
+ * This is the experiment's Form Route conversion event. Only the site
+ * sends it (unlike `purchase`, which Fresha also sends), and it is
+ * credited to the visitor's Assigned Group however they reached the form.
+ *
+ * Call it from the form's success path, not the booking confirmation page.
  */
-export function trackFormSubmission() {
+export function trackFormSubmission(treatmentName?: string) {
   if (typeof window === 'undefined' || !window.gtag) {
     return;
   }
 
-  window.gtag('event', 'booking_form_submitted', experimentParams());
+  window.gtag('event', 'booking_form_submitted', {
+    ...experimentParams(),
+    treatment_name: treatmentName || 'none',
+  });
 }

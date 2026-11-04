@@ -83,7 +83,7 @@ describe('trackAbTest', () => {
       track.trackBookingRedirect('form', 'hero', 'Swedish Massage');
     }
 
-    it('attaches no experiment data with the experiment flag off', () => {
+    it('labels a consented visitor as non_participant while the experiment flag is off', () => {
       vi.stubEnv('NEXT_PUBLIC_AB_TEST_ENABLED', 'false');
       giveConsent();
 
@@ -93,19 +93,19 @@ describe('trackAbTest', () => {
       const redirects = eventParams(gtag, 'booking_redirect');
       expect(clicks).toHaveLength(1);
       expect(redirects).toHaveLength(1);
-      expect(clicks[0]).not.toHaveProperty('ab_test_variant');
-      expect(redirects[0]).not.toHaveProperty('ab_test_variant');
+      expect(clicks[0]).toMatchObject({ ab_test_variant: 'non_participant' });
+      expect(redirects[0]).toMatchObject({ ab_test_variant: 'non_participant' });
     });
 
-    it('attaches no experiment data for a visitor who is not a Participant', () => {
+    it('labels a visitor who is not a Participant as non_participant', () => {
       trackClick();
 
-      expect(eventParams(gtag, 'booking_button_clicked')[0]).not.toHaveProperty(
-        'ab_test_variant'
-      );
-      expect(eventParams(gtag, 'booking_redirect')[0]).not.toHaveProperty(
-        'ab_test_variant'
-      );
+      expect(eventParams(gtag, 'booking_button_clicked')[0]).toMatchObject({
+        ab_test_variant: 'non_participant',
+      });
+      expect(eventParams(gtag, 'booking_redirect')[0]).toMatchObject({
+        ab_test_variant: 'non_participant',
+      });
     });
 
     it("attaches a Participant's Assigned Group", () => {
@@ -121,6 +121,52 @@ describe('trackAbTest', () => {
       expect(eventParams(gtag, 'booking_redirect')[0]).toMatchObject({
         ab_test_variant: 'fresha',
       });
+    });
+  });
+
+  describe('Booking Request tracking', () => {
+    it("records a Form Group Participant's Booking Request as form", () => {
+      giveConsent();
+      document.cookie = 'ab_test_variant=user_form_group; path=/';
+
+      track.trackFormSubmission('Swedish Massage');
+
+      expect(eventParams(gtag, 'booking_form_submitted')).toEqual([
+        { ab_test_variant: 'form', treatment_name: 'Swedish Massage' },
+      ]);
+    });
+
+    it("records a Fresha Group Participant's Booking Request as fresha", () => {
+      giveConsent();
+      document.cookie = 'ab_test_variant=user_fresha_group; path=/';
+
+      track.trackFormSubmission('Swedish Massage');
+
+      expect(eventParams(gtag, 'booking_form_submitted')).toEqual([
+        { ab_test_variant: 'fresha', treatment_name: 'Swedish Massage' },
+      ]);
+    });
+
+    it('records a Booking Request as non_participant while the experiment flag is off', () => {
+      vi.stubEnv('NEXT_PUBLIC_AB_TEST_ENABLED', 'false');
+      giveConsent();
+
+      track.trackFormSubmission('Swedish Massage');
+
+      expect(eventParams(gtag, 'booking_form_submitted')).toEqual([
+        { ab_test_variant: 'non_participant', treatment_name: 'Swedish Massage' },
+      ]);
+    });
+
+    it('records a Booking Request with no treatment chosen as treatment_name=none', () => {
+      giveConsent();
+      document.cookie = 'ab_test_variant=user_fresha_group; path=/';
+
+      track.trackFormSubmission();
+
+      expect(eventParams(gtag, 'booking_form_submitted')).toEqual([
+        { ab_test_variant: 'fresha', treatment_name: 'none' },
+      ]);
     });
   });
 });
