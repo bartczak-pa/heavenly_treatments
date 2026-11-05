@@ -5,9 +5,10 @@
  */
 
 import {
-  getVariantAssignment,
+  experimentParams,
   type ABTestVariant,
 } from '@/lib/abTesting/variantAssignment';
+import { hasConsent } from '@/lib/cookieUtils';
 import type { BookingContext } from '@/lib/abTesting/getBookingUrl';
 
 /** sessionStorage key marking the group as already recorded this visit */
@@ -27,22 +28,27 @@ function isGroupRecordedThisVisit(): boolean {
   }
 }
 
+/** `treatment_name` value when no treatment was chosen */
+const NO_TREATMENT_LABEL = 'none';
+
+/**
+ * GA4's gtag, when a booking event may be sent: GA4 is loaded and the
+ * visitor still consents (consent can be withdrawn mid-visit while GA4
+ * stays loaded). Null otherwise.
+ */
+function bookingEventGtag(): NonNullable<Window['gtag']> | null {
+  if (typeof window === 'undefined' || typeof window.gtag !== 'function') {
+    return null;
+  }
+  return hasConsent() ? window.gtag : null;
+}
+
 function markGroupRecordedThisVisit(variant: ABTestVariant): void {
   try {
     sessionStorage.setItem(GROUP_RECORDED_KEY, variant);
   } catch {
     groupRecordedThisPageLoad = true;
   }
-}
-
-/**
- * The experiment parameter for booking events: a Participant's Assigned
- * Group, or nothing when the visitor is not a Participant (no consent,
- * or the experiment flag off).
- */
-function experimentParams(): { ab_test_variant?: ABTestVariant } {
-  const { variant, isParticipant } = getVariantAssignment();
-  return isParticipant ? { ab_test_variant: variant } : {};
 }
 
 /**
@@ -79,14 +85,15 @@ export function trackBookingButtonClick(
   context: BookingContext,
   treatmentName?: string
 ) {
-  if (typeof window === 'undefined' || !window.gtag) {
+  const gtag = bookingEventGtag();
+  if (!gtag) {
     return;
   }
 
-  window.gtag('event', 'booking_button_clicked', {
+  gtag('event', 'booking_button_clicked', {
     ...experimentParams(),
     context,
-    treatment_name: treatmentName || 'none',
+    treatment_name: treatmentName || NO_TREATMENT_LABEL,
   });
 }
 
@@ -98,25 +105,36 @@ export function trackBookingRedirect(
   context: BookingContext,
   treatmentName?: string
 ) {
-  if (typeof window === 'undefined' || !window.gtag) {
+  const gtag = bookingEventGtag();
+  if (!gtag) {
     return;
   }
 
-  window.gtag('event', 'booking_redirect', {
+  gtag('event', 'booking_redirect', {
     ...experimentParams(),
     destination,
     context,
-    treatment_name: treatmentName || 'none',
+    treatment_name: treatmentName || NO_TREATMENT_LABEL,
   });
 }
 
 /**
- * Track form submission (Fresha variant won't track this)
+ * Track a Booking Request: the server accepted a contact form submission.
+ *
+ * This is the experiment's Form Route conversion event. Only the site
+ * sends it (unlike `purchase`, which Fresha also sends), and it is
+ * credited to the visitor's Assigned Group however they reached the form.
+ *
+ * Call it from the form's success path, not the booking confirmation page.
  */
-export function trackFormSubmission() {
-  if (typeof window === 'undefined' || !window.gtag) {
+export function trackBookingRequest(treatmentName?: string) {
+  const gtag = bookingEventGtag();
+  if (!gtag) {
     return;
   }
 
-  window.gtag('event', 'booking_form_submitted', experimentParams());
+  gtag('event', 'booking_form_submitted', {
+    ...experimentParams(),
+    treatment_name: treatmentName || NO_TREATMENT_LABEL,
+  });
 }

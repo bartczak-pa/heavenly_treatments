@@ -14,9 +14,10 @@ import {
 // Mock the cookieUtils module
 vi.mock('@/lib/cookieUtils', () => ({
   hasConsent: vi.fn(() => true),
+  getCookie: vi.fn((): string | null => null),
 }));
 
-import { hasConsent } from '@/lib/cookieUtils';
+import { hasConsent, getCookie } from '@/lib/cookieUtils';
 
 describe('GA4 Analytics', () => {
   let originalWindow: typeof globalThis.window;
@@ -222,6 +223,7 @@ describe('GA4 Analytics', () => {
           },
         ],
         booking_source: 'form',
+        ab_test_variant: 'non_participant',
       });
     });
 
@@ -234,7 +236,29 @@ describe('GA4 Analytics', () => {
         value: 0,
         items: [],
         booking_source: 'fresha',
+        ab_test_variant: 'non_participant',
       });
+    });
+
+    it("attaches a Participant's Assigned Group to the purchase event", () => {
+      vi.stubEnv('NEXT_PUBLIC_AB_TEST_ENABLED', 'true');
+      vi.mocked(getCookie).mockReturnValue('user_fresha_group');
+
+      try {
+        trackPurchase('txn_789', 40, undefined, 'form');
+      } finally {
+        vi.unstubAllEnvs();
+        vi.mocked(getCookie).mockReturnValue(null);
+      }
+
+      expect(mockGtag).toHaveBeenCalledWith(
+        'event',
+        'purchase',
+        expect.objectContaining({
+          transaction_id: 'txn_789',
+          ab_test_variant: 'fresha',
+        })
+      );
     });
   });
 
